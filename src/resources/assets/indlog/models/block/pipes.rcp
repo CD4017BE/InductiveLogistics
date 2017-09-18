@@ -1,0 +1,38 @@
+{
+	dependencies = ["pipe"];
+	textures = [
+		"indlog:block/fluid_tr",
+		"indlog:block/fluid_in",
+		"indlog:block/fluid_ex",
+		"indlog:block/fluid_filter",
+		"indlog:block/item_tr",
+		"indlog:block/item_in",
+		"indlog:block/item_ex",
+		"indlog:block/item_filter",
+		"indlog:block/warp"
+	];
+}
+
+core(t) {
+	texIdx(t);
+	pipe.core(4);
+}
+
+con(t) {
+	texIdx(t);
+	pipe.con(4);
+}
+
+conf(t) {
+	push();
+		texIdx(t);
+		pipe.con(4);
+	pop();
+	if (t >= 4) {texIdx(7);} else {texIdx(3);}
+	pipe.filter(8,2);
+}
+
+item(t) {
+	texIdx(t);
+	pipe.full(4);
+}
