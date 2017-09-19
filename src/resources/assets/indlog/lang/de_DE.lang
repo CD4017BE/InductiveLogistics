@@ -1,0 +1,47 @@
+#PARSE_ESCAPES
+#CreativeTab
+itemGroup.indlog=Inductive Logistics
+#Blöcke
+tile.indlog.fluid_pipe\:0.name=Flüssigkeitstransportrohr
+tile.indlog.fluid_pipe\:0.tip=Transportiert Flüssigkeit von §6extraktions§7 zu §6injektionsrohr§7en.\nBewegt \\<FluidTiers_TankCap:0> L/t von roten zu grünen verbindungen.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.fluid_pipe\:1.name=Flüssigkeitsinjektionsrohr
+tile.indlog.fluid_pipe\:1.tip=Füllt Flüssigkeiten in angeschlossene Tanks/Maschinen.\nEs können §6Flüssigkeitsfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.fluid_pipe\:2.name=Flüssigkeitsextraktionsrohr
+tile.indlog.fluid_pipe\:2.tip=Saugt Flüssigkeiten aus angeschlossenen Tanks/Maschinen.\nEs können §6Flüssigkeitsfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.item_pipe\:0.name=Itemtransportrohr
+tile.indlog.item_pipe\:0.tip=Transportiert Items von §6extraktions§7 zu §6injektionsrohr§7en.\nBewegt 1 Stapel/t von roten zu grünen verbindungen.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.item_pipe\:1.name=Iteminjektionsrohr
+tile.indlog.item_pipe\:1.tip=Legt Items in angeschlossene Inventare.\nEs können §6Itemfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.item_pipe\:2.name=Itemextraktionsrohr
+tile.indlog.item_pipe\:2.tip=Zieht Items aus angeschlossenen Inventaren.\nEs können §6Itemfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.warp_pipe.name=Warpleitung
+tile.indlog.warp_pipe.tip=Transportiert Items & Flüssigkeiten zwischen\nangeschlossenen Blöcken ohne Verzögerung oder\nZwischenlagerung mit 1 Stapel/t Extraktionsrate.\nInstalliere §6(Item|Flüssigkeits)(extraktions|injektions)rohr§7e an den Seiten\num Items/Flüssigkeiten von dieser Seite zu extrahieren/injizieren.\n§6(Item|Flüssigkeits)filter§7 werden für alle Seiten separat verwendet.\nInteragiere geduckt zur Verbindungstrennung.
+#Items
+item.indlog.fluid_filter.name=Flüssigkeitsfilter
+item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen.
+item.indlog.item_filter.name=Itemfilter
+item.indlog.item_filter.tip=Filter für §6Item(extraktions|injektions)rohr§7e und den §6Itemsortierer§7.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen.
+
+#GUI Tooltips
+gui.cd4017be.rstCtr=Redstone-steuerung
+gui.cd4017be.filter.state=erlauben ,verbieten ,meta ,nbt ,ore ,halten ,rs=ON,rs=OFF
+gui.cd4017be.filter.stock=%s m³ auf Vorrat
+gui.cd4017be.priority=Priorität: %d
+gui.cd4017be.filter.tryF0=Weiter schicken wenn Tank voll
+gui.cd4017be.filter.tryF1=Erlaubte Flüssikeiten hier behalten
+gui.cd4017be.filter.invertF0=Angegebene Flüssigkeiten erlauben
+gui.cd4017be.filter.invertF1=Angegebene Flüssigkeiten verbieten
+gui.cd4017be.filter.try0=Weiter schicken, wenn Inventar voll
+gui.cd4017be.filter.try1=Erlaubte Items hier behalten
+gui.cd4017be.filter.invert0=Angegebene Items erlauben
+gui.cd4017be.filter.invert1=Angegebene Items verbieten
+gui.cd4017be.filter.targetF=Auf Vorrat zu haltene Menge[m³]\n0 = unbegrenzt befüllen/entleeren
+gui.cd4017be.filter.ore0=OreDictionary-Identitäten ignorieren
+gui.cd4017be.filter.ore1=OreDictionary-Identitäten verwenden
+gui.cd4017be.filter.nbt0=NBT-Daten ignorieren
+gui.cd4017be.filter.nbt1=NBT-Daten beachten
+gui.cd4017be.filter.meta0=Metadata/Schaden ignorieren
+gui.cd4017be.filter.meta1=Metadata/Schaden beachten
+gui.cd4017be.filter.targetI0=Unbegrenzt entnehmen/einfügen
+gui.cd4017be.filter.targetI1=Angegebene Items auf Vorrat halten
+gui.cd4017be.filter.priority=Zielpriorität (Warpleitung)
