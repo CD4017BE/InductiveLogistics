@@ -38,9 +38,9 @@ public class Objects {
 	public static DefaultItemBlock i_warpPipe;
 
 	static void createBlocks() {
-		i_itemPipe = new ItemItemPipe((itemPipe = BlockPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3)).setCreativeTab(tabIndLog).setHardness(0.5F));
-		i_fluidPipe = new ItemFluidPipe((fluidPipe = BlockPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 3)).setCreativeTab(tabIndLog).setHardness(0.5F));
-		i_warpPipe = new DefaultItemBlock((warpPipe = BlockPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1)).setCreativeTab(tabIndLog).setHardness(1.0F).setResistance(20F));
+		i_itemPipe = new ItemItemPipe((itemPipe = BlockPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3).setSize(0.25)).setCreativeTab(tabIndLog).setHardness(0.5F));
+		i_fluidPipe = new ItemFluidPipe((fluidPipe = BlockPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 3).setSize(0.25)).setCreativeTab(tabIndLog).setHardness(0.5F));
+		i_warpPipe = new DefaultItemBlock((warpPipe = BlockPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25)).setCreativeTab(tabIndLog).setHardness(1.0F).setResistance(20F));
 		
 		tabIndLog.item = new ItemStack(Blocks.HOPPER); //TODO set CreativeTab item
 	}
