@@ -41,8 +41,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  */
 public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IModularTile {
 
-	public static int CAP = 1000;
-	public static byte TICKS = 1;
+	public static int CAP;
+	public static byte TICKS;
 
 	private final LinkedTank tankcap = new LinkedTank(CAP, this::getFluid, this::setFluid);
 	public FluidStack tank, last;

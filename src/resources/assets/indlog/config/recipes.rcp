@@ -1,1 +1,23 @@
-VERSION = 1;
+VERSION = 6;
+
+fluid_pipe_cap = 1000;
+fluid_pipe_tick = 4;
+item_pipe_tick = 4;
+fluid_warp_tick = 4;
+item_warp_tick = 4;
+
+INIT() {
+	add("shaped", it("fluidPipeT", 8), "000/1 1/000", "blockGlass", it("minecraft:iron_bars"));
+	add("shaped", it("fluidPipeI", 4), " 0 /010/ 0 ", it("fluidPipeT"), it("minecraft:piston"));
+	add("shaped", it("fluidPipeE", 4), " 0 /010/ 0 ", it("fluidPipeT"), it("minecraft:sticky_piston"));
+	add("shaped", it("itemPipeT", 8), "000/1 1/000", "slabWood", it("minecraft:iron_bars"));
+	add("shaped", it("itemPipeI", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:piston"));
+	add("shaped", it("itemPipeE", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:sticky_piston"));
+	add("shaped", it("tile.warp_pipe", 16), "000/232/111", it("fluidPipeT"), it("itemPipeT"), "enderpearl", "gemDiamond");
+	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
+	add("shaped", it("item.item_filter"), "012", it("itemPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
+	add("shapedNBT", "#mode,#maxAm,#prior,#Fluids", it("item.fluid_filter", 2), "0/0", it("item.fluid_filter"));
+	add("shapedNBT", "#mode,#ore,#prior,#Items", it("item.item_filter", 2), "0/0", it("item.item_filter"));
+	add("shapeless", it("item.fluid_filter"), it("item.fluid_filter"));
+	add("shapeless", it("item.item_filter"), it("item.item_filter"));
+}

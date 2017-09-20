@@ -41,7 +41,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IItemPipeCon, IModularTile {
 
-	public static byte ticks = 1;
+	public static byte TICKS;
+
 	public final LinkedInventory invcap = new LinkedInventory(1, 64, this::getItem, this::setItem);
 	public ItemStack inventory, last;
 	private PipeFilterItem filter = null;
@@ -84,7 +85,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 				break;
 			case 2:
 				timer++;
-				if ((filter == null || filter.active(world.isBlockPowered(pos))) && (timer & 0xff) >= ticks) transferEx();
+				if ((filter == null || filter.active(world.isBlockPowered(pos))) && (timer & 0xff) >= TICKS) transferEx();
 			default:
 				if (inventory != null && target != null) inventory = target.insert(inventory, targetSide);
 			}

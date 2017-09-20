@@ -16,13 +16,17 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class FluidExtractor extends FluidComp implements ITickable {
 
+	public static byte TICKS;
+
+	private byte timer = 0;
+
 	public FluidExtractor(BasicWarpPipe pipe, byte side) {
 		super(pipe, side);
 	}
 
 	@Override
 	public void update() {
-		if (!this.isValid()) return;
+		if ((++timer & 0xff) < TICKS || !isValid()) return;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null || (filter != null && !filter.active(pipe.redstone))) return;
 		FluidStack stack = PipeFilterFluid.isNullEq(filter) ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
@@ -32,7 +36,7 @@ public class FluidExtractor extends FluidComp implements ITickable {
 		if (result != null) stack.amount -= result.amount;
 		if (n > 0) acc.drain(stack, true);
 	}
-	
+
 	@Override
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (super.onClicked(player, hand, item, uid)) return true;

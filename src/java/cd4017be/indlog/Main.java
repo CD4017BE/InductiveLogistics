@@ -1,7 +1,6 @@
 package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
-import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.lib.script.ScriptFiles.Version;
 import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class Main {
 
 	public static final String ID = "indlog";
-	private static final String ConfigName = "inductiveLogistics";
+	static final String ConfigName = "inductiveLogistics";
 
 	@Instance
 	public static Main instance;
@@ -25,12 +24,11 @@ public class Main {
 	public static CommonProxy proxy;
 
 	public Main() {
-		RecipeScriptContext.scriptRegistry.add(new Version(ConfigName, 0, "/assets/" + ID + "/config/recipes.rcp"));
+		RecipeScriptContext.scriptRegistry.add(new Version(ConfigName, 6, "/assets/" + ID + "/config/recipes.rcp"));
 	}
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ConfigConstants cfg = new ConfigConstants(RecipeScriptContext.instance.modules.get(ConfigName));
 		TooltipUtil.CURRENT_DOMAIN = ID;
 		Objects.tabIndLog = new TabMaterials(ID);
 		Objects.createBlocks();
@@ -48,4 +46,5 @@ public class Main {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 	}
+
 }
