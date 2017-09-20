@@ -5,7 +5,7 @@ import java.util.List;
 
 import cd4017be.api.automation.IItemPipeCon;
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeUpgradeItem;
+import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
@@ -43,7 +43,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	public static byte ticks = 1;
 	public final LinkedInventory invcap = new LinkedInventory(1, 64, this::getItem, this::setItem);
 	public ItemStack inventory, last;
-	private PipeUpgradeItem filter = null;
+	private PipeFilterItem filter = null;
 	private IItemPipeCon target;
 	private EnumFacing targetSide;
 	private ArrayList<TileAccess> invs = null;
@@ -156,7 +156,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 		IItemHandler acc;
 		for (TileAccess inv : invs)
 			if (inv.te.isInvalid() || (acc = inv.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inv.side)) == null) updateCon = true;
-			else if (PipeUpgradeItem.isNullEq(filter)) {
+			else if (PipeFilterItem.isNullEq(filter)) {
 				inventory = ItemHandlerHelper.insertItem(acc, inventory, false);
 				if (inventory.getCount() <= 0) {
 					inventory = null;
@@ -179,7 +179,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 		IItemHandler acc;
 		for (TileAccess inv : invs)
 			if (inv.te.isInvalid() || (acc = inv.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inv.side)) == null) updateCon = true;
-			else if (PipeUpgradeItem.isNullEq(filter)) {
+			else if (PipeFilterItem.isNullEq(filter)) {
 				if (inventory == null) setItem(ItemFluidUtil.drain(acc, -1), 0);
 				else {
 					int m = inventory.getMaxStackSize() - inventory.getCount();
@@ -230,13 +230,13 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 			return true;
 		} else if (!player.isSneaking() && item.getCount() == 0 && filter != null) {
 			item = new ItemStack(Objects.itemFilter);
-			item.setTagCompound(PipeUpgradeItem.save(filter));
+			item.setTagCompound(PipeFilterItem.save(filter));
 			filter = null;
 			player.setHeldItem(hand, item);
 			markUpdate();
 			return true;
 		} else if (filter == null && canF && item.getItem() == Objects.itemFilter && item.getTagCompound() != null) {
-			filter = PipeUpgradeItem.load(item.getTagCompound());
+			filter = PipeFilterItem.load(item.getTagCompound());
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			markUpdate();
@@ -260,7 +260,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setShort("flow", flow);
-		if (filter != null) nbt.setTag("filter", PipeUpgradeItem.save(filter));
+		if (filter != null) nbt.setTag("filter", PipeFilterItem.save(filter));
 		if (inventory != null) nbt.setTag("item", inventory.writeToNBT(new NBTTagCompound()));
 		return super.writeToNBT(nbt);
 	}
@@ -269,7 +269,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		flow = nbt.getShort("flow");
-		if (nbt.hasKey("filter")) filter = PipeUpgradeItem.load(nbt.getCompoundTag("filter"));
+		if (nbt.hasKey("filter")) filter = PipeFilterItem.load(nbt.getCompoundTag("filter"));
 		if (nbt.hasKey("item")) inventory = new ItemStack(nbt.getCompoundTag("item"));
 		updateCon = true;
 	}
@@ -278,12 +278,15 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.getNbtCompound();
 		short nf = nbt.getShort("flow");
-		boolean f = nbt.getBoolean("filt");
+		byte f = nbt.getByte("filt");
 		if (nbt.hasKey("it", 10)) inventory = new ItemStack(nbt.getCompoundTag("it"));
 		else inventory = null;
-		if (nf != flow || (f ^ filter != null)) {
-			if (f) filter = new PipeUpgradeItem();
-			else filter = null;
+		if (nf != flow || (f != -1 ^ filter != null)) {
+			if (f == -1) filter = null;
+			else {
+				filter = new PipeFilterItem();
+				filter.mode = f;
+			}
 			flow = nf;
 			this.markUpdate();
 		}
@@ -293,7 +296,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setShort("flow", flow);
-		nbt.setBoolean("filt", filter != null);
+		nbt.setByte("filt", filter == null ? -1 : (byte)(filter.mode & 2));
 		if (last != null) nbt.setTag("it", last.writeToNBT(new NBTTagCompound()));
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
@@ -339,7 +342,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 		if (inventory != null) list.add(inventory);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.itemFilter);
-			item.setTagCompound(PipeUpgradeItem.save(filter));
+			item.setTagCompound(PipeFilterItem.save(filter));
 			list.add(item);
 		}
 		return list;

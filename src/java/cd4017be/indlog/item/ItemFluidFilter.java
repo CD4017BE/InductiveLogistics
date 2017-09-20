@@ -9,8 +9,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 import java.util.List;
 
-import cd4017be.indlog.render.gui.GuiFluidUpgrade;
-import cd4017be.indlog.util.PipeUpgradeFluid;
+import cd4017be.indlog.render.gui.GuiFluidFilter;
+import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.DefaultItem;
@@ -51,7 +51,7 @@ public class ItemFluidFilter extends DefaultItem implements IGuiItem, ClientItem
 	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
-			PipeUpgradeFluid filter = PipeUpgradeFluid.load(item.getTagCompound());
+			PipeFilterFluid filter = PipeFilterFluid.load(item.getTagCompound());
 			String s;
 			if (states.length >= 8) {
 				s = states[(filter.mode & 1) == 0 ? 0 : 1];
@@ -90,7 +90,7 @@ public class ItemFluidFilter extends DefaultItem implements IGuiItem, ClientItem
 	@SideOnly(Side.CLIENT)
 	@Override
 	public GuiContainer getGui(ItemStack item, EntityPlayer player, World world, BlockPos pos, int slot) {
-		return new GuiFluidUpgrade(new TileContainer(new GuiData(), player));
+		return new GuiFluidFilter(new TileContainer(new GuiData(), player));
 	}
 
 	@Override

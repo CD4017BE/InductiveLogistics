@@ -4,10 +4,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
-import cd4017be.indlog.render.gui.GuiItemUpgrade;
-import cd4017be.indlog.util.PipeUpgradeItem;
+import cd4017be.indlog.render.gui.GuiItemFilter;
+import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.DefaultItem;
@@ -46,7 +47,7 @@ public class ItemItemFilter extends DefaultItem implements IGuiItem, ClientItemP
 	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
-			PipeUpgradeItem filter = PipeUpgradeItem.load(item.getTagCompound());
+			PipeFilterItem filter = PipeFilterItem.load(item.getTagCompound());
 			String s;
 			if (states.length >= 8) {
 				s = states[(filter.mode & 1) == 0 ? 0 : 1];
@@ -79,7 +80,7 @@ public class ItemItemFilter extends DefaultItem implements IGuiItem, ClientItemP
 	@SideOnly(Side.CLIENT)
 	@Override
 	public GuiContainer getGui(ItemStack item, EntityPlayer player, World world, BlockPos pos, int slot) {
-		return new GuiItemUpgrade(new TileContainer(new GuiData(), player));
+		return new GuiItemFilter(new TileContainer(new GuiData(), player));
 	}
 
 	@Override
@@ -98,6 +99,7 @@ public class ItemItemFilter extends DefaultItem implements IGuiItem, ClientItemP
 		ItemStack[] items = new ItemStack[12];
 		if (inv.hasTagCompound())
 			ItemFluidUtil.loadItems(inv.getTagCompound().getTagList(ItemFluidUtil.Tag_ItemList, 10), items);
+		else Arrays.fill(items, ItemStack.EMPTY);
 		return items;
 	}
 

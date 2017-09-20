@@ -5,7 +5,7 @@ import java.util.List;
 
 import cd4017be.api.automation.IFluidPipeCon;
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeUpgradeFluid;
+import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
@@ -44,7 +44,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 
 	private final LinkedTank tankcap = new LinkedTank(CAP, this::getFluid, this::setFluid);
 	public FluidStack tank, last;
-	private PipeUpgradeFluid filter = null;
+	private PipeFilterFluid filter = null;
 	private FluidPipe target = null;
 	private ArrayList<TileAccess> invs = null;
 	private byte type;
@@ -153,7 +153,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 		IFluidHandler acc;
 		for (TileAccess inv : invs)
 			if (inv.te.isInvalid() || (acc = inv.te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, inv.side)) == null) updateCon = true;
-			else if (PipeUpgradeFluid.isNullEq(filter)) {
+			else if (PipeFilterFluid.isNullEq(filter)) {
 				if ((tank.amount -= acc.fill(tank, true)) <= 0) {
 					tank = null;
 					break;
@@ -172,7 +172,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 		IFluidHandler acc;
 		for (TileAccess inv : invs)
 			if (inv.te.isInvalid() || (acc = inv.te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, inv.side)) == null) updateCon = true;
-			else if (PipeUpgradeFluid.isNullEq(filter)) {
+			else if (PipeFilterFluid.isNullEq(filter)) {
 				if (tank == null) tank = acc.drain(tankcap.cap, true);
 				else {
 					int m = tankcap.cap - tank.amount;
@@ -224,7 +224,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 			return true;
 		} else if (!player.isSneaking() && item.getCount() == 0 && filter != null) {
 			item = new ItemStack(Objects.fluidFilter);
-			item.setTagCompound(PipeUpgradeFluid.save(filter));
+			item.setTagCompound(PipeFilterFluid.save(filter));
 			filter = null;
 			player.setHeldItem(hand, item);
 			markUpdate();
@@ -254,7 +254,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setShort("flow", flow);
-		if (filter != null) nbt.setTag("filter", PipeUpgradeFluid.save(filter));
+		if (filter != null) nbt.setTag("filter", PipeFilterFluid.save(filter));
 		if (tank != null) nbt.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
 		return super.writeToNBT(nbt);
 	}
@@ -263,7 +263,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		flow = nbt.getShort("flow");
-		if (nbt.hasKey("filter")) filter = PipeUpgradeFluid.load(nbt.getCompoundTag("filter"));
+		if (nbt.hasKey("filter")) filter = PipeFilterFluid.load(nbt.getCompoundTag("filter"));
 		if (nbt.hasKey("fluid")) tank = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid"));
 		updateCon = true;
 	}
@@ -272,12 +272,15 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.getNbtCompound();
 		short nf = nbt.getShort("flow");
-		boolean f = nbt.getBoolean("filt");
+		byte f = nbt.getByte("filt");
 		if (nbt.hasKey("fl", 10)) tank = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fl"));
 		else tank = null;
-		if (nf != flow || (f ^ filter != null)) {
-			if (f) filter = new PipeUpgradeFluid();
-			else filter = null;
+		if (nf != flow || (f != -1 ^ filter != null)) {
+			if (f == -1) filter = null;
+			else {
+				filter = new PipeFilterFluid();
+				filter.mode = f;
+			}
 			flow = nf;
 			this.markUpdate();
 		}
@@ -287,7 +290,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setShort("flow", flow);
-		nbt.setBoolean("filt", filter != null);
+		nbt.setByte("filt", filter == null ? -1 : (byte)(filter.mode & 2));
 		if (last != null) nbt.setTag("fl", last.writeToNBT(new NBTTagCompound()));
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
@@ -320,7 +323,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 		List<ItemStack> list = makeDefaultDrops(null);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.fluidFilter);
-			item.setTagCompound(PipeUpgradeFluid.save(filter));
+			item.setTagCompound(PipeFilterFluid.save(filter));
 			list.add(item);
 		}
 		return list;

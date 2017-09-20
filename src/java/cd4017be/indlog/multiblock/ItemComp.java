@@ -12,14 +12,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
-import cd4017be.indlog.util.PipeUpgradeItem;
+import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.util.ItemFluidUtil;
 
 public class ItemComp extends ConComp implements IObjLink {
 
 	public final BasicWarpPipe pipe;
 	public ICapabilityProvider link;
-	public PipeUpgradeItem filter;
+	public PipeFilterItem filter;
 	
 	public ItemComp(BasicWarpPipe pipe, byte side)
 	{
@@ -30,7 +30,7 @@ public class ItemComp extends ConComp implements IObjLink {
 	@Override
 	public void load(NBTTagCompound nbt) {
 		if (nbt.hasKey("mode")) {
-			filter = PipeUpgradeItem.load(nbt);
+			filter = PipeFilterItem.load(nbt);
 			pipe.hasFilters |= 1 << side;
 		} else pipe.hasFilters &= ~(1 << side);
 	}
@@ -61,14 +61,14 @@ public class ItemComp extends ConComp implements IObjLink {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (item.getCount() == 0 && filter != null) {
 			item = new ItemStack(Objects.itemFilter);
-			item.setTagCompound(PipeUpgradeItem.save(filter));
+			item.setTagCompound(PipeFilterItem.save(filter));
 			filter = null;
 			ItemFluidUtil.dropStack(item, player);
 			pipe.network.reorder(this);
 			pipe.hasFilters &= ~(1 << side);
 			return true;
 		} else if (filter == null && item.getItem() == Objects.itemFilter && item.getTagCompound() != null) {
-			filter = PipeUpgradeItem.load(item.getTagCompound());
+			filter = PipeFilterItem.load(item.getTagCompound());
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			pipe.network.reorder(this);
@@ -96,7 +96,7 @@ public class ItemComp extends ConComp implements IObjLink {
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null || (filter != null && !filter.active(pipe.redstone))) return item;
 		int n = item.getCount();
-		if (PipeUpgradeItem.isNullEq(filter)) return ItemHandlerHelper.insertItemStacked(acc, item, false);
+		if (PipeFilterItem.isNullEq(filter)) return ItemHandlerHelper.insertItemStacked(acc, item, false);
 		n = filter.insertAmount(item, acc);
 		if (n == 0) return item;
 		if (n > item.getCount()) n = item.getCount();

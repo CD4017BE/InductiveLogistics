@@ -3,7 +3,7 @@ package cd4017be.indlog.multiblock;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeUpgradeFluid;
+import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class FluidExtractor extends FluidComp implements ITickable {
 		if (!this.isValid()) return;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null || (filter != null && !filter.active(pipe.redstone))) return;
-		FluidStack stack = PipeUpgradeFluid.isNullEq(filter) ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
+		FluidStack stack = PipeFilterFluid.isNullEq(filter) ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
 		if (stack == null) return;
 		int n = stack.amount;
 		FluidStack result = pipe.network.insertFluid(stack.copy(), filter == null || (filter.mode & 2) == 0 ? Byte.MAX_VALUE : filter.priority);

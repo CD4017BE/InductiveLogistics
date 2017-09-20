@@ -15,7 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
  *
  * @author CD4017BE
  */
-public class PipeUpgradeItem implements IFilter<ItemStack, IItemHandler> {
+public class PipeFilterItem implements IFilter<ItemStack, IItemHandler> {
 
 	public ItemStack[] list = new ItemStack[0];
 	public int[] ores;
@@ -26,8 +26,8 @@ public class PipeUpgradeItem implements IFilter<ItemStack, IItemHandler> {
 		return (mode & 64) == 0 || (rs ^ (mode & 128) != 0);
 	}
 
-	public static PipeUpgradeItem load(NBTTagCompound nbt) {
-		PipeUpgradeItem upgrade = new PipeUpgradeItem();
+	public static PipeFilterItem load(NBTTagCompound nbt) {
+		PipeFilterItem upgrade = new PipeFilterItem();
 		upgrade.mode = nbt.getByte("mode");
 		upgrade.priority = nbt.getByte("prior");
 		if (nbt.hasKey(ItemFluidUtil.Tag_ItemList)) {
@@ -68,7 +68,7 @@ public class PipeUpgradeItem implements IFilter<ItemStack, IItemHandler> {
 		if (ores != null) nbt.setIntArray("ore", ores);
 	}
 
-	public static NBTTagCompound save(PipeUpgradeItem upgrade) {
+	public static NBTTagCompound save(PipeFilterItem upgrade) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		upgrade.save(nbt);
 		return nbt;
@@ -78,7 +78,7 @@ public class PipeUpgradeItem implements IFilter<ItemStack, IItemHandler> {
 		return list.length == 0 && (mode & 1) == 0;
 	}
 
-	public static boolean isNullEq(PipeUpgradeItem filter) {
+	public static boolean isNullEq(PipeFilterItem filter) {
 		return filter == null || (filter.list.length == 0 && (filter.mode & 1) != 0);
 	}
 

@@ -12,14 +12,14 @@ import cd4017be.lib.Gui.TileContainer;
  *
  * @author CD4017BE
  */
-public class GuiItemUpgrade extends GuiMachine {
+public class GuiItemFilter extends GuiMachine {
 
 	private final InventoryPlayer inv;
 
-	public GuiItemUpgrade(TileContainer container) {
+	public GuiItemFilter(TileContainer container) {
 		super(container);
 		this.inv = container.player.inventory;
-		this.MAIN_TEX = new ResourceLocation("automation", "textures/gui/itemUpgrade.png");
+		this.MAIN_TEX = new ResourceLocation("indlog", "textures/gui/item_filter.png");
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class GuiItemUpgrade extends GuiMachine {
 
 	@Override
 	protected void setDisplVar(int id, Object obj, boolean send) {
-		PacketBuffer dos = BlockGuiHandler.getPacketTargetData(((TileContainer)inventorySlots).data.pos());
+		PacketBuffer dos = BlockGuiHandler.getPacketForItem(inv.currentItem);
 		ItemStack item = inv.mainInventory.get(inv.currentItem);
 		if (id < 7) {
 			byte mode = item != null && item.hasTagCompound() ? item.getTagCompound().getByte("mode") : 0;

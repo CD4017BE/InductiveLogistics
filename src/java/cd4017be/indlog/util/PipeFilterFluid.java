@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
  *
  * @author CD4017BE
  */
-public class PipeUpgradeFluid implements IFilter<FluidStack, IFluidHandler> {
+public class PipeFilterFluid implements IFilter<FluidStack, IFluidHandler> {
 
 	public int maxAmount;
 	public Fluid[] list = new Fluid[0];
@@ -81,8 +81,8 @@ public class PipeUpgradeFluid implements IFilter<FluidStack, IFluidHandler> {
 		return listed ^ (mode & 1) == 0;
 	}
 
-	public static PipeUpgradeFluid load(NBTTagCompound nbt) {
-		PipeUpgradeFluid upgrade = new PipeUpgradeFluid();
+	public static PipeFilterFluid load(NBTTagCompound nbt) {
+		PipeFilterFluid upgrade = new PipeFilterFluid();
 		upgrade.mode = nbt.getByte("mode");
 		upgrade.maxAmount = nbt.getInteger("maxAm");
 		upgrade.priority = nbt.getByte("prior");
@@ -108,13 +108,13 @@ public class PipeUpgradeFluid implements IFilter<FluidStack, IFluidHandler> {
 		}
 	}
 
-	public static NBTTagCompound save(PipeUpgradeFluid upgrade) {
+	public static NBTTagCompound save(PipeFilterFluid upgrade) {
 		NBTTagCompound nbt = new NBTTagCompound();
 		upgrade.save(nbt);
 		return nbt;
 	}
 
-	public static boolean isNullEq(PipeUpgradeFluid filter) {
+	public static boolean isNullEq(PipeFilterFluid filter) {
 		return filter == null || (filter.list.length == 0 && (filter.mode & 1) != 0 && filter.maxAmount == 0);
 	}
 

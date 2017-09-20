@@ -15,14 +15,14 @@ import java.util.List;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
-import cd4017be.indlog.util.PipeUpgradeFluid;
+import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.util.ItemFluidUtil;
 
 public class FluidComp extends ConComp implements IObjLink {
 
 	public final BasicWarpPipe pipe;
 	public ICapabilityProvider link;
-	public PipeUpgradeFluid filter;
+	public PipeFilterFluid filter;
 	
 	public FluidComp(BasicWarpPipe pipe, byte side) {
 		super(side);
@@ -32,7 +32,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	@Override
 	public void load(NBTTagCompound nbt) {
 		if (nbt.hasKey("mode")) {
-			filter = PipeUpgradeFluid.load(nbt);
+			filter = PipeFilterFluid.load(nbt);
 			pipe.hasFilters |= 1 << side;
 		} else pipe.hasFilters &= ~(1 << side);
 	}
@@ -62,14 +62,14 @@ public class FluidComp extends ConComp implements IObjLink {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (item.getCount() == 0 && filter != null) {
 			item = new ItemStack(Objects.fluidFilter);
-			item.setTagCompound(PipeUpgradeFluid.save(filter));
+			item.setTagCompound(PipeFilterFluid.save(filter));
 			filter = null;
 			ItemFluidUtil.dropStack(item, player);
 			pipe.network.reorder(this);
 			pipe.hasFilters &= ~(1 << side);
 			return true;
 		} else if (filter == null && item.getItem() == Objects.fluidFilter && item.getTagCompound() != null) {
-			filter = PipeUpgradeFluid.load(item.getTagCompound());
+			filter = PipeFilterFluid.load(item.getTagCompound());
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			pipe.network.reorder(this);
@@ -83,7 +83,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	public void dropContent(List<ItemStack> list) {
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.fluidFilter);
-			item.setTagCompound(PipeUpgradeFluid.save(filter));
+			item.setTagCompound(PipeFilterFluid.save(filter));
 			list.add(item);
 		}
 	}
@@ -106,7 +106,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	public FluidStack insertFluid(FluidStack fluid) {
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null || (filter != null && !filter.active(pipe.redstone))) return fluid;
-		if (PipeUpgradeFluid.isNullEq(filter)) fluid.amount -= acc.fill(fluid, true);
+		if (PipeFilterFluid.isNullEq(filter)) fluid.amount -= acc.fill(fluid, true);
 		else {
 			int n = filter.insertAmount(fluid, acc);
 			if (n > 0) fluid.amount -= acc.fill(new FluidStack(fluid, n), true);
