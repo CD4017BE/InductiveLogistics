@@ -8,9 +8,13 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
+import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.templates.SharedNetwork;
+import cd4017be.lib.util.Utils;
 
 public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> {
 
@@ -31,12 +35,24 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	
 	public void addConnector(BasicWarpPipe pipe, ConComp con) {
 		this.addConnector(SharedNetwork.SidedPosUID(pipe.getUID(), con.side), con);
+		if (con instanceof IObjLink) pipe.updateCon = true;
+		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
 	}
 	
 	public ConComp remConnector(BasicWarpPipe pipe, byte side) {
-		return this.remConnector(SharedNetwork.SidedPosUID(pipe.getUID(), side));
+		pipe.con[side] = 0;
+		ConComp con = remConnector(SharedNetwork.SidedPosUID(pipe.getUID(), side));
+		pipe.updateCon = true;
+		pipe.hasFilters &= ~(1 << side);
+		((BaseTileEntity)pipe.tile).markUpdate();
+		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
+		return con;
 	}
-	
+
+	public ConComp getConnector(BasicWarpPipe pipe, byte side) {
+		return connectors.get(SharedNetwork.SidedPosUID(pipe.getUID(), side));
+	}
+
 	public void reorder(ConComp con) {
 		if (con instanceof IItemDest) sortItemDest = true;
 		if (con instanceof IFluidDest) sortFluidDest = true;
@@ -102,7 +118,7 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		super.updateCompCon(comp);
 		for (byte s : sides())
 			if (comp.con[s] >= 2) {
-				ConComp con = connectors.get(SharedNetwork.SidedPosUID(comp.getUID(), s));
+				ConComp con = getConnector(comp, s);
 				if (con instanceof IObjLink) ((IObjLink)con).updateLink();
 			}
 	}
@@ -127,7 +143,6 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	 */
 	public ItemStack insertItem(ItemStack item, byte pr)
 	{
-		if (item == null) return null;
 		for (IItemDest dest : itemDest) {
 			if (dest.getPriority() <= pr && dest.isValid()) {
 				item = dest.insertItem(item);

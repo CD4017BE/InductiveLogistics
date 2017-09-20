@@ -4,7 +4,6 @@ import java.util.List;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.PipeFilterFluid;
-import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,11 +38,7 @@ public class FluidExtractor extends FluidComp implements ITickable {
 		if (super.onClicked(player, hand, item, uid)) return true;
 		if (player.isSneaking() && player.getHeldItemMainhand().getCount() == 0) {
 			ItemFluidUtil.dropStack(new ItemStack(Objects.fluidPipe, 1, 2), player);
-			pipe.con[side] = 0;
 			pipe.network.remConnector(pipe, side);
-			pipe.updateCon = true;
-			pipe.hasFilters &= ~(1 << side);
-			((BaseTileEntity)pipe.tile).markUpdate();
 			return true;
 		}
 		return false;

@@ -10,6 +10,9 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.List;
+
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
 import cd4017be.indlog.util.PipeFilterItem;
@@ -76,6 +79,14 @@ public class ItemComp extends ConComp implements IObjLink {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void dropContent(List<ItemStack> list) {
+		super.dropContent(list);
+		ItemStack item = new ItemStack(Objects.itemFilter);
+		item.setTagCompound(PipeFilterItem.save(filter));
+		list.add(item);
 	}
 
 	/**

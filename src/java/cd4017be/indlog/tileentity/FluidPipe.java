@@ -1,5 +1,7 @@
 package cd4017be.indlog.tileentity;
 
+import static cd4017be.lib.util.PropertyByte.cast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +55,15 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 	private boolean updateCon = true;
 	private byte timer = 0;
 
+	public FluidPipe() {
+		super();
+	}
+
+	public FluidPipe(IBlockState state) {
+		super(state);
+		type = (byte)blockType.getMetaFromState(state);
+	}
+
 	private FluidStack getFluid() {
 		return tank;
 	}
@@ -94,7 +105,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T)tankcap : null;
 	}
 
-	private void updateConnections(int type) {
+	private void updateConnections(int type) {//FIXME possible connection paradox
 		if (invs != null) invs.clear();
 		else if (type != 0) invs = new ArrayList<TileAccess>(5);
 		EnumFacing dir;
@@ -108,7 +119,8 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 			if (lDirIO == 3) continue;
 			dir = EnumFacing.VALUES[i];
 			te = world.getTileEntity(pos.offset(dir));
-			if (te != null && te instanceof FluidPipe) {
+			if (te == null) setFlowBit(i, 0);
+			else if (te instanceof FluidPipe) {
 				FluidPipe pipe = (FluidPipe)te;
 				int pHasIO = pipe.getFlowBit(6);
 				int pDirIO = pipe.getFlowBit(i ^ 1);
@@ -230,7 +242,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 			markUpdate();
 			return true;
 		} else if (filter == null && canF && item.getItem() == Objects.fluidFilter && item.getTagCompound() != null) {
-			filter = PipeUpgradeFluid.load(item.getTagCompound());
+			filter = PipeFilterFluid.load(item.getTagCompound());
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			markUpdate();
@@ -253,6 +265,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt.setByte("type", type);
 		nbt.setShort("flow", flow);
 		if (filter != null) nbt.setTag("filter", PipeFilterFluid.save(filter));
 		if (tank != null) nbt.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
@@ -262,6 +275,7 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		type = nbt.getByte("type");
 		flow = nbt.getShort("flow");
 		if (nbt.hasKey("filter")) filter = PipeFilterFluid.load(nbt.getCompoundTag("filter"));
 		if (nbt.hasKey("fluid")) tank = FluidStack.loadFluidStackFromNBT(nbt.getCompoundTag("fluid"));
@@ -295,23 +309,26 @@ public class FluidPipe extends BaseTileEntity implements ITilePlaceHarvest, INei
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getModuleState(int m) {
 		int b = getFlowBit(m);
+		if (b == 3) return cast(-1);
 		EnumFacing f = EnumFacing.VALUES[m];
 		ICapabilityProvider p = getTileOnSide(f);
-		if (b == 3 || p == null || !p.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite())) return (T)Byte.valueOf((byte)-1);
-		if (filter != null && b != 0 && !(b == 2 && p instanceof FluidPipe)) b += 2;
-		return (T)Byte.valueOf((byte)b);
+		if (b == 0) {
+			if (p == null || !p.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite())) b = -1;
+		} else if (filter != null && b != 0 && !(p instanceof FluidPipe && (b == 2 || (filter.mode & 2) == 0))) b += 2;
+		return cast(b);		
 	}
 
 	@Override
 	public boolean isModulePresent(int m) {
 		int b = getFlowBit(m);
+		if (b == 3) return false;
+		else if (b != 0) return true;
 		EnumFacing f = EnumFacing.VALUES[m];
 		ICapabilityProvider p = getTileOnSide(f);
-		return b != 3 && p != null && p.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite());
+		return p != null && p.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, f.getOpposite());
 	}
 
 	@Override

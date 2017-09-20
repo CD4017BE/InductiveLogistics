@@ -14,6 +14,7 @@ import net.minecraft.util.ITickable;
 
 import java.util.List;
 
+import static cd4017be.lib.util.PropertyByte.cast;
 import cd4017be.api.automation.IFluidPipeCon;
 import cd4017be.api.automation.IItemPipeCon;
 import cd4017be.indlog.Objects;
@@ -56,15 +57,15 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		} else if (player.isSneaking() && item.getCount() == 0) {
 			comp.setConnect(s, t != 0);
 			this.markUpdate();
-			BasicWarpPipe pipe = comp.getNeighbor(s);
-			if (pipe != null && pipe.tile instanceof WarpPipe) {
-				pipe.setConnect((byte)(s^1), t != 0);
-				((WarpPipe)pipe.tile).markUpdate();
+			TileEntity te = Utils.neighborTile(this, dir);
+			if (te instanceof WarpPipe) {
+				((WarpPipe)te).comp.setConnect((byte)(s^1), t != 0);
+				((WarpPipe)te).markUpdate();
 			}
 			return true;
 		} 
 		if (player.isSneaking()) return false;
-		else if (t < 2 && ConComp.createFromItem(item, comp, (byte)s)) {
+		else if (t < 2 && ConComp.createFromItem(item, comp, s)) {
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			this.markUpdate();
@@ -107,14 +108,13 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getModuleState(int m) {
 		byte t = comp.con[m];
-		if (t == 1) return (T)Byte.valueOf((byte)-1);
-		else if (t > 1) return (T)Byte.valueOf((byte)(t - 1 + (comp.hasFilters >> m & 1) * 4));
+		if (t == 1) return cast(-1);
+		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 4);
 		TileEntity te = Utils.neighborTile(this, EnumFacing.VALUES[m]);
-		return (T)Byte.valueOf(te != null && te.hasCapability(Objects.WARP_PIPE_CAP, EnumFacing.VALUES[m^1]) ? (byte)0 : (byte)-1);
+		return cast(te != null && te.hasCapability(Objects.WARP_PIPE_CAP, EnumFacing.VALUES[m^1]) ? 0 : -1);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
 		List<ItemStack> list = makeDefaultDrops(null);
 		for (int i = 0; i < 6; i++) {
-			ConComp con = comp.network.remConnector(comp, (byte)i);
+			ConComp con = comp.network.getConnector(comp, (byte)i);
 			if (con != null) con.dropContent(list);
 		}
 		return list;

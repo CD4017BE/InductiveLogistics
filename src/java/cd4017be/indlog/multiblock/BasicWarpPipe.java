@@ -64,10 +64,10 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 		NBTTagList list = new NBTTagList();
 		NBTTagCompound tag;
 		ConComp comp;
-		for (int i = 0; i < con.length; i++)
+		for (byte i = 0; i < con.length; i++)
 			if (con[i] > 0) {
-				tag = ConComp.writeToNBT(con[i], (byte)i);
-				comp = network.connectors.get(SharedNetwork.SidedPosUID(uid, i));
+				tag = ConComp.writeToNBT(con[i], i);
+				comp = network.getConnector(this, i);
 				if (comp != null) comp.save(tag);
 				list.appendTag(tag);
 			}

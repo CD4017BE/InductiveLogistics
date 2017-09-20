@@ -3,7 +3,6 @@ package cd4017be.indlog.multiblock;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
-import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,7 +38,7 @@ public class ItemExtractor extends ItemComp implements ITickable {
 		m = stack.getCount();
 		if (target < 0 || m == 0) return;
 		m -= pipe.network.insertItem(stack, filter == null || (filter.mode & 2) == 0 ? Byte.MAX_VALUE : filter.priority).getCount();
-		acc.extractItem(target, m, false);
+		if (m > 0) acc.extractItem(target, m, false);
 	}
 
 	@Override
@@ -47,11 +46,7 @@ public class ItemExtractor extends ItemComp implements ITickable {
 		if (super.onClicked(player, hand, item, uid)) return true;
 		if (player.isSneaking() && player.getHeldItemMainhand().isEmpty()) {
 			ItemFluidUtil.dropStack(new ItemStack(Objects.itemPipe, 1, 2), player);
-			pipe.con[side] = 0;
 			pipe.network.remConnector(pipe, side);
-			pipe.updateCon = true;
-			pipe.hasFilters &= ~(1 << side);
-			((BaseTileEntity)pipe.tile).markUpdate();
 			return true;
 		}
 		return false;

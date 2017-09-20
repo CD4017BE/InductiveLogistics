@@ -13,6 +13,7 @@ import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.templates.LinkedInventory;
 import cd4017be.lib.util.ItemFluidUtil;
+import static cd4017be.lib.util.PropertyByte.cast;
 import cd4017be.lib.util.TileAccess;
 import cd4017be.lib.util.Utils;
 import net.minecraft.block.Block;
@@ -52,6 +53,15 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	private short flow;
 	private boolean updateCon = true;
 	private byte timer = 0;
+
+	public ItemPipe() {
+		super();
+	}
+
+	public ItemPipe(IBlockState state) {
+		super(state);
+		type = (byte)blockType.getMetaFromState(state);
+	}
 
 	private ItemStack getItem(int i) {
 		return inventory == null ? ItemStack.EMPTY : inventory;
@@ -96,7 +106,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)invcap : null;
 	}
 
-	private void updateConnections(int type) {
+	private void updateConnections(int type) {//FIXME possible connection paradox
 		if (invs != null) invs.clear();
 		else if (type != 0) invs = new ArrayList<TileAccess>(5);
 		EnumFacing dir;
@@ -259,6 +269,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt.setByte("type", type);
 		nbt.setShort("flow", flow);
 		if (filter != null) nbt.setTag("filter", PipeFilterItem.save(filter));
 		if (inventory != null) nbt.setTag("item", inventory.writeToNBT(new NBTTagCompound()));
@@ -268,6 +279,7 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		type = nbt.getByte("type");
 		flow = nbt.getShort("flow");
 		if (nbt.hasKey("filter")) filter = PipeFilterItem.load(nbt.getCompoundTag("filter"));
 		if (nbt.hasKey("item")) inventory = new ItemStack(nbt.getCompoundTag("item"));
@@ -313,23 +325,26 @@ public class ItemPipe extends BaseTileEntity implements ITilePlaceHarvest, INeig
 		return item;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getModuleState(int m) {
 		int b = getFlowBit(m);
+		if (b == 3) return cast(-1);
 		EnumFacing f = EnumFacing.VALUES[m];
 		ICapabilityProvider p = getTileOnSide(f);
-		if (b == 3 || p == null || !p.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, f.getOpposite())) return (T)Byte.valueOf((byte)-1);
-		if (filter != null && b != 0 && !(b == 2 && p instanceof ItemPipe)) b += 2;
-		return (T)Byte.valueOf((byte)b);
+		if (b == 0) {
+			if (p == null || !p.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, f.getOpposite())) b = -1;
+		} else if (filter != null && b != 0 && !(p instanceof ItemPipe && (b == 2 || (filter.mode & 2) == 0))) b += 2;
+		return cast(b);
 	}
 
 	@Override
 	public boolean isModulePresent(int m) {
 		int b = getFlowBit(m);
+		if (b == 3) return false;
+		else if (b != 0) return true;
 		EnumFacing f = EnumFacing.VALUES[m];
 		ICapabilityProvider p = getTileOnSide(f);
-		return b != 3 && p != null && p.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, f.getOpposite());
+		return p != null && p.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, f.getOpposite());
 	}
 
 	@Override
