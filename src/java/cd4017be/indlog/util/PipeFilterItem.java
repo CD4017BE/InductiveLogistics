@@ -19,11 +19,11 @@ public class PipeFilterItem implements IFilter<ItemStack, IItemHandler> {
 
 	public ItemStack[] list = new ItemStack[0];
 	public int[] ores;
-	public byte mode;//1=invert; 2=force; 4=meta; 8=nbt; 16=ore; 32=count; 64=redstone; 128=invertRS
+	public byte mode;//1=invert; 2=force; 4=meta; 8=nbt; 16=ore; 32=count; 64=invertRS; 128=redstone
 	public byte priority;
 
 	public boolean active(boolean rs) {
-		return (mode & 64) == 0 || (rs ^ (mode & 128) != 0);
+		return (mode & 128) == 0 || (rs ^ (mode & 64) != 0);
 	}
 
 	public static PipeFilterItem load(NBTTagCompound nbt) {

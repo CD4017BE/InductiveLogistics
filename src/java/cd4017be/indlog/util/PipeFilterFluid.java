@@ -19,11 +19,11 @@ public class PipeFilterFluid implements IFilter<FluidStack, IFluidHandler> {
 
 	public int maxAmount;
 	public Fluid[] list = new Fluid[0];
-	public byte mode;//1=invert; 2=force; 4=redstone; 8=invertRS
+	public byte mode;//1=invert; 2=force; 4=invertRS; 8=redstone
 	public byte priority;
 
 	public boolean active(boolean rs) {
-		return (mode & 4) == 0 || (rs ^ (mode & 8) != 0);
+		return (mode & 8) == 0 || (rs ^ (mode & 4) != 0);
 	}
 
 	@Override

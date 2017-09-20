@@ -84,9 +84,11 @@ public class ItemComp extends ConComp implements IObjLink {
 	@Override
 	public void dropContent(List<ItemStack> list) {
 		super.dropContent(list);
-		ItemStack item = new ItemStack(Objects.itemFilter);
-		item.setTagCompound(PipeFilterItem.save(filter));
-		list.add(item);
+		if (filter != null) {
+			ItemStack item = new ItemStack(Objects.itemFilter);
+			item.setTagCompound(PipeFilterItem.save(filter));
+			list.add(item);
+		}
 	}
 
 	/**
