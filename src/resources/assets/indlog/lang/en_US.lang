@@ -2,29 +2,39 @@
 #CreativeTab
 itemGroup.indlog=Inductive Logistics
 #Blocks
-tile.indlog.fluid_pipe\:0.name=Liquid Transport Pipe
-tile.indlog.fluid_pipe\:0.tip=Transfers fluids from §6extraction§7 to §6injection pipes§7.\nMoves \\<FluidTiers_TankCap:0> L/t from red to green connections.\nSneak-click to remove a pipe connection.
-tile.indlog.fluid_pipe\:1.name=Liquid Injection Pipe
-tile.indlog.fluid_pipe\:1.tip=Fills fluids into connected tanks/machines.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nSneak-click to remove a pipe connection.
-tile.indlog.fluid_pipe\:2.name=Liquid Extraction Pipe
-tile.indlog.fluid_pipe\:2.tip=Pumps fluids out of connected tanks/machines.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nSneak-click to remove a pipe connection.
+tile.indlog.fluid_pipe\:0.name=Fluid Transport Pipe
+tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Liquid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.
+tile.indlog.fluid_pipe\:1.name=Fluid Injection Pipe
+tile.indlog.fluid_pipe\:1.tip=Acts as destination Pipe. First tries to fill its fluid into connected tanks before passing it on.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nSneak-click to remove a pipe connection.
+tile.indlog.fluid_pipe\:2.name=Fluid Extraction Pipe
+tile.indlog.fluid_pipe\:2.tip=Acts as source Pipe. Drains fluids out of connected tanks to pass them on to the next pipe.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nSneak-click to remove a pipe connection.
 tile.indlog.item_pipe\:0.name=Item Transport Pipe
-tile.indlog.item_pipe\:0.tip=Transfers items from §6extraction§7 to §6injection pipes§7.\nMoves 1 stack/t from red to green connections.\nSneak-click to remove a pipe connection.
+tile.indlog.item_pipe\:0.tip=Contains a one-Slot-Inventory. Receives items through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Item (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.
 tile.indlog.item_pipe\:1.name=Item Injection Pipe
-tile.indlog.item_pipe\:1.tip=Puts items into connected inventories.\nCan be upgraded with an §6Item Pipe Filter§7.\nSneak-click to remove a pipe connection.
-tile.indlog.item_pipe\:2.tip=Pulls items out of connected inventories.\nCan be upgraded with an §6Item Pipe Filter§7.\nSneak-click to remove a pipe connection.
+tile.indlog.item_pipe\:1.tip=Acts as destination Pipe. First tries to puts items into connected inventories before passing it on.\nCan be upgraded with an §6Item Pipe Filter§7.\nSneak-click to remove a pipe connection.
 tile.indlog.item_pipe\:2.name=Item Extraction Pipe
-tile.indlog.warp_pipe.name=Warp Pipe
-tile.indlog.warp_pipe.tip=Transfers items & fluids between connected blocks instantly\nwithout internal storage at 1 stack/t extraction rate.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nside to extract/inject items/fluids from that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nSneak-click to remove a pipe connection.
+tile.indlog.item_pipe\:2.tip=Acts as source Pipe. Pulls items out of connected inventories to pass them on to the next pipe.\nCan be upgraded with an §6Item Pipe Filter§7.\nSneak-click to remove a pipe connection.
+tile.indlog.warp_pipe.name=Advanced Universal Pipe
+tile.indlog.warp_pipe.tip=Transports items and fluids between connected blocks instantly without internal storage.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nsides to extract/inject items/fluids at that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nSneak-click to remove a pipe connection.
 #Items
 item.indlog.fluid_filter.name=Pipe Liquid-Filter
-item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert.
+item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.item_filter.name=Pipe Item-Filter
-item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert.
+item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 
 #GUI tooltips
-gui.cd4017be.rstCtr=Redstone control mode
-gui.cd4017be.filter.state=incl ,excl ,dmg ,nbt ,ore ,keep ,rs1,rs0
+gui.cd4017be.filter.infoF=Behavior\nStock-keeping\nUniversal Pipes
+gui.cd4017be.filter.infoF0=§7Extraction pipes only extract fluids out of connected tanks if they match the filter.\n§7With injection pipes, only fluids that match the filter are filled into connected tanks (if possible), anything else is directly passed on to the next pipe. If not all of the fluid could be inserted then according to the setting it is either passed on to the next pipe or any futher transfer will be blocked until it is fully inserted into the connected Tanks.
+gui.cd4017be.filter.infoF1=§7This function allows you to only fill tanks up to a certain maximum amount or ensures that a certain minimum fluid amount is left over in tanks when draining.
+gui.cd4017be.filter.infoF2=§7The filter allows you to set the destination priority for injective connections (connections without filter have priority 0). It will first serve the destination with the highest priority and then goes on with the next lower priority until all left overs are used up. Where the effect of the "send further" or "keep here" setting is simmilar to that on normal injection pipes\n§7On extractive connections the specified priority only has an effect if the "keep here" setting is used. In this case it will skip all destinations that have a higher priority than the one specified which can be usefull if you want multiple channels that are separated. Example:\n§2Dest priority§7:    5 > 4 | 3 | 2 > 1 > 0\n§4Start priority§7:5^      3^  2^
+gui.cd4017be.filter.infoI=Behavior\nStock-keeping\nUniversal Pipes
+gui.cd4017be.filter.infoI0=§7Extraction pipes only extract items out of connected inventories if they match the filter.\n§7With injection pipes, only items that match the filter are filled into connected inventories (if possible), anything else is directly passed on to the next pipe. If not all of the items could be inserted then according to the setting they are either passed on to the next pipe or any futher transfer will be blocked until they are fully inserted into the connected inventories.
+gui.cd4017be.filter.infoI1=§7This function allows you to fill items into inventories only up to a certain maximum amount or ensures that a certain minimum amount of these items is left over in the inventory when extracting.\n§7If this setting is used in combination with the blacklist setting then the listed items are still stock keeped whereas all non listed items have unlimited transfer.
+gui.cd4017be.filter.infoI2=§7The filter allows you to set the destination priority for injective connections (connections without filter have priority 0). It will first serve the destination with the highest priority and then goes on with the next lower priority until all left overs are used up. Where the effect of the "send further" or "keep here" setting is simmilar to that on normal injection pipes\n§7On extractive connections the specified priority only has an effect if the "keep here" setting is used. In this case it will skip all destinations that have a higher priority than the one specified which can be usefull if you want multiple channels that are separated. Example:\n§2Dest priority§7:    5 > 4 | 3 | 2 > 1 > 0\n§4Start priority§7:5^      3^  2^
+gui.cd4017be.filter.rs0=Always active
+gui.cd4017be.filter.rs2=Active with signal
+gui.cd4017be.filter.rs3=Active without signal
+gui.cd4017be.filter.state=include ,exclude ,dmg ,nbt ,ore ,keep ,rs=ON,rs=OFF
 gui.cd4017be.filter.stock=Stock: %s m³
 gui.cd4017be.priority=Priority: %d
 gui.cd4017be.filter.tryF0=Send further if can't insert
@@ -35,13 +45,13 @@ gui.cd4017be.filter.try0=Send further if can't insert
 gui.cd4017be.filter.try1=Keep matching items here
 gui.cd4017be.filter.invert0=Allow listed items
 gui.cd4017be.filter.invert1=Restrict listed items
-gui.cd4017be.filter.targetF=Target fluid amount [m³]\n0 for drain/fill all
-gui.cd4017be.filter.ore0=OreDictionary names are ignored
-gui.cd4017be.filter.ore1=Equal OreDictionary names match
+gui.cd4017be.filter.targetF=Stocked fluid amount [m³]\n0 for unlimited drain/fill
+gui.cd4017be.filter.ore0=ignored OreDictionary identities
+gui.cd4017be.filter.ore1=use OreDictionary identities
 gui.cd4017be.filter.nbt0=Ignore NBT-data
 gui.cd4017be.filter.nbt1=Check NBT-data
 gui.cd4017be.filter.meta0=Ignore metadata/damage
 gui.cd4017be.filter.meta1=Check metadata/damage
 gui.cd4017be.filter.targetI0=Unlimited extract/insert
-gui.cd4017be.filter.targetI1=Stock-keep listed items
-gui.cd4017be.filter.priority=Destination priority\n(Warp Pipes)
+gui.cd4017be.filter.targetI1=Keep listed items stocked
+gui.cd4017be.filter.priority=Destination priority (Universal Pipe)

@@ -3,27 +3,37 @@
 itemGroup.indlog=Inductive Logistics
 #Blöcke
 tile.indlog.fluid_pipe\:0.name=Flüssigkeitstransportrohr
-tile.indlog.fluid_pipe\:0.tip=Transportiert Flüssigkeit von §6extraktions§7 zu §6injektionsrohr§7en.\nBewegt \\<FluidTiers_TankCap:0> L/t von roten zu grünen verbindungen.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.fluid_pipe\:0.tip=Besitzt ein \\<fluid_pipe_cap> mB Tank. Flüssigkeiten werden über (mehrere) §4Eingangsverbindungen§7 aufgenommen und über eine einzige §2Ausgangsverbindung§7 an das nächste Rohr weitergeleitet. Siehe auch §6Flüssigkeits(injektions|extraktions)rohr\nInteragiere geduckt um Verbindungen zu trennen.
 tile.indlog.fluid_pipe\:1.name=Flüssigkeitsinjektionsrohr
-tile.indlog.fluid_pipe\:1.tip=Füllt Flüssigkeiten in angeschlossene Tanks/Maschinen.\nEs können §6Flüssigkeitsfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.fluid_pipe\:1.tip=Kann ein Rohrende darstellen und versucht Flüssigkeiten zunächst an angeschlossene Tanks abzugeben, bevor sie weitergeleitet werden.\nEs kann ein §6Flüssigkeitsfilter§7 eingefügt werden.\nInteragiere geduckt um Verbindungen zu trennen.
 tile.indlog.fluid_pipe\:2.name=Flüssigkeitsextraktionsrohr
-tile.indlog.fluid_pipe\:2.tip=Saugt Flüssigkeiten aus angeschlossenen Tanks/Maschinen.\nEs können §6Flüssigkeitsfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.fluid_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Flüssigkeiten aus angeschlossenen Tanks um sie weiterzuleiten.\nEs kann ein §6Flüssigkeitsfilter§7 eingefügt werden.\nInteragiere geduckt um Verbindungen zu trennen.
 tile.indlog.item_pipe\:0.name=Itemtransportrohr
-tile.indlog.item_pipe\:0.tip=Transportiert Items von §6extraktions§7 zu §6injektionsrohr§7en.\nBewegt 1 Stapel/t von roten zu grünen verbindungen.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.item_pipe\:0.tip=Besitzt ein 1-Slot Inventar. Items werden über (mehrere) §4Eingangsverbindungen§7 aufgenommen und über eine einzige §2Ausgangsverbindung§7 an das nächste Rohr weitergeleitet. Siehe auch §6Item(injektions|extraktions)rohr\nInteragiere geduckt um Verbindungen zu trennen.
 tile.indlog.item_pipe\:1.name=Iteminjektionsrohr
-tile.indlog.item_pipe\:1.tip=Legt Items in angeschlossene Inventare.\nEs können §6Itemfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.item_pipe\:1.tip=Kann ein Rohrende darstellen und versucht Items zunächst an angeschlossene Inventare abzugeben, bevor sie weitergeleitet werden.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere geduckt um Verbindungen zu trennen.
 tile.indlog.item_pipe\:2.name=Itemextraktionsrohr
-tile.indlog.item_pipe\:2.tip=Zieht Items aus angeschlossenen Inventaren.\nEs können §6Itemfilter§7 installiert werden.\nInteragiere geduckt zur Verbindungstrennung.
-tile.indlog.warp_pipe.name=Warpleitung
-tile.indlog.warp_pipe.tip=Transportiert Items & Flüssigkeiten zwischen\nangeschlossenen Blöcken ohne Verzögerung oder\nZwischenlagerung mit 1 Stapel/t Extraktionsrate.\nInstalliere §6(Item|Flüssigkeits)(extraktions|injektions)rohr§7e an den Seiten\num Items/Flüssigkeiten von dieser Seite zu extrahieren/injizieren.\n§6(Item|Flüssigkeits)filter§7 werden für alle Seiten separat verwendet.\nInteragiere geduckt zur Verbindungstrennung.
+tile.indlog.item_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Items aus angeschlossenen Inventaren um sie weiterzuleiten.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.warp_pipe.name=erweitertes Universalrohr
+tile.indlog.warp_pipe.tip=Transportiert sowohl Items als auch Flüssigkeiten zwischen angeschlossenen Blöcken ohne Verzögerung oder Zwischenlagerung.\nInteragiere mit §6(Item|Flüssigkeits)(extraktions|injektions)rohr§7 in der Hand auf die Seiten\num Items/Flüssigkeiten von dieser Seite zu extrahieren/injizieren.\n§6(Item|Flüssigkeits)filter§7 werden für alle Seiten separat verwendet.\nInteragiere geduckt um Verbindungen zu trennen bzw. Rohranschlüsse wieder zu entnehmen.
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
-item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen.
+item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
 item.indlog.item_filter.name=Itemfilter
-item.indlog.item_filter.tip=Filter für §6Item(extraktions|injektions)rohr§7e und den §6Itemsortierer§7.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen.
+item.indlog.item_filter.tip=Filter für §6Item(extraktions|injektions)rohr§7e und den §6Itemsortierer§7.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
 
 #GUI Tooltips
-gui.cd4017be.rstCtr=Redstone-steuerung
+gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
+gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
+gui.cd4017be.filter.infoF1=§7Diese Funktion ermöglicht es, Tanks nur bis zu einer bestimmten maximalen Menge zu befüllen und umgekehrt beim entnehmen sicherzustellen, dass immer eine gewisse Mindestmenge in Tank bleibt.
+gui.cd4017be.filter.infoF2=§7Bei Injektionsanschlüssen lässt sich mithilfe des Filters deren Zielpriorität festlegen (Anschlüsse ohne Filter haben Priorität 0). Das Ziel mit der höchsten Priorität wird zuerst beliefert und der nicht angenommene Rest jeweils an das Ziel mit nächst niedrigerer Priorität weitergeleitet. Die "weiterleiten" bzw. "blockieren" Einstellung wird hier ähnlich, wie bei normalen Rohren angewand.\n§7Bei Extraktionsanschlüssen ist die eingestellte Priorität nur relevant, wenn die "hier behalten"-Einstellung gewählt ist, in dem Fall werden beim beliefern alle Ziele übersprungen, deren Priorität höher ist als diese. Dies ist nützlich, um voneinander getrennte Kanäle zu betreiben. Beispiel:\n§2Zielpriorität§7:    5 > 4 | 3 | 2 > 1 > 0\n§4Startpriorität§7:5^      3^  2^
+gui.cd4017be.filter.infoI=Funktionsweise\nVorratshaltung\nUniversalrohre
+gui.cd4017be.filter.infoI0=§7Bei Extraktionsrohren werden aus den angeschlossenen Inventaren nur Items entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Items, die dem Filter entsprechen, in die angeschlossenen Inventare gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Inventare zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Inventare erreicht werden konnte.
+gui.cd4017be.filter.infoI1=§7Diese Funktion ermöglicht es, Inventare mit den im Filter angegebenen Items jeweils nur bis zu einer bestimmten Maximalanzahl zu befüllen (jeweilige Stapelgröße) und umgekehrt beim entnehmen sicherzustellen, dass von diesen Items immer jeweils eine gewisse Mindestmenge in Inventar bleibt.\n§7Wird diese Einstellung bei invertiertem Filter verwendet, so werden die aufgelisteten Items trotzdem auf Vorrat gehalten wohingegen alle nicht gelisteten Items unbegrenzt Transferiert werden.
+gui.cd4017be.filter.infoI2=§7Bei Injektionsanschlüssen lässt sich mithilfe des Filters deren Zielpriorität festlegen (Anschlüsse ohne Filter haben Priorität 0). Das Ziel mit der höchsten Priorität wird zuerst beliefert und der nicht angenommene Rest jeweils an das Ziel mit nächst niedrigerer Priorität weitergeleitet. Die "weiterleiten" bzw. "blockieren" Einstellung wird hier ähnlich, wie bei normalen Rohren angewand.\n§7Bei Extraktionsanschlüssen ist die eingestellte Priorität nur relevant, wenn die "hier behalten"-Einstellung gewählt ist, in dem Fall werden beim beliefern alle Ziele übersprungen, deren Priorität höher ist als diese. Dies ist nützlich, um voneinander getrennte Kanäle zu betreiben. Beispiel:\n§2Zielpriorität§7:    5 > 4 | 3 | 2 > 1 > 0\n§4Startpriorität§7:5^      3^  2^
+gui.cd4017be.filter.rs0=Immer aktiv
+gui.cd4017be.filter.rs2=Aktiv wenn Redstone-Signal an
+gui.cd4017be.filter.rs3=Aktiv wenn Redstone-Signal aus
 gui.cd4017be.filter.state=erlauben ,verbieten ,meta ,nbt ,ore ,halten ,rs=ON,rs=OFF
 gui.cd4017be.filter.stock=%s m³ auf Vorrat
 gui.cd4017be.priority=Priorität: %d
@@ -35,7 +45,7 @@ gui.cd4017be.filter.try0=Weiter schicken, wenn Inventar voll
 gui.cd4017be.filter.try1=Erlaubte Items hier behalten
 gui.cd4017be.filter.invert0=Angegebene Items erlauben
 gui.cd4017be.filter.invert1=Angegebene Items verbieten
-gui.cd4017be.filter.targetF=Auf Vorrat zu haltene Menge[m³]\n0 = unbegrenzt befüllen/entleeren
+gui.cd4017be.filter.targetF=Auf Vorrat zu haltene Menge [m³]\n0 = unbegrenzt befüllen/entleeren
 gui.cd4017be.filter.ore0=OreDictionary-Identitäten ignorieren
 gui.cd4017be.filter.ore1=OreDictionary-Identitäten verwenden
 gui.cd4017be.filter.nbt0=NBT-Daten ignorieren
@@ -44,4 +54,4 @@ gui.cd4017be.filter.meta0=Metadata/Schaden ignorieren
 gui.cd4017be.filter.meta1=Metadata/Schaden beachten
 gui.cd4017be.filter.targetI0=Unbegrenzt entnehmen/einfügen
 gui.cd4017be.filter.targetI1=Angegebene Items auf Vorrat halten
-gui.cd4017be.filter.priority=Zielpriorität (Warpleitung)
+gui.cd4017be.filter.priority=Zielpriorität (Universalrohr)

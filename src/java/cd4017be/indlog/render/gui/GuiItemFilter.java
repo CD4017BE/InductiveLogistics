@@ -33,8 +33,9 @@ public class GuiItemFilter extends GuiMachine {
 		guiComps.add(new Button(3, 151, 24, 18, 9, 0).texture(212, 0).setTooltip("filter.nbt#"));
 		guiComps.add(new Button(4, 133, 33, 18, 18, 0).texture(194, 18).setTooltip("filter.ore#"));
 		guiComps.add(new Button(5, 151, 33, 18, 18, 0).texture(212, 18).setTooltip("filter.targetI#"));
-		guiComps.add(new Button(6, 115, 15, 9, 18, 0).texture(230, 0).setTooltip("rstCtr"));
+		guiComps.add(new Button(6, 115, 15, 9, 18, 0).texture(230, 0).setTooltip("filter.rs#"));
 		guiComps.add(new TextField(7, 144, 16, 24, 7, 4).setTooltip("filter.priority"));
+		guiComps.add(new InfoTab(8, 7, 6, 7, 8, "filter.infoI"));
 	}
 
 	@Override
@@ -55,8 +56,9 @@ public class GuiItemFilter extends GuiMachine {
 			byte mode = item != null && item.hasTagCompound() ? item.getTagCompound().getByte("mode") : 0;
 			if (id != 6) mode ^= 1 << id;
 			else {
-				if ((mode & 192) != 64) mode ^= 64;
-				if ((mode & 64) != 0) mode ^= 128;
+				if ((mode & 128) == 128) mode ^= 64;
+				if ((mode & 64) == 0) mode ^= 128;
+				if ((mode & 192) == 64) mode &= 63;
 			}
 			dos.writeByte(0);
 			dos.writeByte(mode);
