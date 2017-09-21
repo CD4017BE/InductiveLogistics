@@ -1,0 +1,16 @@
+v0.0.0:
+Ported InductiveAutomation features:
+- Item Pipes
+- Fluid Pipes
+- Universal Pipe
+- Filters
+Changes (relative to IA):
+- improved ingame documentation
+- pipes can only have one destination to pass on their contents now
+- made extraction rate of Universal Pipes also configurable
+- new pipe textures 
+- changed recipes
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.0.2
