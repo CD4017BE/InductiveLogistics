@@ -7,7 +7,7 @@ core(size) {
 con(size) {
 	Loc a = 8 - size/2, b = 8 + size/2;
 	Loc Q = [a,a,0, b,b,a]#, T = [0,a, a,b]#;
-	for(F:["-vU","+vU","v-U","v+U"]) {add(rect(Q, T, F));}
+	for(F:["-vu","+Vu","v-u","V+u"]) {add(rect(Q, T, F));}
 	add(rect(Q, [a,a, b,b]#, "uv-N"));
 }
 
