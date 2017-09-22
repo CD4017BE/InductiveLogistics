@@ -1,0 +1,16 @@
+{
+	Loc tex = "indlog:block/tank";
+	textures = [
+		[tex,"_basic"]$,
+		[tex,"_big"]$,
+		[tex,"_extreme"]$
+	];
+}
+
+main(t) {
+	if(t >= #textures) {t = #textures - 1;}
+	Loc Q = [0,0,0, 16,16,16]#, T = [0,0, 16,16]#;
+	for(F:["u-vB","u+vT","UV-N","UV+S","-VUW","+VUE"]) {
+		add(rect(Q, T, F, t));
+	}
+}

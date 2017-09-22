@@ -22,6 +22,8 @@ item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions
 item.indlog.item_filter.name=Itemfilter
 item.indlog.item_filter.tip=Filter für §6Item(extraktions|injektions)rohr§7e und den §6Itemsortierer§7.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
 
+#GUI namen
+gui.indlog.tank.name=Tank
 #GUI Tooltips
 gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
 gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
@@ -55,3 +57,9 @@ gui.cd4017be.filter.meta1=Metadata/Schaden beachten
 gui.cd4017be.filter.targetI0=Unbegrenzt entnehmen/einfügen
 gui.cd4017be.filter.targetI1=Angegebene Items auf Vorrat halten
 gui.cd4017be.filter.priority=Zielpriorität (Universalrohr)
+gui.cd4017be.tank.lock0=Flüssigkeitstyp frei
+gui.cd4017be.tank.lock1=Flüssigkeitstyp fest
+gui.cd4017be.tank.dir0=Behälter entleeren
+gui.cd4017be.tank.dir1=Behälter auffüllen
+gui.cd4017be.tank.del0=Tankinhalt löschen
+gui.cd4017be.tank.del1=§4Sicher? Er ist für immer verloren!

@@ -22,6 +22,8 @@ item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe�
 item.indlog.item_filter.name=Pipe Item-Filter
 item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 
+#GUI names
+gui.indlog.tank.name=Tank
 #GUI tooltips
 gui.cd4017be.filter.infoF=Behavior\nStock-keeping\nUniversal Pipes
 gui.cd4017be.filter.infoF0=§7Extraction pipes only extract fluids out of connected tanks if they match the filter.\n§7With injection pipes, only fluids that match the filter are filled into connected tanks (if possible), anything else is directly passed on to the next pipe. If not all of the fluid could be inserted then according to the setting it is either passed on to the next pipe or any futher transfer will be blocked until it is fully inserted into the connected Tanks.
@@ -55,3 +57,9 @@ gui.cd4017be.filter.meta1=Check metadata/damage
 gui.cd4017be.filter.targetI0=Unlimited extract/insert
 gui.cd4017be.filter.targetI1=Keep listed items stocked
 gui.cd4017be.filter.priority=Destination priority (Universal Pipe)
+gui.cd4017be.tank.lock0=Fluid type unlocked
+gui.cd4017be.tank.lock1=Fluid type locked
+gui.cd4017be.tank.dir0=Drain fluid containers
+gui.cd4017be.tank.dir1=Fill fluid containers
+gui.cd4017be.tank.del0=Delete contained fluid
+gui.cd4017be.tank.del1=§4Sure? It's lost forever!
