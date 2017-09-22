@@ -16,6 +16,17 @@ tile.indlog.item_pipe\:2.name=Item Extraction Pipe
 tile.indlog.item_pipe\:2.tip=Acts as source Pipe. Pulls items out of connected inventories to pass them on to the next pipe.\nCan be upgraded with an §6Item Pipe Filter§7.\nSneak-click to remove a pipe connection.
 tile.indlog.warp_pipe.name=Advanced Universal Pipe
 tile.indlog.warp_pipe.tip=Transports items and fluids between connected blocks instantly without internal storage.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nsides to extract/inject items/fluids at that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nSneak-click to remove a pipe connection.
+tile.indlog.tank\:0.name=Fluid Tank §8tiny
+tile.indlog.tank\:1.name=Fluid Tank §4small
+tile.indlog.tank\:2.name=Fluid Tank §6normal
+tile.indlog.tank\:3.name=Fluid Tank §elarge
+tile.indlog.tank\:4.name=Fluid Tank §2huge
+tile.indlog.tank\:5.name=Fluid Tank §3extreme
+tile.indlog.tank\:6.name=Fluid Tank §1hyper
+tile.indlog.tank\:7.name=Fluid Tank §5ultimate
+tile.indlog.tank\:i.tip=Automatically outputs contained fluids to the bottom.\nCapable of automatic draining/filling fluid containers.\nKeeps its content when broken.
+tile.indlog.tank.stor=Contains %s: %1$.5uB / %2$.5uB
+tile.indlog.tank.empty=Capacity: %.5uB
 #Items
 item.indlog.fluid_filter.name=Pipe Liquid-Filter
 item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).

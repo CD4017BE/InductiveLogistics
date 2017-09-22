@@ -16,6 +16,17 @@ tile.indlog.item_pipe\:2.name=Itemextraktionsrohr
 tile.indlog.item_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Items aus angeschlossenen Inventaren um sie weiterzuleiten.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere geduckt um Verbindungen zu trennen.
 tile.indlog.warp_pipe.name=erweitertes Universalrohr
 tile.indlog.warp_pipe.tip=Transportiert sowohl Items als auch Flüssigkeiten zwischen angeschlossenen Blöcken ohne Verzögerung oder Zwischenlagerung.\nInteragiere mit §6(Item|Flüssigkeits)(extraktions|injektions)rohr§7 in der Hand auf die Seiten\num Items/Flüssigkeiten von dieser Seite zu extrahieren/injizieren.\n§6(Item|Flüssigkeits)filter§7 werden für alle Seiten separat verwendet.\nInteragiere geduckt um Verbindungen zu trennen bzw. Rohranschlüsse wieder zu entnehmen.
+tile.indlog.tank\:0.name=Flüssigkeitstank §8winzig
+tile.indlog.tank\:1.name=Flüssigkeitstank §4klein
+tile.indlog.tank\:2.name=Flüssigkeitstank §6normal
+tile.indlog.tank\:3.name=Flüssigkeitstank §egroß
+tile.indlog.tank\:4.name=Flüssigkeitstank §2riesig
+tile.indlog.tank\:5.name=Flüssigkeitstank §3extrem
+tile.indlog.tank\:6.name=Flüssigkeitstank §1hyper
+tile.indlog.tank\:7.name=Flüssigkeitstank §5ultimativ
+tile.indlog.tank\:i.tip=Gibt Flüssigkeit automatisch nach unten ab.\nErmöglicht das befüllen/entleeren von Flüssigkeitsbehältern.\nBehält seinen Inhalt beim abbauen.
+tile.indlog.tank.stor=Inhalt: %s %1$.5u / %2$.5u m³
+tile.indlog.tank.empty=Kapazität: %.5u m³
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
 item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
