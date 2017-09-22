@@ -9,6 +9,8 @@ import cd4017be.indlog.Main;
 import cd4017be.lib.render.IModeledTESR;
 import cd4017be.lib.render.SpecialModelLoader;
 import cd4017be.lib.render.model.IntArrayModel;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -28,8 +30,8 @@ public class FluidRenderer implements IModeledTESR {
 
 	private static final String name = "fluid_block";
 	public static final FluidRenderer instance = new FluidRenderer();
-	private IntArrayModel baseModel; 
-	private HashMap<Fluid, IntArrayModel> fluidModels;
+	private IntArrayModel baseModel = new IntArrayModel(0);
+	private HashMap<Fluid, IntArrayModel> fluidModels = new HashMap<Fluid, IntArrayModel>();
 
 	public IntArrayModel getFor(Fluid fluid) {
 		IntArrayModel m = fluidModels.get(fluid);
@@ -56,10 +58,7 @@ public class FluidRenderer implements IModeledTESR {
 		Fluid fluid = stack.getFluid();
 		IntArrayModel m = getFor(fluid);
 		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.depthMask(false);
-		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.Profile.TRANSPARENT_MODEL.apply();
 		m.setColor(fluid.getColor(stack));
 		m.setBrightness(te.getWorld().getCombinedLight(te.getPos(), fluid.getLuminosity(stack)));
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
