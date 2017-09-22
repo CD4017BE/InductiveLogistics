@@ -1,10 +1,15 @@
-VERSION = 6;
+VERSION = 12;
 
+!internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
-fluid_pipe_tick = 4;
+!pipe extraction interval in ticks
+fluid_pipe_tick = 4; 
 item_pipe_tick = 4;
 fluid_warp_tick = 4;
 item_warp_tick = 4;
+!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)
+!theoretically up to 16 tanks can be defined here but tanks 8-15 will be missing translation and models unless you make a resource pack.
+{tank_caps = [1000, 8000, 64000, 512000, 4096000, 32768000, 262144000, 2097152000]#;}
 
 INIT() {
 	add("shaped", it("fluidPipeT", 8), "000/1 1/000", "blockGlass", it("minecraft:iron_bars"));
@@ -20,4 +25,16 @@ INIT() {
 	add("shapedNBT", "#mode,#ore,#prior,#Items", it("item.item_filter", 2), "0/0", it("item.item_filter"));
 	add("shapeless", it("item.fluid_filter"), it("item.fluid_filter"));
 	add("shapeless", it("item.item_filter"), it("item.item_filter"));
+	Loc nbt = "#FluidName,#Tag,#Amount";
+	add("shaped", it("tile.tank"), "000/0 0/000", "paneGlass");
+	add("shapedNBT", nbt, it("tile.tank", 1, 1), " 0 /010/ 0 ", "blockGlass", "ingotIron");
+	add("shapedNBT", nbt, it("tile.tank", 1, 3), "000/010/000", "ingotGold", it("tile.tank", 1, 2));
+	add("shapedNBT", nbt, it("tile.tank", 1, 4), " 0 /212/ 0 ", "blockQuartz", it("tile.tank", 1, 3), "gemEmerald", "glowstone");
+	add("shapedNBT", nbt, it("tile.tank", 1, 5), "000/010/000", "gemDiamond", it("tile.tank", 1, 4));
+	add("shapedNBT", nbt, it("tile.tank", 1, 6), "323/010/323", "netherStar", it("tile.tank", 1, 5), "blockLapis", "enderpearl");
+	for (i:7) {
+		Loc pre = it("tile.tank", 1, i), next = it("tile.tank", 1, i + 1);
+		add("shapedNBT", "=FluidName,=Tag,+Amount", next, "000/0 0/000", pre);
+		add("shapedNBT", "#FluidName,#Tag,+Amount", it(pre, 8), "0", next);
+	}
 }

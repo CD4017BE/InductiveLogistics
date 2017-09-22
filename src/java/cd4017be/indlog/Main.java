@@ -24,7 +24,7 @@ public class Main {
 	public static CommonProxy proxy;
 
 	public Main() {
-		RecipeScriptContext.scriptRegistry.add(new Version(ConfigName, 6, "/assets/" + ID + "/config/recipes.rcp"));
+		RecipeScriptContext.scriptRegistry.add(new Version(ConfigName, 12, "/assets/" + ID + "/config/recipes.rcp"));
 	}
 
 	@Mod.EventHandler
