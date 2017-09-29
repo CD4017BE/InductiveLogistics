@@ -1,11 +1,13 @@
 package cd4017be.indlog.render.gui;
 
 import cd4017be.indlog.Main;
+import cd4017be.indlog.render.RenderItemOverride;
 import cd4017be.indlog.tileentity.Buffer;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.GuiMachine;
 import cd4017be.lib.Gui.TileContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -89,6 +91,12 @@ public class GuiItemBuffer extends GuiMachine {
 			for (int h = h0; h < h1; h++) drawTexturedModalRect(guiLeft, guiTop + h * 18 + 15, 0, ty, xSize, 18);
 			if (w1 > 7) drawTexturedModalRect(guiLeft, guiTop + h1 * 18 + 15, 0, ty, w1, 18);
 		}
+	}
+
+	@Override
+	public void setWorldAndResolution(Minecraft mc, int width, int height) {
+		super.setWorldAndResolution(mc, width, height);
+		this.itemRender = RenderItemOverride.instance();
 	}
 
 }
