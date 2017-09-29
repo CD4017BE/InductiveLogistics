@@ -11,7 +11,6 @@ import cd4017be.lib.block.VariantBlock;
 import cd4017be.lib.templates.TabMaterials;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -49,7 +48,7 @@ public class Objects {
 		i_tank = new ItemTank((tank = VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class)).setCreativeTab(tabIndLog).setLightOpacity(0));
 		i_buffer = new ItemBuffer((buffer = VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class)).setCreativeTab(tabIndLog));
 		
-		tabIndLog.item = new ItemStack(Blocks.HOPPER); //TODO set CreativeTab item
+		tabIndLog.item = new ItemStack(i_itemPipe);
 	}
 
 	//Items
