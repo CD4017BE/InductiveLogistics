@@ -27,6 +27,24 @@ tile.indlog.tank\:7.name=Flüssigkeitstank §5ultimativ
 tile.indlog.tank\:i.tip=Gibt Flüssigkeit automatisch nach unten ab.\nErmöglicht das befüllen/entleeren von Flüssigkeitsbehältern.\nBehält seinen Inhalt beim abbauen.
 tile.indlog.tank.stor=Inhalt: %s %1$.5u / %2$.5u m³
 tile.indlog.tank.empty=Kapazität: %.5u m³
+tile.indlog.buffer\:0.name=Item Puffer §6normal-S
+tile.indlog.buffer\:1.name=Item Puffer §6normal-M
+tile.indlog.buffer\:2.name=Item Puffer §6normal-L
+tile.indlog.buffer\:3.name=Item Puffer §6normal-XL
+tile.indlog.buffer\:4.name=Item Puffer §eerweitert-S
+tile.indlog.buffer\:5.name=Item Puffer §eerweitert-M
+tile.indlog.buffer\:6.name=Item Puffer §eerweitert-L
+tile.indlog.buffer\:7.name=Item Puffer §eerweitert-XL
+tile.indlog.buffer\:8.name=Item Puffer §bextrem-S
+tile.indlog.buffer\:9.name=Item Puffer §bextrem-M
+tile.indlog.buffer\:10.name=Item Puffer §bextrem-L
+tile.indlog.buffer\:11.name=Item Puffer §bextrem-XL
+tile.indlog.buffer\:12.name=Item Puffer §5ultimativ-S
+tile.indlog.buffer\:13.name=Item Puffer §5ultimativ-M
+tile.indlog.buffer\:14.name=Item Puffer §5ultimativ-L
+tile.indlog.buffer\:15.name=Item Puffer §5ultimativ-XL
+tile.indlog.buffer\:i.tip=Lagerinventar mit einstellbarer Slotanzahl & Stapelbegrenzung.
+tile.indlog.buffer.stor=%d / %d Slots gefüllt @ Stapellimit: %d
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
 item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
@@ -35,6 +53,7 @@ item.indlog.item_filter.tip=Filter für §6Item(extraktions|injektions)rohr§7e 
 
 #GUI namen
 gui.indlog.tank.name=Tank
+gui.indlog.buffer.name=Item Puffer
 #GUI Tooltips
 gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
 gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
@@ -74,3 +93,8 @@ gui.cd4017be.tank.dir0=Behälter entleeren
 gui.cd4017be.tank.dir1=Behälter auffüllen
 gui.cd4017be.tank.del0=Tankinhalt löschen
 gui.cd4017be.tank.del1=§4Sicher? Er ist für immer verloren!
+gui.cd4017be.buffer.slots=Slot-Limit:\n%d / %d
+gui.cd4017be.buffer.stack=Stapel-Limit:\n%d / %d
+gui.cd4017be.buffer.info=Größenskalierung\nSlot Interaktion
+gui.cd4017be.buffer.info0=§7Mit den beiden Schiebereglern unten rechts kann eingestellt werden wieviele Slots für externe Automatisierung zur Verfügung gestellt werden sollen und bis zu welcher Stapelanzahl die Slots jeweils maximal gefüllt werden sollen. Dabei wird das Item-spezifische standart Stapellimit ignoriert.
+gui.cd4017be.buffer.info1=§7In diesem Inventar verhalten sich die Slots etwas anders als normalerweise, um mit übergroßen Item-Stapeln umgehen zu können:\n§7Klicke §emit Item am Cursor§7 zum hineinlegen, Rechtsklick: 1, Linksklick: alle, shift-RK: alle Items von gleichen Typ aus dem gesammten Inventar, shift-LK: alle Items von gleichen Typ aus dem gesammten Inventar + Item am Cursor.\n§7Klicke §eohne Item am cursor§7 zu herausnehmen: Linksklick: 1 Item, Rechtsklick: 8 Items, shift-LK: 1 ganzen Stapel, shift-RK: alles bis Inventar voll.
