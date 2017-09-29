@@ -33,18 +33,21 @@ public class Objects {
 	public static BlockPipe fluidPipe;
 	public static BlockPipe warpPipe;
 	public static VariantBlock tank;
+	public static VariantBlock buffer;
 	
 	//ItemBlocks
 	public static ItemItemPipe i_itemPipe;
 	public static ItemFluidPipe i_fluidPipe;
 	public static DefaultItemBlock i_warpPipe;
 	public static ItemTank i_tank;
+	public static ItemBuffer i_buffer;
 
 	static void createBlocks() {
 		i_itemPipe = new ItemItemPipe((itemPipe = BlockPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3).setSize(0.25)).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F));
 		i_fluidPipe = new ItemFluidPipe((fluidPipe = BlockPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 3).setSize(0.25)).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F));
 		i_warpPipe = new DefaultItemBlock((warpPipe = BlockPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25)).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(1.0F).setResistance(20F));
 		i_tank = new ItemTank((tank = VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class)).setCreativeTab(tabIndLog).setLightOpacity(0));
+		i_buffer = new ItemBuffer((buffer = VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class)).setCreativeTab(tabIndLog));
 		
 		tabIndLog.item = new ItemStack(Blocks.HOPPER); //TODO set CreativeTab item
 	}
