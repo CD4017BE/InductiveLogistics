@@ -1,4 +1,4 @@
-VERSION = 12;
+VERSION = 15;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -7,9 +7,15 @@ fluid_pipe_tick = 4;
 item_pipe_tick = 4;
 fluid_warp_tick = 4;
 item_warp_tick = 4;
-!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)
-!theoretically up to 16 tanks can be defined here but tanks 8-15 will be missing translation and models unless you make a resource pack.
-{tank_caps = [1000, 8000, 64000, 512000, 4096000, 32768000, 262144000, 2097152000]#;}
+{
+	!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)
+	!theoretically up to 16 tanks can be defined here but tanks 8-15 will be missing translation and models unless you make a resource pack.
+	tank_caps = [1000, 8000, 64000, 512000, 4096000, 32768000, 262144000, 2097152000]#;
+	!slot count and stacksize limit of all the item buffers
+	buffer_slots = [12, 24, 48, 96,  12,  24,  48,  96,   12,   24,   48,   96,   12,   24,   48,   96]#;
+	buffer_stack = [64, 64, 64, 64, 256, 256, 256, 256, 1024, 1024, 1024, 1024, 4096, 4096, 4096, 4096]#;
+}
+
 
 INIT() {
 	add("shaped", it("fluidPipeT", 8), "000/1 1/000", "blockGlass", it("minecraft:iron_bars"));
@@ -36,5 +42,16 @@ INIT() {
 		Loc pre = it("tile.tank", 1, i), next = it("tile.tank", 1, i + 1);
 		add("shapedNBT", "=FluidName,=Tag,+Amount", next, "000/0 0/000", pre);
 		add("shapedNBT", "#FluidName,#Tag,+Amount", it(pre, 8), "0", next);
+	}
+	add("shaped", it("tile.buffer", 1, 1), "010/121/010", "stickWood", it("minecraft:iron_bars"), it("minecraft:chest"));
+	add("shaped", it("tile.buffer", 1, 5), "000/010/000", "ingotIron", it("tile.buffer", 1, 1));
+	add("shaped", it("tile.buffer", 1, 9), "000/010/000", "ingotGold", it("tile.buffer", 1, 5));
+	add("shaped", it("tile.buffer", 1, 13), "202/010/202", "gemDiamond", it("tile.buffer", 1, 9), "enderpearl");
+	for (i:4) {
+		for (j:3) {
+			Loc pre = it("tile.buffer", 1, i*4 + j), next = it("tile.buffer", 1, i*4 + j + 1);
+			add("shaped", next, "00", pre);
+			add("shaped", it(pre, 2), "0", next);
+		}
 	}
 }
