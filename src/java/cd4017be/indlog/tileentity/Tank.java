@@ -154,6 +154,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 		if (!item.isEmpty()) nbt.setTag("item", item.writeToNBT(new NBTTagCompound()));
 		nbt.setBoolean("lock", lockType);
 		nbt.setBoolean("fill", fill);
+		nbt.setByte("type", type);
 		return super.writeToNBT(nbt);
 	}
 
