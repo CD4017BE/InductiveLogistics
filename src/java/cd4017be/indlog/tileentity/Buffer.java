@@ -27,8 +27,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiData, ClientPacketReceiver {
 
-	public static final int[] SLOTS = {8, 16, 32, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-							STACKS = {8, 64, 512, 4096, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	public static final int[] SLOTS = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+							STACKS = {64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 	public final VariableInventory inventory;
 	public byte type;
@@ -66,7 +66,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		type = nbt.getByte("type");
-		inventory.items = new ItemStack[STACKS[type]];
+		inventory.items = new ItemStack[SLOTS[type]];
 		load(nbt);
 	}
 
@@ -83,8 +83,8 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	}
 
 	private void load(NBTTagCompound nbt) {
-		inventory.slots = nbt.getByte("slots");
-		inventory.stackSize = nbt.getShort("stack");
+		inventory.slots = nbt.getByte("slots") & 0xff;
+		inventory.stackSize = nbt.getShort("stack") & 0xffff;
 		Arrays.fill(inventory.items, ItemStack.EMPTY);
 		for (NBTBase t : nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND)) {
 			NBTTagCompound tag = (NBTTagCompound)t;
