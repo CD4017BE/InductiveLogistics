@@ -1,6 +1,5 @@
 package cd4017be.indlog.util;
 
-import cd4017be.lib.util.IFilter;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,13 +14,15 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
  *
  * @author CD4017BE
  */
-public class PipeFilterFluid implements IFilter<FluidStack, IFluidHandler> {
+public class PipeFilterFluid implements PipeFilter<FluidStack, IFluidHandler> {
 
 	public int maxAmount;
 	public Fluid[] list = new Fluid[0];
-	public byte mode;//1=invert; 2=force; 4=invertRS; 8=redstone
+	/** 1=invert; 2=force; 4=invertRS; 8=redstone */
+	public byte mode;
 	public byte priority;
 
+	@Override
 	public boolean active(boolean rs) {
 		return (mode & 8) == 0 || (rs ^ (mode & 4) != 0);
 	}
@@ -79,6 +80,11 @@ public class PipeFilterFluid implements IFilter<FluidStack, IFluidHandler> {
 			}
 		}
 		return listed ^ (mode & 1) == 0;
+	}
+
+	@Override
+	public boolean blocking() {
+		return (mode & 2) != 0;
 	}
 
 	public static PipeFilterFluid load(NBTTagCompound nbt) {

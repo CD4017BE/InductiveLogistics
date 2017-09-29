@@ -15,7 +15,7 @@ public class ItemPipeRenderer extends TileEntitySpecialRenderer<ItemPipe> {
 
 	@Override
 	public void renderTileEntityAt(ItemPipe te, double x, double y, double z, float partialTicks, int destroyStage) {
-		if (te.inventory != null) renderItem(te.inventory, x, y, z);
+		if (te.content != null) renderItem(te.content, x, y, z);
 	}
 
 	private void renderItem(ItemStack item, double x, double y, double z) {

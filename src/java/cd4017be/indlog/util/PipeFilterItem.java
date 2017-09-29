@@ -1,6 +1,5 @@
 package cd4017be.indlog.util;
 
-import cd4017be.lib.util.IFilter;
 import cd4017be.lib.util.ItemFluidUtil;
 import cd4017be.lib.util.Utils.ItemType;
 import net.minecraft.item.ItemStack;
@@ -15,13 +14,15 @@ import net.minecraftforge.oredict.OreDictionary;
  *
  * @author CD4017BE
  */
-public class PipeFilterItem implements IFilter<ItemStack, IItemHandler> {
+public class PipeFilterItem implements PipeFilter<ItemStack, IItemHandler> {
 
 	public ItemStack[] list = new ItemStack[0];
 	public int[] ores;
-	public byte mode;//1=invert; 2=force; 4=meta; 8=nbt; 16=ore; 32=count; 64=invertRS; 128=redstone
+	/** 1=invert; 2=force; 4=meta; 8=nbt; 16=ore; 32=count; 64=invertRS; 128=redstone */
+	public byte mode;
 	public byte priority;
 
+	@Override
 	public boolean active(boolean rs) {
 		return (mode & 128) == 0 || (rs ^ (mode & 64) != 0);
 	}
@@ -161,6 +162,11 @@ public class PipeFilterItem implements IFilter<ItemStack, IItemHandler> {
 		for (int j : OreDictionary.getOreIDs(item))
 			if (j == o) return true;
 		return false;
+	}
+
+	@Override
+	public boolean blocking() {
+		return (mode & 2) != 0;
 	}
 
 }

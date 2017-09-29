@@ -23,8 +23,8 @@ public class CommonProxy {
 	private void setConfig() {
 		ConfigConstants cfg = new ConfigConstants(RecipeScriptContext.instance.modules.get(Main.ConfigName));
 		FluidPipe.CAP = (int)cfg.getNumber("fluid_pipe_cap", 1000);
-		FluidPipe.TICKS = (byte)cfg.getNumber("fluid_pipe_tick", 1);
-		ItemPipe.TICKS = (byte)cfg.getNumber("item_pipe_tick", 1);
+		FluidPipe.TICKS = Math.max((int)cfg.getNumber("fluid_pipe_tick", 1), 1);
+		ItemPipe.TICKS = Math.max((int)cfg.getNumber("item_pipe_tick", 1), 1);
 		FluidExtractor.TICKS = (byte)cfg.getNumber("fluid_warp_tick", 1);
 		ItemExtractor.TICKS = (byte)cfg.getNumber("item_warp_tick", 1);
 		cfg.getVect("tank_caps", Tank.CAP);

@@ -15,12 +15,12 @@ import net.minecraft.util.ITickable;
 import java.util.List;
 
 import static cd4017be.lib.util.PropertyByte.cast;
-import cd4017be.api.automation.IFluidPipeCon;
-import cd4017be.api.automation.IItemPipeCon;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.BasicWarpPipe;
 import cd4017be.indlog.multiblock.ConComp;
 import cd4017be.indlog.multiblock.WarpPipePhysics;
+import cd4017be.indlog.util.IFluidPipeCon;
+import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
@@ -127,19 +127,16 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	}
 
 	@Override
-	public byte getItemConnectType(int s) {
-		byte t = comp.con[s];
-		return (byte)(t == 2 ? 1 : t == 3 ? 2 : 0);
+	public byte getFluidConnectDir(EnumFacing s) {
+		byte t = comp.con[s.ordinal()];
+		return (byte)(t == 4 ? 2 : t == 5 ? 1 : 0);
 	}
 
 	@Override
-	public byte getFluidConnectType(int s) {
-		byte t = comp.con[s];
-		return (byte)(t == 4 ? 1 : t == 5 ? 2 : 0);
+	public byte getItemConnectDir(EnumFacing s) {
+		byte t = comp.con[s.ordinal()];
+		return (byte)(t == 2 ? 2 : t == 3 ? 1 : 0);
 	}
-
-	@Override
-	public ItemStack insert(ItemStack item, EnumFacing side) {return item;}
 
 	@Override
 	public void onPlaced(EntityLivingBase entity, ItemStack item) {
