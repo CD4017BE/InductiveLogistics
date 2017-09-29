@@ -1,0 +1,19 @@
+{
+	Loc tex = "indlog:block/buffer";
+	textures = [[tex,"_side0"]$, [tex,"_side1"]$, [tex,"_side2"]$, [tex,"_side3"]$, [tex,"_top0"]$, [tex,"_top1"]$, [tex,"_top2"]$, [tex,"_top3"]$,];
+	colors = [
+		[0.65,0.50,0.25,1]#,
+		[0.9,0.92,0.94,1]#,
+		[1,0.9,0.2,1]#,
+		[0.67,0.94,0.94,1]#
+	];
+}
+
+main(t) {
+	color(colors:(t / 4));
+	texIdx(t % 4);
+	Loc Q = [0,0,0, 16,16,16]#, T = [0,0, 16,16]#;
+	for(F:["UV-N","UV+S","-VUW","+VUE"]) {add(rect(Q, T, F));}
+	texIdx(4);
+	for(F:["u-vB","u+vT"]) {add(rect(Q, T, F));}
+}
