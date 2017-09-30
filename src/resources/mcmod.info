@@ -3,7 +3,7 @@
   "modid": "indlog",
   "name": "Inductive Logistics",
   "description": "Advanced transport, sorting & storage for items & fluids",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "acceptableRemoteVersions": "(,)",
   "acceptableSaveVersions": "(,)",
   "acceptedMinecraftVersions": "[1.11.2,1.12)",

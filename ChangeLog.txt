@@ -1,3 +1,13 @@
+v0.1.1:
+Changes:
+- added Item Buffers with variable stacksize and slot count
+- make pipes translucent to light
+- change pipe connection mechanics
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.0.3
+
 v0.1.0:
 Changes:
 - added multiple Fluid tanks with different capacities (configurable in config)
