@@ -32,6 +32,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
  */
 public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O, I>, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable {
 
+	public static boolean SAVE_PERFORMANCE;
+
 	protected final I inventory = createInv();
 	public O content, last;
 	protected T target;
@@ -40,6 +42,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected byte type, dest;
 	/** bits[0-13 (6+1)*2]: (side + total) * dir{0:none, 1:out, 2:in, 3:lock/both} */
 	private short flow;
+	private byte time;
 	protected boolean updateCon = true;
 
 	public Pipe() {}
@@ -52,41 +55,43 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@Override
 	public void update() {
 		if (world.isRemote) return;
-		if (updateCon) this.updateConnections(type);
-		if ((flow & 0x3000) == 0x3000) {
-			switch(type) {
-			case 1:
-				if (content != null && (filter == null || filter.active(world.isBlockPowered(pos)))) {
-					I acc;
-					for (TileAccess inv : invs)
-						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
-						else if (transferOut(acc)) break;
-				}
-				if (content != null && target != null && target.content == null && (filter == null || filter.transfer(content))) {
-					if (target.tileEntityInvalid) target = null;
-					else {
-						target.content = content;
-						content = null;
+		if (updateCon) updateConnections();
+		if (world.getTotalWorldTime() % resetTimer() == time) {
+			if ((flow & 0x1000) != 0) {
+				switch(type) {
+				case 1:
+					if (content != null && (filter == null || filter.active(world.isBlockPowered(pos)))) {
+						I acc;
+						for (TileAccess inv : invs)
+							if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
+							else if (transferOut(acc)) break;
 					}
-				}
-				break;
-			case 2:
-				if (world.getTotalWorldTime() % resetTimer() == 0 && (filter == null || filter.active(world.isBlockPowered(pos)))) {
-					I acc;
-					for (TileAccess inv : invs)
-						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
-						else if (transferIn(acc)) break;
-				}
-			default:
-				if (content != null && target != null && target.content == null) {
-					if (target.tileEntityInvalid) target = null;
-					else {
-						target.content = content;
-						content = null;
+					if (content != null && target != null && target.content == null && (filter == null || filter.transfer(content))) {
+						if (target.tileEntityInvalid) target = null;
+						else {
+							target.content = content;
+							content = null;
+						}
+					}
+					break;
+				case 2:
+					if (filter == null || filter.active(world.isBlockPowered(pos))) {
+						I acc;
+						for (TileAccess inv : invs)
+							if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
+							else if (transferIn(acc)) break;
+					}
+				default:
+					if (content != null && target != null && target.content == null) {
+						if (target.tileEntityInvalid) target = null;
+						else {
+							target.content = content;
+							content = null;
+						}
 					}
 				}
 			}
-		}
+		} else if (SAVE_PERFORMANCE) return;
 		if (content != last) {
 			last = content;
 			markUpdate();
@@ -101,7 +106,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			(j == 15 && !world.isBlockLoaded(pos.south()));
 	}
 
-	protected void updateConnections(int type) {
+	protected void updateConnections() {
 		updateCon = false;
 		if (invs != null) invs.clear();
 		else if (type != 0) invs = new ArrayList<TileAccess>(5);
@@ -225,6 +230,13 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@Override
 	public void neighborTileChange(BlockPos src) {
 		updateCon = true;
+	}
+
+	@Override
+	public void setPos(BlockPos posIn) {
+		super.setPos(posIn);
+		if ((posIn.getX() + posIn.getY() + posIn.getZ() & 1) == 0) time = 0;
+		else time = (byte) Math.min(127, resetTimer() / 2);
 	}
 
 	@Override

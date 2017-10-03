@@ -1,12 +1,15 @@
-VERSION = 15;
+VERSION = 17;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
-!pipe extraction interval in ticks
-fluid_pipe_tick = 4; 
+!pipe transfer interval in ticks (higher value = slower speed & possibly better performance)
+fluid_pipe_tick = 4;
 item_pipe_tick = 4;
 fluid_warp_tick = 4;
 item_warp_tick = 4;
+!whether pipe contents should be visible while moving from pipe to pipe (may reduce server network performance),
+!otherwise they are only visible when there is a backlock.
+pipe_fancy_content = true;
 {
 	!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)
 	!theoretically up to 16 tanks can be defined here but tanks 8-15 will be missing translation and models unless you make a resource pack.

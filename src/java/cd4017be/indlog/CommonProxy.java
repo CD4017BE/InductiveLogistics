@@ -7,6 +7,7 @@ import cd4017be.indlog.multiblock.ItemExtractor;
 import cd4017be.indlog.tileentity.FluidPipe;
 import cd4017be.indlog.tileentity.Buffer;
 import cd4017be.indlog.tileentity.ItemPipe;
+import cd4017be.indlog.tileentity.Pipe;
 import cd4017be.indlog.tileentity.Tank;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.TickRegistry;
@@ -24,6 +25,7 @@ public class CommonProxy {
 
 	private void setConfig() {
 		ConfigConstants cfg = new ConfigConstants(RecipeScriptContext.instance.modules.get(Main.ConfigName));
+		Pipe.SAVE_PERFORMANCE = !cfg.get("pipe_fancy_content", Boolean.class, false);
 		FluidPipe.CAP = (int)cfg.getNumber("fluid_pipe_cap", 1000);
 		FluidPipe.TICKS = Math.max((int)cfg.getNumber("fluid_pipe_tick", 1), 1);
 		ItemPipe.TICKS = Math.max((int)cfg.getNumber("item_pipe_tick", 1), 1);
