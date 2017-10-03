@@ -135,24 +135,27 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				int pDirIO = pipe.getFlowBit(i ^ 1);
 				if (pDirIO == 3) setFlowBit(i, 3);
 				else {
-					boolean canIn = (lHasIO != 2 || lDirIO == 2) && pDirIO != 2 && (pHasIO & 2) != 0;
-					boolean canOut = newDest > 0 && (lHasIO != 1 || lDirIO == 1) && pDirIO != 1 && (pHasIO & 1) != 0 && (newDest > 1 || pDirIO == 2 || (pHasIO & 2) == 0);
-					if (canIn && !(canOut && type != 1)) nDirIO = 2;
-					else if (canOut) {
-						nDirIO = 1;
+					nDirIO = (~lHasIO | lDirIO) & ~pDirIO & pHasIO;
+					if (newDest <= 0 || !(newDest > 1 || pDirIO == 2 || (pHasIO & 2) == 0)) nDirIO &= 2;
+					else nDirIO &= 3;
+					if (nDirIO == 3) nDirIO = 0;
+					if (nDirIO == 0) {
+						if (pDirIO != 1 && pHasIO == 1) nDirIO = 1;							
+						else if (pDirIO != 2 && pHasIO == 2) nDirIO = 2;
+					}
+					if (nDirIO == 1) {
 						target = pipe;
 						if (dest >= 0 && getFlowBit(dest) == 1) setFlowBit(dest, 0);
 						dest = (byte)i;
 						newDest = pDirIO == 2 ? 0 : 1;
-					} else nDirIO = 0;
-					setFlowBit(i, nDirIO);
-					nHasIO |= nDirIO;
-					updateList.add(pipe);
-					if (dest == i && nDirIO != 1) {
+					} else if (dest == i) {
 						target = null;
 						dest = -1;
 						updateCon = true;
 					}
+					setFlowBit(i, nDirIO);
+					nHasIO |= nDirIO;
+					updateList.add(pipe);
 				}
 			} else if (type != 0 && te.hasCapability(capability(), dir.getOpposite())) {
 				setFlowBit(i, type);
