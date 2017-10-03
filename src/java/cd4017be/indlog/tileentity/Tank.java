@@ -172,8 +172,10 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 
 	@Override
 	public void onPlaced(EntityLivingBase entity, ItemStack item) {
-		NBTTagCompound nbt = item.getTagCompound();
-		if (nbt != null) fluid = FluidStack.loadFluidStackFromNBT(nbt);
+		if (item.hasTagCompound()) {
+			fluid = FluidStack.loadFluidStackFromNBT(item.getTagCompound());
+			lastAmount = fluid != null ? fluid.amount : 0;
+		}
 		lockType = fluid != null && fluid.amount == 0;
 	}
 
