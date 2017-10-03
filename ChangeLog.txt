@@ -1,3 +1,17 @@
+v0.1.2
+Changes:
+- optimized pipe connection logic
+- extraction rate config settings now also affects transport speed
+- items are now also visible while moving in pipes (can be disabled in config to save performance)
+- made Fluid Tanks act as fluid containers when harvested
+- added fancy durability bar to Fluid Tank items showing the content
+- extraction & injection pipes now can be deactivated which allows removing filters for reconfiguration without risking a mess
+- bug fixes
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.0.4
+
 v0.1.1:
 Changes:
 - added Item Buffers with variable stacksize and slot count
