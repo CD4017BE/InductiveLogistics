@@ -62,20 +62,27 @@ public class ItemComp extends ConComp implements IObjLink {
 
 	@Override
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
-		if (item.getCount() == 0 && filter != null) {
-			item = new ItemStack(Objects.itemFilter);
-			item.setTagCompound(PipeFilterItem.save(filter));
-			filter = null;
-			ItemFluidUtil.dropStack(item, player);
-			pipe.network.reorder(this);
-			pipe.hasFilters &= ~(1 << side);
-			return true;
+		if (item.getCount() == 0) {
+			if (filter != null) {
+				item = new ItemStack(Objects.itemFilter);
+				item.setTagCompound(PipeFilterItem.save(filter));
+				filter = null;
+				ItemFluidUtil.dropStack(item, player);
+				pipe.network.reorder(this);
+				pipe.hasFilters &= ~(1 << side);
+				pipe.isBlocked |= 1 << side;
+				return true;
+			} else if(!player.isSneaking()) {
+				pipe.isBlocked ^= 1 << side;
+				return true;
+			}
 		} else if (filter == null && item.getItem() == Objects.itemFilter && item.getTagCompound() != null) {
 			filter = PipeFilterItem.load(item.getTagCompound());
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			pipe.network.reorder(this);
 			pipe.hasFilters |= 1 << side;
+			pipe.isBlocked &= ~(1 << side);
 			return true;
 		}
 		return false;
@@ -106,8 +113,9 @@ public class ItemComp extends ConComp implements IObjLink {
 	 * @return the result if not possible
 	 */
 	public ItemStack insertItem(ItemStack item) {
+		if ((filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return item;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
-		if (acc == null || (filter != null && !filter.active(pipe.redstone))) return item;
+		if (acc == null) return item;
 		int n = item.getCount();
 		if (PipeFilterItem.isNullEq(filter)) return ItemHandlerHelper.insertItemStacked(acc, item, false);
 		n = filter.insertAmount(item, acc);

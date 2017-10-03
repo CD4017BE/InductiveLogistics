@@ -40,8 +40,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected F filter;
 	protected ArrayList<TileAccess> invs = null;
 	protected byte type, dest;
-	/** bits[0-13 (6+1)*2]: (side + total) * dir{0:none, 1:out, 2:in, 3:lock/both} */
-	private short flow;
+	/** bits[0-13 (6+1)*2]: (side + total) * dir{0:none, 1:out, 2:in, 3:lock/both}, bit[14]: update, bit[15]: blocked */
+	protected short flow;
 	private byte time;
 	protected boolean updateCon = true;
 
@@ -57,9 +57,10 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		if (world.isRemote) return;
 		if (updateCon) updateConnections();
 		if (world.getTotalWorldTime() % resetTimer() == time) {
-			if ((flow & 0x1000) != 0) {
+			if ((flow & 0x3000) == 0x3000) {
 				switch(type) {
 				case 1:
+					if ((flow & 0x8000) != 0) break;
 					if (content != null && (filter == null || filter.active(world.isBlockPowered(pos)))) {
 						I acc;
 						for (TileAccess inv : invs)
@@ -75,7 +76,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 					}
 					break;
 				case 2:
-					if (filter == null || filter.active(world.isBlockPowered(pos))) {
+					if ((flow & 0x8000) == 0 && (filter == null || filter.active(world.isBlockPowered(pos)))) {
 						I acc;
 						for (TileAccess inv : invs)
 							if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
@@ -179,7 +180,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			}
 		}
 		setFlowBit(6, nHasIO);
-		setFlowBit(7, 0);
+		flow &= 0xbfff;
 		if (flow != lFlow) {
 			this.markUpdate();
 			for (T pipe : updateList) pipe.updateCon = true;
@@ -198,22 +199,27 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@Override
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (world.isRemote) return true;
-		if (player.isSneaking() && item.getCount() == 0) {
+		if (item.getCount() > 0) return false;
+		if (player.isSneaking()) {
 			dir = Utils.hitSide(X, Y, Z);
 			int s = dir.getIndex();
 			int lock = getFlowBit(s) == 3 ? 0 : 3;
 			setFlowBit(s, lock);
-			setFlowBit(7, lock);
+			if (lock != 0) flow |= 0x4000;
 			updateCon = true;
 			this.markUpdate();
 			ICapabilityProvider te = getTileOnSide(dir);
 			if (pipeClass().isInstance(te)) {
 				T pipe = pipeClass().cast(te);
 				pipe.setFlowBit(s^1, lock);
-				pipe.setFlowBit(7, lock);
+				if (lock != 0) pipe.flow |= 0x4000;
 				pipe.updateCon = true;
 				pipe.markUpdate();
 			}
+			return true;
+		} else if (filter == null) {
+			flow ^= 0x8000;
+			markUpdate();
 			return true;
 		} else return false;
 	}
@@ -280,7 +286,9 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		TileEntity p = Utils.neighborTile(this, f);
 		if (b == 0) {
 			if (!pipeClass().isInstance(p)) b = -1;
-		} else if (filter != null && b != 0 && !(pipeClass().isInstance(p) && (b == 2 || !filter.blocking()))) b += 2;
+		} else if ((flow & 0x8000) != 0) {
+			if (b == type && !(b == 2 && pipeClass().isInstance(p))) b += 4;
+		} else if (filter != null && b == type && !(pipeClass().isInstance(p) && (b == 2 || !filter.blocking()))) b += 2;
 		return cast(b);
 	}
 

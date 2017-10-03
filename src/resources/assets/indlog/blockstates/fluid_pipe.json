@@ -38,6 +38,18 @@
 		"cs4": { "model": "indlog:_pipes.conf(2)#s" },
 		"cw4": { "model": "indlog:_pipes.conf(2)#w" },
 		"cb4": { "model": "indlog:_pipes.conf(2)#bn" },
-		"ct4": { "model": "indlog:_pipes.conf(2)#tn" }
+		"ct4": { "model": "indlog:_pipes.conf(2)#tn" },
+		"cn5": { "model": "indlog:_pipes.conx(1)" },
+		"ce5": { "model": "indlog:_pipes.conx(1)#e" },
+		"cs5": { "model": "indlog:_pipes.conx(1)#s" },
+		"cw5": { "model": "indlog:_pipes.conx(1)#w" },
+		"cb5": { "model": "indlog:_pipes.conx(1)#bn" },
+		"ct5": { "model": "indlog:_pipes.conx(1)#tn" },
+		"cn6": { "model": "indlog:_pipes.conx(2)" },
+		"ce6": { "model": "indlog:_pipes.conx(2)#e" },
+		"cs6": { "model": "indlog:_pipes.conx(2)#s" },
+		"cw6": { "model": "indlog:_pipes.conx(2)#w" },
+		"cb6": { "model": "indlog:_pipes.conx(2)#bn" },
+		"ct6": { "model": "indlog:_pipes.conx(2)#tn" }
 	}
 }

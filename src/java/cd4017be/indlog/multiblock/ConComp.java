@@ -88,6 +88,7 @@ public class ConComp {
 			pipe.con[side] = 5;
 		} else return false;
 		pipe.network.addConnector(pipe, con);
+		pipe.isBlocked |= 1 << side;
 		return true;
 	}
 

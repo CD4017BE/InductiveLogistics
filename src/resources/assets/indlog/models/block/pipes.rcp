@@ -9,7 +9,8 @@
 		"indlog:block/item_in",
 		"indlog:block/item_ex",
 		"indlog:block/item_filter",
-		"indlog:block/warp"
+		"indlog:block/warp",
+		"indlog:block/blocked_pipe"
 	];
 }
 
@@ -30,6 +31,16 @@ conf(t) {
 	pop();
 	if (t >= 4) {texIdx(7);} else {texIdx(3);}
 	pipe.filter(8,2);
+}
+
+conx(t) {
+	push();
+		texIdx(t);
+		pipe.con(4);
+	pop();
+	texIdx(9);
+	scaleUV(2,2);
+	pipe.filter(6,1);
 }
 
 item(t) {

@@ -97,11 +97,13 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 			item = new ItemStack(Objects.fluidFilter);
 			item.setTagCompound(PipeFilterFluid.save(filter));
 			filter = null;
+			flow |= 0x8000;
 			player.setHeldItem(hand, item);
 			markUpdate();
 			return true;
 		} else if (filter == null && type != 0 && item.getItem() == Objects.fluidFilter && item.getTagCompound() != null) {
 			filter = PipeFilterFluid.load(item.getTagCompound());
+			flow &= 0x7fff;
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			markUpdate();

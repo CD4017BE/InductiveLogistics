@@ -95,6 +95,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		byte[] data = nbt.getByteArray("con");
 		if (data.length == 6) System.arraycopy(data, 0, comp.con, 0, 6);
 		comp.hasFilters = nbt.getByte("filt");
+		comp.isBlocked = nbt.getByte("block");
 		this.markUpdate();
 	}
 
@@ -105,6 +106,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		System.arraycopy(comp.con, 0, data, 0, data.length);
 		nbt.setByteArray("con", data);
 		nbt.setByte("filt", comp.hasFilters);
+		nbt.setByte("block", comp.isBlocked);
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
@@ -112,7 +114,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	public <T> T getModuleState(int m) {
 		byte t = comp.con[m];
 		if (t == 1) return cast(-1);
-		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 4);
+		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 4 + (comp.isBlocked >> m & 1) * 8);
 		TileEntity te = Utils.neighborTile(this, EnumFacing.VALUES[m]);
 		return cast(te != null && te.hasCapability(Objects.WARP_PIPE_CAP, EnumFacing.VALUES[m^1]) ? 0 : -1);
 	}

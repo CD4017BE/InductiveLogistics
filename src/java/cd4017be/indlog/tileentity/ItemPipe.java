@@ -98,11 +98,13 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			item = new ItemStack(Objects.itemFilter);
 			item.setTagCompound(PipeFilterItem.save(filter));
 			filter = null;
+			flow |= 0x8000;
 			player.setHeldItem(hand, item);
 			markUpdate();
 			return true;
 		} else if (filter == null && type != 0 && item.getItem() == Objects.itemFilter && item.getTagCompound() != null) {
 			filter = PipeFilterItem.load(item.getTagCompound());
+			flow &= 0x7fff;
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			markUpdate();

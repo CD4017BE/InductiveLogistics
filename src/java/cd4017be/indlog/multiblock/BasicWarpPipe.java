@@ -11,7 +11,7 @@ import cd4017be.lib.templates.SharedNetwork;
 public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics> {
 
 	public final byte[] con = new byte[6];
-	public byte hasFilters = 0;
+	public byte hasFilters = 0, isBlocked = 0;
 	public boolean redstone = false;
 
 	public BasicWarpPipe(IAbstractTile pipe) {
@@ -57,6 +57,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 			ConComp con = ConComp.readFromNBT(pipe, list.getCompoundTagAt(i));
 			if (con != null) physics.addConnector(pipe, con);
 		}
+		pipe.isBlocked = nbt.getByte("block");
 		return pipe;
 	}
 
@@ -72,6 +73,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 				list.appendTag(tag);
 			}
 		if (!list.hasNoTags()) nbt.setTag("connectors", list);
+		nbt.setByte("block", isBlocked);
 	}
 
 	@Override

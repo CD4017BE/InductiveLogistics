@@ -21,8 +21,8 @@ full(size) {
 
 filter(w,d) {
 	Loc a = 8 - w/2, b = 8 + w/2;
-	Loc Q = [a,a,0, b,b,d]#, T = [w,0, w+d,w]#;
+	Loc Q = [a,a,-0.01, b,b,d]#, T = [w,0, w+d,w]#;
 	for(F:["-vU","+vU","v-U","v+U"]) {add(rect(Q, T, F));}
 	T = [0,0, w,w]#;
-	add(rect(Q, T, "uv-N"), rect(Q, T, "Uv+S"));
+	add(rect(Q, T, "uv-N"), rect(Q, T, "Uv+"));
 }
