@@ -50,6 +50,7 @@ public class ClientProxy extends CommonProxy {
 		
 		BlockItemRegistry.registerRender(fluidFilter);
 		BlockItemRegistry.registerRender(itemFilter);
+		BlockItemRegistry.registerRender(portableCraft);
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(ItemPipe.class, new ItemPipeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluidPipe.class, new FluidPipeRenderer());

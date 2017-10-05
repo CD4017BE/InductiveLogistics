@@ -54,10 +54,12 @@ public class Objects {
 	//Items
 	public static ItemItemFilter itemFilter;
 	public static ItemFluidFilter fluidFilter;
+	public static ItemPortableCrafter portableCraft;
 
 	static void createItems() {
 		(fluidFilter = new ItemFluidFilter("fluid_filter")).setCreativeTab(tabIndLog);
 		(itemFilter = new ItemItemFilter("item_filter")).setCreativeTab(tabIndLog);
+		(portableCraft = new ItemPortableCrafter("portable_craft")).setCreativeTab(tabIndLog);
 	}
 
 }

@@ -50,6 +50,8 @@ item.indlog.fluid_filter.name=Pipe Liquid-Filter
 item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.item_filter.name=Pipe Item-Filter
 item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
+item.indlog.portable_craft.name=Portable Autocrafter
+item.indlog.portable_craft.tip=Convenient portable crafting device with\nsingle batch processing and stock-keeping abillity.\nClick to open GUI.
 
 #GUI names
 gui.indlog.tank.name=Tank
@@ -98,3 +100,15 @@ gui.cd4017be.buffer.stack=Stacksize Limit:\n%d / %d
 gui.cd4017be.buffer.info=Size scale\nSlot interaction
 gui.cd4017be.buffer.info0=§7Using the two sliders on bottom right you can change how many slots of this inventory should be available to external automation and up to what stack size they should be filled. The Item's default stack size limit will be ignored.
 gui.cd4017be.buffer.info1=§7The slots in this inventory behave a bit different than normal in order to work well with oversized stacks:\n§7Click §ewith stack on cursor§7 to insert, right-click: 1, left-click: all, shift-R-C: all of same type from inventory, shift-L-C: all of same type from inventory + stack on cursor.\n§7Click with §eempty cursor§7 to extract: left-click: 1 item, right-click: 8 items, shift-L-C: 1 stack, shift-R-C: all or until inventory full.
+gui.cd4017be.craftAm=Amount to craft
+gui.cd4017be.startCraft=Perform Autocrafting
+gui.cd4017be.autoCraft0=craft specified amount once
+gui.cd4017be.autoCraft1=stock-keep specified amount in inventory
+gui.cd4017be.craftDmg0=Ignore damage values.\n(Crafting attempts may fail)
+gui.cd4017be.craftDmg1=Exactly match damage values.
+gui.cd4017be.craftNBT0=Ignore nbt data.\n(Crafting attempts may fail)
+gui.cd4017be.craftNBT1=Exactly match nbt data.
+gui.cd4017be.craft.info=Crafting grid\nManual crafting\nAuto crafting
+gui.cd4017be.craft.info0=§7The crafting grid slots don't contain real items they only take images of items you put in. They support dragging.\n§7Instead of clicking items into the slots directly you can also click on the sourroundig grid patterns to set multiple slots at once.\n§7§mCrafting recipes can also be directly imported from JEI using it's recipe transfer buttons (you don't even need all the ingredients in your inventory to do that).§r§4 <- coming soon
+gui.cd4017be.craft.info1=§7Click on the recipe result to directly craft §6left-click: 1 item§7, §eright-click: 8 items§7, §ashift-L-C: 1 stack§7, §bshift-R-C: as much as possible§7.\n§7It will automatically take the required ingredients from your inventory and put the result (and any by-product left overs) back. If there isn't enought space in your inventory then some of the outputs may drop on the ground.
+gui.cd4017be.craft.info2=§7There are two operating modes: In §6single process mode§7 it will craft the specified amount and then stop whereas in §6stock keeping mode§7 it will continously try to keep up the specified amount of the crafting result in your inventory.\n§7After you've specified the operating mode and amount to craft, simply click on the green arrows to start the auto crafting process. Clicking the button again will stop it.\n§7If you don't have all the required ingredients then the process will simply use what it can find and then wait until you get more. But it will automatically stop when items where thrown on the ground because of full inventory.
