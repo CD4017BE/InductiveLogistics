@@ -5,6 +5,7 @@ import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.indlog.multiblock.FluidExtractor;
 import cd4017be.indlog.multiblock.ItemExtractor;
 import cd4017be.indlog.tileentity.FluidPipe;
+import cd4017be.indlog.tileentity.AutoCrafter;
 import cd4017be.indlog.tileentity.Buffer;
 import cd4017be.indlog.tileentity.ItemPipe;
 import cd4017be.indlog.tileentity.Pipe;
@@ -21,6 +22,7 @@ public class CommonProxy {
 		
 		BlockGuiHandler.registerContainer(Objects.tank, TileContainer.class);
 		BlockGuiHandler.registerContainer(Objects.buffer, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.autoCraft, TileContainer.class);
 	}
 
 	private void setConfig() {
@@ -34,6 +36,7 @@ public class CommonProxy {
 		cfg.getVect("tank_caps", Tank.CAP);
 		cfg.getVect("buffer_slots", Buffer.SLOTS);
 		cfg.getVect("buffer_stack", Buffer.STACKS);
+		AutoCrafter.INTERVAL = Math.max((int)cfg.getNumber("auto_craft_tick", 20), 1);
 	}
 
 	public void registerRenderers() {

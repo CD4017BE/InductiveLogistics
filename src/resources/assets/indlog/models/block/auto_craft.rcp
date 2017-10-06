@@ -1,0 +1,6 @@
+{
+	dependencies = ["util"];
+	textures = ["indlog:block/auto_craft0", "indlog:block/auto_craft1", "indlog:block/auto_craft2"];
+}
+
+main() { util.cube([1,0,2,2,2,2]#); }

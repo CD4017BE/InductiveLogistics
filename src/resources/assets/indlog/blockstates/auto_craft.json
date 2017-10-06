@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"inventory": { "model": "indlog:_auto_craft" },
+		"normal": { "model": "indlog:_auto_craft" }
+	}
+}

@@ -1,0 +1,5 @@
+!normal cube texturized with given array of texture indices [B,T,N,S,W,E]
+cube(tex) {
+	Loc Q = [0,0,0,16,16,16]#, T = [0,0,16,16]#, F = ["u-vB","u+vT","UV-N","UV+S","-VUW","+VUE"];
+	for(i:6) { add(rect(Q, T, F:i, tex:i)); }
+}

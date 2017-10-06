@@ -6,6 +6,7 @@ import cd4017be.indlog.item.*;
 import cd4017be.indlog.multiblock.BasicWarpPipe;
 import cd4017be.indlog.tileentity.*;
 import cd4017be.lib.DefaultItemBlock;
+import cd4017be.lib.block.AdvancedBlock;
 import cd4017be.lib.block.BlockPipe;
 import cd4017be.lib.block.VariantBlock;
 import cd4017be.lib.templates.TabMaterials;
@@ -33,6 +34,7 @@ public class Objects {
 	public static BlockPipe warpPipe;
 	public static VariantBlock tank;
 	public static VariantBlock buffer;
+	public static AdvancedBlock autoCraft;
 	
 	//ItemBlocks
 	public static ItemItemPipe i_itemPipe;
@@ -40,6 +42,7 @@ public class Objects {
 	public static DefaultItemBlock i_warpPipe;
 	public static ItemTank i_tank;
 	public static ItemBuffer i_buffer;
+	public static DefaultItemBlock i_autoCraft;
 
 	static void createBlocks() {
 		i_itemPipe = new ItemItemPipe((itemPipe = BlockPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3).setSize(0.25)).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F));
@@ -47,6 +50,7 @@ public class Objects {
 		i_warpPipe = new DefaultItemBlock((warpPipe = BlockPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25)).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(1.0F).setResistance(20F));
 		i_tank = new ItemTank((tank = VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class)).setCreativeTab(tabIndLog).setLightOpacity(0));
 		i_buffer = new ItemBuffer((buffer = VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class)).setCreativeTab(tabIndLog));
+		i_autoCraft = new DefaultItemBlock((autoCraft = new AdvancedBlock("auto_craft", Material.IRON, SoundType.ANVIL, 0, AutoCrafter.class)).setCreativeTab(tabIndLog));
 		
 		tabIndLog.item = new ItemStack(i_itemPipe);
 	}
