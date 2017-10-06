@@ -1,4 +1,4 @@
-VERSION = 17;
+VERSION = 18;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -7,6 +7,8 @@ fluid_pipe_tick = 4;
 item_pipe_tick = 4;
 fluid_warp_tick = 4;
 item_warp_tick = 4;
+portable_craft_tick = 20;
+auto_craft_tick = 10;
 !whether pipe contents should be visible while moving from pipe to pipe (may reduce server network performance),
 !otherwise they are only visible when there is a backlock.
 pipe_fancy_content = true;

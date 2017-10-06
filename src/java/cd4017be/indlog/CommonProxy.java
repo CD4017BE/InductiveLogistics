@@ -2,6 +2,7 @@ package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
+import cd4017be.indlog.item.ItemPortableCrafter;
 import cd4017be.indlog.multiblock.FluidExtractor;
 import cd4017be.indlog.multiblock.ItemExtractor;
 import cd4017be.indlog.tileentity.FluidPipe;
@@ -36,6 +37,7 @@ public class CommonProxy {
 		cfg.getVect("tank_caps", Tank.CAP);
 		cfg.getVect("buffer_slots", Buffer.SLOTS);
 		cfg.getVect("buffer_stack", Buffer.STACKS);
+		ItemPortableCrafter.INTERVAL = (int)cfg.getNumber("portable_craft_tick", 20);
 		AutoCrafter.INTERVAL = Math.max((int)cfg.getNumber("auto_craft_tick", 20), 1);
 	}
 

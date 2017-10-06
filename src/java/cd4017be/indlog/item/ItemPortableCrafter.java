@@ -39,6 +39,7 @@ import net.minecraft.world.World;
 
 public class ItemPortableCrafter extends DefaultItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
 
+	public static int INTERVAL;
 	/**NBT-Tag names */
 	public static final String
 			TIME = "t",
@@ -140,7 +141,7 @@ public class ItemPortableCrafter extends DefaultItem implements IGuiItem, Client
 			NBTTagCompound nbt = item.getTagCompound();
 			if (nbt == null) item.setTagCompound(nbt = new NBTTagCompound());
 			long t = world.getTotalWorldTime();
-			if (nbt.getBoolean(ACTIVE) && (t - (long)nbt.getByte(TIME) & 0xff) >= 20) {
+			if (nbt.getBoolean(ACTIVE) && (t - (long)nbt.getByte(TIME) & 0xff) >= INTERVAL) {
 				InventoryPlayer inv = player.inventory;
 				int n = nbt.getByte(COUNT);
 				boolean auto = nbt.getBoolean(AUTO);
