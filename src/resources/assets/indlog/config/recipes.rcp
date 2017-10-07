@@ -1,4 +1,4 @@
-VERSION = 18;
+VERSION = 19;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -30,6 +30,8 @@ INIT() {
 	add("shaped", it("itemPipeI", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:piston"));
 	add("shaped", it("itemPipeE", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:sticky_piston"));
 	add("shaped", it("tile.warp_pipe", 16), "000/232/111", it("fluidPipeT"), it("itemPipeT"), "enderpearl", "gemDiamond");
+	add("shaped", it("tile.auto_craft", 1), "010/131/020", "ingotIron", "dustRedstone", it("minecraft:piston"), it("minecraft:crafting_table"));
+	add("shaped", it("item.portable_craft", 1), "021/343", it("itemPipeI"), it("itemPipeE"), it("tile.auto_craft"), "string", "slabWood");
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shaped", it("item.item_filter"), "012", it("itemPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shapedNBT", "#mode,#maxAm,#prior,#Fluids", it("item.fluid_filter", 2), "0/0", it("item.fluid_filter"));
