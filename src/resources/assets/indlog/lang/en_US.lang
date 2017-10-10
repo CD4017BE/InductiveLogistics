@@ -54,6 +54,7 @@ item.indlog.item_filter.name=Pipe Item-Filter
 item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.portable_craft.name=Portable Autocrafter
 item.indlog.portable_craft.tip=Convenient portable crafting device with\nsingle batch processing and stock-keeping ability.\nClick to open GUI.
+item.indlog.remote_inv.name=Portable Inventory Remote Access
 
 #GUI names
 gui.indlog.tank.name=Tank
@@ -125,3 +126,9 @@ gui.cd4017be.craft.infoB=Usage\nOperation\nRedstone Control
 gui.cd4017be.craft.infoB0=§7Instead of setting the actual recipe here, you just specify from which of the neighboring inventories the crafting grid slots should take their ingredients.\n§7Slots without an associated side will be empty and slots that refer to the same side will also always get the same item.\n§7Some recipes have left overs (Empty Buckets, etc.), which will by default go back into the inventory they came from. But you can also specify an extra side where to put them instead.
 gui.cd4017be.craft.infoB1=§7In order to craft, all referenced inventories must have at least one item in enough quantity that it can supply the specified amount of crafting operations.\n§7If the formed recipe is valid, it will be crafted and the result will land in the output slot (which is accessible from outside). If some of the result or any left overs couldn't be ejected then the machine will halt until it's internal buffer is empty again.
 gui.cd4017be.craft.infoB2=§7The machine can be configured to only craft things when it gets a redstone signal. Also can it be configured to emit a redstone signal into input inventories that block the current crafting process with missing ingredients.\n§7This can be used to build on-demand crafting chains of multiple Automatic Crafters or more complex redstone controlled logistic systems.
+gui.cd4017be.inputFilter=Auto import items?
+gui.cd4017be.outputFilter=Auto export items?
+gui.cd4017be.remote.invalid=Block has no inventory!
+gui.cd4017be.remote.linked=Block inventory linked
+gui.cd4017be.remote.notFound=§cInventory doesn't exist or was unloaded!
+gui.cd4017be.remote.info=

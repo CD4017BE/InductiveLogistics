@@ -59,11 +59,13 @@ public class Objects {
 	public static ItemItemFilter itemFilter;
 	public static ItemFluidFilter fluidFilter;
 	public static ItemPortableCrafter portableCraft;
+	public static ItemRemoteInv remoteInv;
 
 	static void createItems() {
 		(fluidFilter = new ItemFluidFilter("fluid_filter")).setCreativeTab(tabIndLog);
 		(itemFilter = new ItemItemFilter("item_filter")).setCreativeTab(tabIndLog);
 		(portableCraft = new ItemPortableCrafter("portable_craft")).setCreativeTab(tabIndLog);
+		(remoteInv = new ItemRemoteInv("remote_inv")).setCreativeTab(tabIndLog);
 	}
 
 }
