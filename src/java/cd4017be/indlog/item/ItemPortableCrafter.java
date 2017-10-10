@@ -241,7 +241,9 @@ public class ItemPortableCrafter extends DefaultItem implements IGuiItem, Client
 				if (n > 1) result.setCount(result.getCount() * n);
 				invFull |= addToPlayer(result.copy(), inv);
 				for (ItemStack stack : recipe.getRemainingItems(icr)) {
-					if (n > 1) stack.setCount(stack.getCount() * n);
+					int m = stack.getCount();
+					if (m <= 0) continue;
+					if (n > 1) stack.setCount(m * n);
 					invFull |= addToPlayer(stack, inv);
 				}
 			}

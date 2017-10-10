@@ -109,6 +109,7 @@ public class PipeFilterItem implements PipeFilter<ItemStack, IItemHandler> {
 				int n = -list[i].getCount();
 				for (int s = 0; s < inv.getSlots(); s++) {
 					ItemStack item = inv.getStackInSlot(s);
+					if (item.getCount() <= 0) continue;
 					if (matches(i, item)) n += item.getCount();
 					if (n >= m) {
 						n = m;
