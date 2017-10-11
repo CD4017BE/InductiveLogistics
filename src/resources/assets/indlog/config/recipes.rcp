@@ -1,4 +1,4 @@
-VERSION = 19;
+VERSION = 20;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -8,6 +8,7 @@ item_pipe_tick = 4;
 fluid_warp_tick = 4;
 item_warp_tick = 4;
 portable_craft_tick = 20;
+remote_inv_tick = 20;
 auto_craft_tick = 10;
 !whether pipe contents should be visible while moving from pipe to pipe (may reduce server network performance),
 !otherwise they are only visible when there is a backlock.
@@ -31,7 +32,8 @@ INIT() {
 	add("shaped", it("itemPipeE", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:sticky_piston"));
 	add("shaped", it("tile.warp_pipe", 16), "000/232/111", it("fluidPipeT"), it("itemPipeT"), "enderpearl", "gemDiamond");
 	add("shaped", it("tile.auto_craft", 1), "010/131/020", "ingotIron", "dustRedstone", it("minecraft:piston"), it("minecraft:crafting_table"));
-	add("shaped", it("item.portable_craft", 1), "021/343", it("itemPipeI"), it("itemPipeE"), it("tile.auto_craft"), "string", "slabWood");
+	add("shaped", it("item.portable_craft", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("tile.auto_craft"), "string", "slabWood");
+	add("shaped", it("item.remote_inv", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("minecraft:ender_chest"), "string", "gemDiamond");
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shaped", it("item.item_filter"), "012", it("itemPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shapedNBT", "#mode,#maxAm,#prior,#Fluids", it("item.fluid_filter", 2), "0/0", it("item.fluid_filter"));

@@ -55,6 +55,7 @@ item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s
 item.indlog.portable_craft.name=Portable Autocrafter
 item.indlog.portable_craft.tip=Convenient portable crafting device with\nsingle batch processing and stock-keeping ability.\nClick to open GUI.
 item.indlog.remote_inv.name=Portable Inventory Remote Access
+item.indlog.remote_inv.tip=Allows you to remotely access a block's inventory and\nautomatically transfer items between it and your own inventory.\nSneak-click block face to link.\nClick in air to open GUI.
 
 #GUI names
 gui.indlog.tank.name=Tank
@@ -101,9 +102,8 @@ gui.cd4017be.tank.del0=Delete contained fluid
 gui.cd4017be.tank.del1=§4Sure? It's lost forever!
 gui.cd4017be.buffer.slots=Slot Limit:\n%d / %d
 gui.cd4017be.buffer.stack=Stack size Limit:\n%d / %d
-gui.cd4017be.buffer.info=Size scale\nSlot interaction
+gui.cd4017be.buffer.info=Size scale\nSlot interaction@specialSlot
 gui.cd4017be.buffer.info0=§7Using the two sliders on bottom right you can change how many slots of this inventory should be available to external automation and up to what stack size they should be filled. The Item's default stack size limit will be ignored.
-gui.cd4017be.buffer.info1=§7The slots in this inventory behave a bit different than normal in order to work well with over-sized stacks:\n§7Click §dwith stack on cursor§7 to insert, §eright-click: 1§7, §6left-click: all§7, §bshift-R-C: all§7 of same type §bfrom inventory§7, §ashift-L-C: all§7 of same type §afrom inventory + stack on cursor§7.\n§7Click with §dempty cursor§7 to extract: §6left-click: 1 item§7, §eright-click: 8 items§7, §ashift-L-C: 1 stack§7, §bshift-R-C: all or until inventory full§7.
 gui.cd4017be.craftAm=Amount to craft
 gui.cd4017be.startCraft=Perform Autocrafting
 gui.cd4017be.autoCraft0=craft specified amount once
@@ -131,4 +131,6 @@ gui.cd4017be.outputFilter=Auto export items?
 gui.cd4017be.remote.invalid=Block has no inventory!
 gui.cd4017be.remote.linked=Block inventory linked
 gui.cd4017be.remote.notFound=§cInventory doesn't exist or was unloaded!
-gui.cd4017be.remote.info=
+gui.cd4017be.remote.info=Function\nSlot interaction@specialSlot
+gui.cd4017be.remote.info0=§7The slots here act as interface to interact with the linked block's inventory. So what type of interaction is supported actually depends on the block and which face was linked.\n§7Inserting §6Item Pipe Filters§7 will make this tool automatically transfer certain items from the block to your inventory or vice versa. Here the filters stock-keeping function will always refer to the contents of your inventory.\n§7In order for this device to work, the linked block only needs to be loaded but could be arbitrarily far away or even in a different dimension.
+gui.cd4017be.specialSlot=§eClick with stack on cursor to insert:\n§aright-click§7 = 1 item\n§aleft-click§7 = full stack\n§ashift-R-C§7 = all equal items in inventory instead cursor\n§ashift-L-C§7 = all equal items in inventory plus cursor\n§eClick with empty cursor to extract:\n§aleft-click§7 = 1 item\n§aright-click§7 = 8 items\n§ashift-L-C§7 = 1 stack\n§ashift-R-C§7 = all or until inventory full
