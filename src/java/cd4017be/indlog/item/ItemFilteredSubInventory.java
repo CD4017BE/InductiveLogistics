@@ -1,9 +1,6 @@
 package cd4017be.indlog.item;
 
 import java.io.IOException;
-import java.util.List;
-
-import cd4017be.api.automation.InventoryItemHandler;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
@@ -23,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 public abstract class ItemFilteredSubInventory extends DefaultItem implements IItemInventory, IGuiItem, ClientItemPacketReceiver {
 
@@ -68,12 +65,6 @@ public abstract class ItemFilteredSubInventory extends DefaultItem implements II
 		} else nbt.removeTag("fout");
 	}
 
-	@Override
-	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
-		InventoryItemHandler.addInformation(item, list);
-		super.addInformation(item, player, list, b);
-	}
-
 	protected int tickTime() {
 		return 20;
 	}
@@ -96,14 +87,15 @@ public abstract class ItemFilteredSubInventory extends DefaultItem implements II
 
 	protected void updateItem(ItemStack item, EntityPlayer player, InventoryPlayer inv, int s, PipeFilterItem in, PipeFilterItem out) {
 		IItemHandler acc = item.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		IItemHandler pacc = new PlayerMainInvWrapper(inv);
 		if (acc == null) return;
 		if (in != null && (in.mode & 64) != 0) {
 			in.mode |= 128;
-			ItemFluidUtil.transferItems(new InvWrapper(inv), acc, in, notMe);
+			ItemFluidUtil.transferItems(pacc, acc, in, notMe);
 		}
 		if (out != null && (out.mode & 64) != 0) {
 			out.mode |= 128;
-			ItemFluidUtil.transferItems(acc, new InvWrapper(inv), null, out);
+			ItemFluidUtil.transferItems(acc, pacc, null, out);
 		}
 	}
 

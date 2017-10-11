@@ -1,5 +1,7 @@
 package cd4017be.indlog.item;
 
+import java.util.List;
+
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.render.gui.GuiRemoteInventory;
 import cd4017be.lib.BlockGuiHandler;
@@ -37,14 +39,28 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemRemoteInv extends ItemFilteredSubInventory {
 
+	public static int INTERVAL = 20;
+
 	public ItemRemoteInv(String id) {
 		super(id);
 		this.setMaxStackSize(1);
 	}
 
 	@Override
+	protected int tickTime() {
+		return INTERVAL;
+	}
+
+	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
 		return new CapabilityProvider(stack);
+	}
+
+	@Override
+	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
+		NBTTagCompound nbt = item.getTagCompound();
+		if (nbt != null) list.add(TooltipUtil.formatLink(BlockPos.fromLong(nbt.getLong("pos")), EnumFacing.getFront(nbt.getByte("s")), nbt.getInteger("d")));
+		super.addInformation(item, player, list, b);
 	}
 
 	@Override
@@ -60,9 +76,7 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 		}
 		NBTTagCompound nbt = item.getTagCompound();
 		if (nbt == null) item.setTagCompound(nbt = new NBTTagCompound());
-		nbt.setInteger("x", pos.getX());
-		nbt.setInteger("y", pos.getY());
-		nbt.setInteger("z", pos.getZ());
+		nbt.setLong("pos", pos.toLong());
 		nbt.setByte("s", (byte)s.getIndex());
 		nbt.setInteger("d", player.dimension);
 		player.sendMessage(new TextComponentString(TooltipUtil.translate("gui.cd4017be.remote.linked")));
@@ -156,14 +170,10 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 
 	public static TileEntity getLink(NBTTagCompound nbt) {
 		if (nbt == null) return null;
-		int y = nbt.getInteger("y");
-		if (y < 0) return null;
-		int x = nbt.getInteger("x");
-		int z = nbt.getInteger("z");
 		int d = nbt.getInteger("d");
 		World world = DimensionManager.getWorld(d);
 		if (world == null) return null;
-		return Utils.getTileAt(world, new BlockPos(x, y, z));
+		return Utils.getTileAt(world, BlockPos.fromLong(nbt.getLong("pos")));
 	}
 
 	public class CapabilityProvider implements ICapabilityProvider {
