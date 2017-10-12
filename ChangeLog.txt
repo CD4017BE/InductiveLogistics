@@ -1,3 +1,15 @@
+v0.2.0
+Changes:
+- added block Automatic Crafter
+- added item Portable Autocrafter
+- added item Portable Inventory Remote Access
+- fixed spelling mistakes in English localization
+- fixed bug in Item Filter
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.0.5
+
 v0.1.2
 Changes:
 - optimized pipe connection logic
