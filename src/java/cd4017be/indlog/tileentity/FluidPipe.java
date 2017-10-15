@@ -94,14 +94,14 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (super.onActivated(player, hand, item, dir, X, Y, Z)) return true;
 		if (filter != null && !player.isSneaking() && item.getCount() == 0) {
-			item = new ItemStack(Objects.fluidFilter);
+			item = new ItemStack(Objects.fluid_filter);
 			item.setTagCompound(PipeFilterFluid.save(filter));
 			filter = null;
 			flow |= 0x8000;
 			player.setHeldItem(hand, item);
 			markUpdate();
 			return true;
-		} else if (filter == null && type != 0 && item.getItem() == Objects.fluidFilter && item.getTagCompound() != null) {
+		} else if (filter == null && type != 0 && item.getItem() == Objects.fluid_filter && item.getTagCompound() != null) {
 			filter = PipeFilterFluid.load(item.getTagCompound());
 			flow &= 0x7fff;
 			item.grow(-1);
@@ -155,7 +155,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
 		List<ItemStack> list = makeDefaultDrops(null);
 		if (filter != null) {
-			ItemStack item = new ItemStack(Objects.fluidFilter);
+			ItemStack item = new ItemStack(Objects.fluid_filter);
 			item.setTagCompound(PipeFilterFluid.save(filter));
 			list.add(item);
 		}

@@ -74,16 +74,16 @@ public class ConComp {
 		pipe.setConnect(side, false);
 		Item type = item.getItem();
 		ConComp con;
-		if (type == Objects.i_itemPipe && item.getItemDamage() == 1) {
+		if (type == Objects.item_pipe && item.getItemDamage() == 1) {
 			con = new ItemDestination(pipe, side);
 			pipe.con[side] = 2;
-		} else if (type == Objects.i_itemPipe && item.getItemDamage() == 2) {
+		} else if (type == Objects.item_pipe && item.getItemDamage() == 2) {
 			con = new ItemExtractor(pipe, side);
 			pipe.con[side] = 3;
-		} else if (type == Objects.i_fluidPipe && item.getItemDamage() == 1) {
+		} else if (type == Objects.fluid_pipe && item.getItemDamage() == 1) {
 			con = new FluidDestination(pipe, side);
 			pipe.con[side] = 4;
-		} else if (type == Objects.i_fluidPipe && item.getItemDamage() == 2) {
+		} else if (type == Objects.fluid_pipe && item.getItemDamage() == 2) {
 			con = new FluidExtractor(pipe, side);
 			pipe.con[side] = 5;
 		} else return false;

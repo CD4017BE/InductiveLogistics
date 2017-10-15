@@ -62,7 +62,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (item.getCount() == 0) {
 			if (filter != null) {
-				item = new ItemStack(Objects.fluidFilter);
+				item = new ItemStack(Objects.fluid_filter);
 				item.setTagCompound(PipeFilterFluid.save(filter));
 				filter = null;
 				ItemFluidUtil.dropStack(item, player);
@@ -74,7 +74,7 @@ public class FluidComp extends ConComp implements IObjLink {
 				pipe.isBlocked ^= 1 << side;
 				return true;
 			}
-		} else if (filter == null && item.getItem() == Objects.fluidFilter && item.getTagCompound() != null) {
+		} else if (filter == null && item.getItem() == Objects.fluid_filter && item.getTagCompound() != null) {
 			filter = PipeFilterFluid.load(item.getTagCompound());
 			item.grow(-1);
 			player.setHeldItem(hand, item);
@@ -89,7 +89,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	@Override
 	public void dropContent(List<ItemStack> list) {
 		if (filter != null) {
-			ItemStack item = new ItemStack(Objects.fluidFilter);
+			ItemStack item = new ItemStack(Objects.fluid_filter);
 			item.setTagCompound(PipeFilterFluid.save(filter));
 			list.add(item);
 		}

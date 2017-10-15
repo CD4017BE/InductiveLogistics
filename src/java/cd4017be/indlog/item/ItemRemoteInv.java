@@ -142,8 +142,8 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 				BlockGuiHandler.sendPacketToServer(dos);
 			}
 			if (linkedInv == null) linkedInv = new BasicInventory(0); 
-			cont.addItemSlot(new SlotItemType(inv, 0, 8, 86 + ofsY, new ItemStack(Objects.itemFilter)));
-			cont.addItemSlot(new SlotItemType(inv, 1, 26, 86 + ofsY, new ItemStack(Objects.itemFilter)));
+			cont.addItemSlot(new SlotItemType(inv, 0, 8, 86 + ofsY, new ItemStack(Objects.item_filter)));
+			cont.addItemSlot(new SlotItemType(inv, 1, 26, 86 + ofsY, new ItemStack(Objects.item_filter)));
 			if (size > 0) {
 				int h = size / 12;
 				int w = size % 12;

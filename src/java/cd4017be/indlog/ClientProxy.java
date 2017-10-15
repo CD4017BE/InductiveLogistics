@@ -27,34 +27,34 @@ public class ClientProxy extends CommonProxy {
 		super.init();
 		ClientInputHandler.init();
 		SpecialModelLoader.setMod(Main.ID);
-		SpecialModelLoader.registerBlockModel(itemPipe, new MultipartModel(itemPipe).setPipeVariants(7));
-		SpecialModelLoader.registerBlockModel(fluidPipe, new MultipartModel(fluidPipe).setPipeVariants(7));
-		SpecialModelLoader.registerBlockModel(warpPipe, new MultipartModel(warpPipe).setPipeVariants(13));
+		SpecialModelLoader.registerBlockModel(ITEM_PIPE, new MultipartModel(ITEM_PIPE).setPipeVariants(7));
+		SpecialModelLoader.registerBlockModel(FLUID_PIPE, new MultipartModel(FLUID_PIPE).setPipeVariants(7));
+		SpecialModelLoader.registerBlockModel(WARP_PIPE, new MultipartModel(WARP_PIPE).setPipeVariants(13));
 		
-		Objects.itemPipe.setBlockLayer(BlockRenderLayer.CUTOUT);
-		Objects.fluidPipe.setBlockLayer(BlockRenderLayer.CUTOUT);
-		Objects.warpPipe.setBlockLayer(BlockRenderLayer.CUTOUT);
-		Objects.tank.setBlockLayer(BlockRenderLayer.CUTOUT);
+		Objects.ITEM_PIPE.setBlockLayer(BlockRenderLayer.CUTOUT);
+		Objects.FLUID_PIPE.setBlockLayer(BlockRenderLayer.CUTOUT);
+		Objects.WARP_PIPE.setBlockLayer(BlockRenderLayer.CUTOUT);
+		Objects.TANK.setBlockLayer(BlockRenderLayer.CUTOUT);
 		
-		BlockGuiHandler.registerGui(tank, GuiTank.class);
-		BlockGuiHandler.registerGui(buffer, GuiItemBuffer.class);
-		BlockGuiHandler.registerGui(autoCraft, GuiAutoCrafter.class);
+		BlockGuiHandler.registerGui(TANK, GuiTank.class);
+		BlockGuiHandler.registerGui(BUFFER, GuiItemBuffer.class);
+		BlockGuiHandler.registerGui(AUTO_CRAFT, GuiAutoCrafter.class);
 	}
 
 	@Override
 	public void registerRenderers() {
 		super.registerRenderers();
-		BlockItemRegistry.registerRenderBS(itemPipe, 0, 2);
-		BlockItemRegistry.registerRenderBS(fluidPipe, 0, 2);
-		BlockItemRegistry.registerRender(warpPipe);
-		BlockItemRegistry.registerRenderBS(tank, 0, 15);
-		BlockItemRegistry.registerRenderBS(buffer, 0, 15);
-		BlockItemRegistry.registerRender(autoCraft);
+		BlockItemRegistry.registerRenderBS(ITEM_PIPE, 0, 2);
+		BlockItemRegistry.registerRenderBS(FLUID_PIPE, 0, 2);
+		BlockItemRegistry.registerRender(WARP_PIPE);
+		BlockItemRegistry.registerRenderBS(TANK, 0, 15);
+		BlockItemRegistry.registerRenderBS(BUFFER, 0, 15);
+		BlockItemRegistry.registerRender(AUTO_CRAFT);
 		
-		BlockItemRegistry.registerRender(fluidFilter);
-		BlockItemRegistry.registerRender(itemFilter);
-		BlockItemRegistry.registerRender(portableCraft);
-		BlockItemRegistry.registerRender(remoteInv);
+		BlockItemRegistry.registerRender(fluid_filter);
+		BlockItemRegistry.registerRender(item_filter);
+		BlockItemRegistry.registerRender(portable_craft);
+		BlockItemRegistry.registerRender(remote_inv);
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(ItemPipe.class, new ItemPipeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluidPipe.class, new FluidPipeRenderer());

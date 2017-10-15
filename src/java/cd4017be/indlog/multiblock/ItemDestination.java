@@ -20,7 +20,7 @@ public class ItemDestination extends ItemComp implements IItemDest {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (super.onClicked(player, hand, item, uid)) return true;
 		if (item.getCount() == 0 && player.isSneaking()) {
-			ItemFluidUtil.dropStack(new ItemStack(Objects.itemPipe, 1, 1), player);
+			ItemFluidUtil.dropStack(new ItemStack(Objects.ITEM_PIPE, 1, 1), player);
 			pipe.network.remConnector(pipe, side);
 			return true;
 		}
@@ -29,7 +29,7 @@ public class ItemDestination extends ItemComp implements IItemDest {
 
 	@Override
 	public void dropContent(List<ItemStack> list) {
-		list.add(new ItemStack(Objects.itemPipe, 1, 1));
+		list.add(new ItemStack(Objects.ITEM_PIPE, 1, 1));
 		super.dropContent(list);
 	}
 

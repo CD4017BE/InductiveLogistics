@@ -20,7 +20,7 @@ public class FluidDestination extends FluidComp implements IFluidDest {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (super.onClicked(player, hand, item, uid)) return true;
 		if (item.getCount() == 0 && player.isSneaking()) {
-			ItemFluidUtil.dropStack(new ItemStack(Objects.fluidPipe, 1, 1), player);
+			ItemFluidUtil.dropStack(new ItemStack(Objects.FLUID_PIPE, 1, 1), player);
 			pipe.network.remConnector(pipe, side);
 			return true;
 		}
@@ -29,7 +29,7 @@ public class FluidDestination extends FluidComp implements IFluidDest {
 
 	@Override
 	public void dropContent(List<ItemStack> list) {
-		list.add(new ItemStack(Objects.fluidPipe, 1, 1));
+		list.add(new ItemStack(Objects.FLUID_PIPE, 1, 1));
 		super.dropContent(list);
 	}
 

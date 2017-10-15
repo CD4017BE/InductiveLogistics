@@ -22,9 +22,9 @@ public class CommonProxy {
 		TickRegistry.register();
 		setConfig();
 		
-		BlockGuiHandler.registerContainer(Objects.tank, TileContainer.class);
-		BlockGuiHandler.registerContainer(Objects.buffer, TileContainer.class);
-		BlockGuiHandler.registerContainer(Objects.autoCraft, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.TANK, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.BUFFER, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.AUTO_CRAFT, TileContainer.class);
 	}
 
 	private void setConfig() {

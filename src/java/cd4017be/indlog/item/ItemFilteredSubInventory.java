@@ -37,11 +37,11 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 		ItemStack[] items = new ItemStack[2];
 		NBTTagCompound nbt;
 		if ((nbt = inv.getSubCompound("fin")) != null) {
-			items[0] = new ItemStack(Objects.itemFilter);
+			items[0] = new ItemStack(Objects.item_filter);
 			items[0].setTagCompound(nbt);
 		} else items[0] = ItemStack.EMPTY;
 		if ((nbt = inv.getSubCompound("fout")) != null) {
-			items[1] = new ItemStack(Objects.itemFilter);
+			items[1] = new ItemStack(Objects.item_filter);
 			items[1].setTagCompound(nbt);
 		} else items[1] = ItemStack.EMPTY;
 		return items;
@@ -53,12 +53,12 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 		if (inv.hasTagCompound()) nbt = inv.getTagCompound();
 		else inv.setTagCompound(nbt = new NBTTagCompound());
 		ItemStack fin = items[0], fout = items[1]; items[0] = ItemStack.EMPTY; items[1] = ItemStack.EMPTY;
-		if (fin.getItem() == Objects.itemFilter) {
+		if (fin.getItem() == Objects.item_filter) {
 			if (!fin.hasTagCompound()) fin.setTagCompound(new NBTTagCompound());
 			nbt.setTag("fin", fin.getTagCompound());
 			items[0] = fin;
 		} else nbt.removeTag("fin");
-		if (fout.getItem() == Objects.itemFilter) {
+		if (fout.getItem() == Objects.item_filter) {
 			if (!fout.hasTagCompound()) fout.setTagCompound(new NBTTagCompound());
 			nbt.setTag("fout", fout.getTagCompound());
 			items[1] = fout;

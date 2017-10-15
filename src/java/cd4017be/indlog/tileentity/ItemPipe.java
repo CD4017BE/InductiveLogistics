@@ -95,14 +95,14 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (super.onActivated(player, hand, item, dir, X, Y, Z)) return true;
 		if (filter != null && !player.isSneaking() && item.getCount() == 0) {
-			item = new ItemStack(Objects.itemFilter);
+			item = new ItemStack(Objects.item_filter);
 			item.setTagCompound(PipeFilterItem.save(filter));
 			filter = null;
 			flow |= 0x8000;
 			player.setHeldItem(hand, item);
 			markUpdate();
 			return true;
-		} else if (filter == null && type != 0 && item.getItem() == Objects.itemFilter && item.getTagCompound() != null) {
+		} else if (filter == null && type != 0 && item.getItem() == Objects.item_filter && item.getTagCompound() != null) {
 			filter = PipeFilterItem.load(item.getTagCompound());
 			flow &= 0x7fff;
 			item.grow(-1);
@@ -157,7 +157,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 		List<ItemStack> list = makeDefaultDrops(null);
 		if (content != null) list.add(content);
 		if (filter != null) {
-			ItemStack item = new ItemStack(Objects.itemFilter);
+			ItemStack item = new ItemStack(Objects.item_filter);
 			item.setTagCompound(PipeFilterItem.save(filter));
 			list.add(item);
 		}

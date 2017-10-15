@@ -27,7 +27,7 @@ public class Main {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Objects.registerCapabilities();
+		Objects.init();
 		RecipeScriptContext.instance.run(ConfigName + ".PRE_INIT");
 		proxy.init();
 	}
