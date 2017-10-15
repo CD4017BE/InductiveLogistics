@@ -6,12 +6,12 @@ import java.util.List;
 
 import cd4017be.indlog.util.VariableInventory;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.GlitchSaveSlot;
 import cd4017be.lib.Gui.TileContainer;
-import cd4017be.lib.block.BaseTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

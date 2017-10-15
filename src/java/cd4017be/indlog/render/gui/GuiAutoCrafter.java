@@ -3,7 +3,7 @@ package cd4017be.indlog.render.gui;
 import cd4017be.indlog.Main;
 import cd4017be.indlog.tileentity.AutoCrafter;
 import cd4017be.lib.BlockGuiHandler;
-import cd4017be.lib.Gui.GuiMachine;
+import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +11,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiAutoCrafter extends GuiMachine {
+public class GuiAutoCrafter extends AdvancedGui {
 
 	private final AutoCrafter tile;
 

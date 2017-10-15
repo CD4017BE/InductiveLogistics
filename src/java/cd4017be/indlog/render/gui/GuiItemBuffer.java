@@ -5,14 +5,14 @@ import cd4017be.indlog.render.RenderItemOverride;
 import cd4017be.indlog.tileentity.Buffer;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
-import cd4017be.lib.Gui.GuiMachine;
+import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiItemBuffer extends GuiMachine {
+public class GuiItemBuffer extends AdvancedGui {
 
 	private final Buffer tile;
 	private final int N;

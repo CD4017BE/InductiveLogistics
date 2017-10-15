@@ -3,7 +3,7 @@ package cd4017be.indlog.item;
 import java.util.List;
 
 import cd4017be.indlog.tileentity.Buffer;
-import cd4017be.lib.templates.ItemVariantBlock;
+import cd4017be.lib.item.ItemVariantBlock;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;

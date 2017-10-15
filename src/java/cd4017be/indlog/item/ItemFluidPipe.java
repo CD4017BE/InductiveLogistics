@@ -3,14 +3,14 @@ package cd4017be.indlog.item;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import cd4017be.lib.BlockItemRegistry;
-import cd4017be.lib.DefaultItemBlock;
+import cd4017be.lib.item.BaseItemBlock;
 
 	
 /**
  *
  * @author CD4017BE
  */
-public class ItemFluidPipe extends DefaultItemBlock {
+public class ItemFluidPipe extends BaseItemBlock {
 
 	public ItemFluidPipe(Block id) {
 		super(id);

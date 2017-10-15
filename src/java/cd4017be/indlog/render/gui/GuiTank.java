@@ -1,13 +1,13 @@
 package cd4017be.indlog.render.gui;
 
-import cd4017be.lib.Gui.GuiMachine;
+import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.indlog.tileentity.Tank;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiTank extends GuiMachine {
+public class GuiTank extends AdvancedGui {
 	private static final long interval = 5000;
 	private final Tank tile;
 	private long clickTime = 0;

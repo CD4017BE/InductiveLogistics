@@ -1,7 +1,7 @@
 package cd4017be.indlog.util;
 
 import cd4017be.lib.Gui.ItemGuiData.IInventoryItem;
-import cd4017be.lib.templates.AbstractInventory;
+import cd4017be.lib.capability.AbstractInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import cd4017be.indlog.Main;
 import cd4017be.lib.BlockGuiHandler;
-import cd4017be.lib.Gui.GuiMachine;
+import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,7 +15,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import static cd4017be.indlog.item.ItemPortableCrafter.*;
 
-public class GuiPortableCrafting extends GuiMachine {
+public class GuiPortableCrafting extends AdvancedGui {
 
 	private final InventoryPlayer inv;
 

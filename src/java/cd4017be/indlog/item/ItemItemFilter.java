@@ -11,15 +11,15 @@ import cd4017be.indlog.render.gui.GuiItemFilter;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
-import cd4017be.lib.DefaultItem;
-import cd4017be.lib.IGuiItem;
 import cd4017be.lib.util.TooltipUtil;
 import cd4017be.lib.Gui.DataContainer;
+import cd4017be.lib.Gui.IGuiItem;
 import cd4017be.lib.Gui.ItemGuiData;
 import cd4017be.lib.Gui.SlotHolo;
 import cd4017be.lib.Gui.TileContainer;
-import cd4017be.lib.templates.InventoryItem;
-import cd4017be.lib.templates.InventoryItem.IItemInventory;
+import cd4017be.lib.capability.InventoryItem;
+import cd4017be.lib.capability.InventoryItem.IItemInventory;
+import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +37,7 @@ import net.minecraft.world.World;
  *
  * @author CD4017BE
  */
-public class ItemItemFilter extends DefaultItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
+public class ItemItemFilter extends BaseItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
 
 	public ItemItemFilter(String id) {
 		super(id);

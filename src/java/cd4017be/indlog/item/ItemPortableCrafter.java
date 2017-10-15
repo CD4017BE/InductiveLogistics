@@ -7,14 +7,14 @@ import java.util.List;
 import cd4017be.indlog.render.gui.GuiPortableCrafting;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
-import cd4017be.lib.DefaultItem;
-import cd4017be.lib.IGuiItem;
 import cd4017be.lib.Gui.DataContainer;
+import cd4017be.lib.Gui.IGuiItem;
 import cd4017be.lib.Gui.ItemGuiData;
 import cd4017be.lib.Gui.SlotHolo;
 import cd4017be.lib.Gui.TileContainer;
-import cd4017be.lib.templates.InventoryItem;
-import cd4017be.lib.templates.InventoryItem.IItemInventory;
+import cd4017be.lib.capability.InventoryItem;
+import cd4017be.lib.capability.InventoryItem.IItemInventory;
+import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,7 +37,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemPortableCrafter extends DefaultItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
+public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
 
 	public static int INTERVAL;
 	/**NBT-Tag names */

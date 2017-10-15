@@ -5,7 +5,7 @@ import cd4017be.indlog.item.ItemFilteredSubInventory;
 import cd4017be.indlog.item.ItemRemoteInv.GuiData;
 import cd4017be.indlog.render.RenderItemOverride;
 import cd4017be.lib.BlockGuiHandler;
-import cd4017be.lib.Gui.GuiMachine;
+import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiRemoteInventory extends GuiMachine {
+public class GuiRemoteInventory extends AdvancedGui {
 
 	private final GuiData data;
 	private final InventoryPlayer inv;

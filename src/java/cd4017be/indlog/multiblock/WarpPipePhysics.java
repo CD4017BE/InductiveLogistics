@@ -12,8 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
-import cd4017be.lib.block.BaseTileEntity;
 import cd4017be.lib.templates.SharedNetwork;
+import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Utils;
 
 public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> {

@@ -13,14 +13,14 @@ import cd4017be.indlog.render.gui.GuiFluidFilter;
 import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
-import cd4017be.lib.DefaultItem;
-import cd4017be.lib.IGuiItem;
 import cd4017be.lib.util.TooltipUtil;
 import cd4017be.lib.Gui.DataContainer;
+import cd4017be.lib.Gui.IGuiItem;
+import cd4017be.lib.Gui.ITankContainer;
 import cd4017be.lib.Gui.ItemGuiData;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
-import cd4017be.lib.templates.ITankContainer;
+import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +41,7 @@ import net.minecraft.world.World;
  *
  * @author CD4017BE
  */
-public class ItemFluidFilter extends DefaultItem implements IGuiItem, ClientItemPacketReceiver {
+public class ItemFluidFilter extends BaseItem implements IGuiItem, ClientItemPacketReceiver {
 
 	public ItemFluidFilter(String id) {
 		super(id);

@@ -7,12 +7,12 @@ import java.util.List;
 
 import cd4017be.lib.block.AdvancedBlock.IRedstoneTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.capability.LinkedInventory;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
-import cd4017be.lib.block.BaseTileEntity;
-import cd4017be.lib.templates.LinkedInventory;
+import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.ItemFluidUtil;
 import cd4017be.lib.util.Utils;
 import net.minecraft.block.state.IBlockState;

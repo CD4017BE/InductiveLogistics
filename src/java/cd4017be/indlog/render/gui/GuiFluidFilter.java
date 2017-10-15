@@ -6,7 +6,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import cd4017be.lib.BlockGuiHandler;
-import cd4017be.lib.Gui.GuiMachine;
+import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.util.TooltipUtil;
 
@@ -14,7 +14,7 @@ import cd4017be.lib.util.TooltipUtil;
  *
  * @author CD4017BE
  */
-public class GuiFluidFilter extends GuiMachine {
+public class GuiFluidFilter extends AdvancedGui {
 
 	private final InventoryPlayer inv;
 

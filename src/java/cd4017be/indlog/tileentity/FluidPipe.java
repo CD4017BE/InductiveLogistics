@@ -6,7 +6,7 @@ import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.IFluidPipeCon;
 import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
-import cd4017be.lib.templates.LinkedTank;
+import cd4017be.lib.capability.LinkedTank;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

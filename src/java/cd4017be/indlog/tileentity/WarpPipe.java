@@ -12,9 +12,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 
+import static cd4017be.lib.property.PropertyByte.cast;
+
 import java.util.List;
 
-import static cd4017be.lib.util.PropertyByte.cast;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.BasicWarpPipe;
 import cd4017be.indlog.multiblock.ConComp;
@@ -25,7 +26,7 @@ import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
-import cd4017be.lib.templates.MultiblockTile;
+import cd4017be.lib.tileentity.MultiblockTile;
 import cd4017be.lib.util.Utils;
 
 public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IModularTile, IItemPipeCon, IFluidPipeCon {

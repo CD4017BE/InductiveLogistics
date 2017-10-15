@@ -5,7 +5,7 @@ import java.util.List;
 import cd4017be.indlog.render.tesr.FluidRenderer;
 import cd4017be.indlog.tileentity.Tank;
 import cd4017be.indlog.util.FluidHandlerDirectNBT;
-import cd4017be.lib.templates.ItemVariantBlock;
+import cd4017be.lib.item.ItemVariantBlock;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;

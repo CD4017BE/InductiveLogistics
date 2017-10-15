@@ -1,16 +1,16 @@
 package cd4017be.indlog.tileentity;
 
-import static cd4017be.lib.util.PropertyByte.cast;
+import static cd4017be.lib.property.PropertyByte.cast;
 
 import java.util.ArrayList;
 
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
+import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.TileAccess;
 import cd4017be.lib.util.Utils;
 import cd4017be.indlog.util.PipeFilter;
-import cd4017be.lib.block.BaseTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

@@ -4,10 +4,10 @@ import java.io.IOException;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
-import cd4017be.lib.DefaultItem;
-import cd4017be.lib.IGuiItem;
+import cd4017be.lib.Gui.IGuiItem;
 import cd4017be.lib.Gui.ItemGuiData;
-import cd4017be.lib.templates.InventoryItem.IItemInventory;
+import cd4017be.lib.capability.InventoryItem.IItemInventory;
+import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.IFilter;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.Entity;
@@ -22,7 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
-public abstract class ItemFilteredSubInventory extends DefaultItem implements IItemInventory, IGuiItem, ClientItemPacketReceiver {
+public abstract class ItemFilteredSubInventory extends BaseItem implements IItemInventory, IGuiItem, ClientItemPacketReceiver {
 
 	public ItemFilteredSubInventory(String id) {
 		super(id);
