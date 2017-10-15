@@ -2,7 +2,6 @@ package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.lib.script.ScriptFiles.Version;
-import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -30,16 +29,14 @@ public class Main {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		TooltipUtil.CURRENT_DOMAIN = ID;
-		Objects.tabIndLog = new TabMaterials(ID);
-		Objects.createBlocks();
-		Objects.createItems();
+		Objects.init();
 		Objects.registerCapabilities();
 		RecipeScriptContext.instance.run(ConfigName + ".PRE_INIT");
 		proxy.init();
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event) {		
+	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 	}
 
