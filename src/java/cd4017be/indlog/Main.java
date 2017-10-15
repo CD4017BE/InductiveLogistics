@@ -2,7 +2,6 @@ package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.lib.script.ScriptFiles.Version;
-import cd4017be.lib.util.TooltipUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -28,8 +27,6 @@ public class Main {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		TooltipUtil.CURRENT_DOMAIN = ID;
-		Objects.init();
 		Objects.registerCapabilities();
 		RecipeScriptContext.instance.run(ConfigName + ".PRE_INIT");
 		proxy.init();
