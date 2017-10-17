@@ -12,7 +12,7 @@ import cd4017be.lib.render.model.IntArrayModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.IResourceManager;
@@ -96,7 +96,7 @@ public class FluidRenderer implements IModeledTESR {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x + 0.5D, y, z + 0.5D);
 		GlStateManager.scale(dxz, dy, dxz);
-		VertexBuffer t = Tessellator.getInstance().getBuffer();
+		BufferBuilder t = Tessellator.getInstance().getBuffer();
 		t.begin(GL11.GL_QUADS, IntArrayModel.FORMAT);
 		t.addVertexData(m.vertexData);
 		Tessellator.getInstance().draw();

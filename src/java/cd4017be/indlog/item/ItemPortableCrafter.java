@@ -175,7 +175,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 				rcpIdx = -1;
 			}
 			if (rcpIdx >= 0) {
-				List<IRecipe> list = CraftingManager.getInstance().getRecipeList();
+				List<IRecipe> list = CraftingManager.REGISTRY;
 				if (rcpIdx < list.size()) recipe = list.get(rcpIdx);
 			}
 			if (recipe == null)	result = ItemStack.EMPTY;
@@ -311,7 +311,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 		nbt.setIntArray(INGRED_IDX, Arrays.copyOf(indices, n));
 		nbt.setTag(INGRED, ItemFluidUtil.saveItems(Arrays.copyOf(ingreds, n)));
 		int rcpIdx = -1;
-		List<IRecipe> list = CraftingManager.getInstance().getRecipeList();
+		List<IRecipe> list = CraftingManager.REGISTRY;
 		for (int i = 0; i < list.size(); i++) {
 			IRecipe r = list.get(i);
 			if (r.matches(icr, player.world)) {

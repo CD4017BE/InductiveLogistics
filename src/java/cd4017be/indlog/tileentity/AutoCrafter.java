@@ -87,7 +87,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 			//find recipe
 			if (lastRecipe == null || !lastRecipe.matches(icr, world)) {
 				lastRecipe = null;
-				for (IRecipe r : CraftingManager.getInstance().getRecipeList())
+				for (IRecipe r : CraftingManager.REGISTRY)
 					if(r.matches(icr, world)) {
 						lastRecipe = r;
 						break;

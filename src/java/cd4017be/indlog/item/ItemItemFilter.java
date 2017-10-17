@@ -1,5 +1,7 @@
 package cd4017be.indlog.item;
 
+import javax.annotation.Nullable;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,7 +46,8 @@ public class ItemItemFilter extends BaseItem implements IGuiItem, ClientItemPack
 	}
 
 	@Override
-	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack item, @Nullable World player, List<String> list, ITooltipFlag b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
 			PipeFilterItem filter = PipeFilterItem.load(item.getTagCompound());

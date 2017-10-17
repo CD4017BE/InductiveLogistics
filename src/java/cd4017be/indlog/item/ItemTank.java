@@ -1,5 +1,8 @@
 package cd4017be.indlog.item;
 
+import javax.annotation.Nullable;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.world.World;
 import java.util.List;
 
 import cd4017be.indlog.render.tesr.FluidRenderer;
@@ -28,7 +31,8 @@ public class ItemTank extends ItemVariantBlock {
 	}
 
 	@Override
-	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack item, @Nullable World player, List<String> list, ITooltipFlag b) {
 		FluidStack fluid = FluidStack.loadFluidStackFromNBT(item.getTagCompound());
 		if (fluid == null) list.add(TooltipUtil.format("tile.indlog.tank.empty", (double)Tank.CAP[item.getItemDamage()] / 1000D));
 		else list.add(TooltipUtil.format("tile.indlog.tank.stor", fluid.getLocalizedName(), (double)fluid.amount / 1000D, (double)Tank.CAP[item.getItemDamage()] / 1000D));
@@ -36,7 +40,9 @@ public class ItemTank extends ItemVariantBlock {
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+		if (!isInCreativeTab(tab)) return;
+		Item item = this;
 		for (int i = 0; i < Tank.CAP.length; i++)
 			if (Tank.CAP[i] > 0)
 				list.add(new ItemStack(item, 1, i));

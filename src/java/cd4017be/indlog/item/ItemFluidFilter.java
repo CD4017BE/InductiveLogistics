@@ -1,5 +1,7 @@
 package cd4017be.indlog.item;
 
+import javax.annotation.Nullable;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -48,7 +50,8 @@ public class ItemFluidFilter extends BaseItem implements IGuiItem, ClientItemPac
 	}
 
 	@Override
-	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack item, @Nullable World player, List<String> list, ITooltipFlag b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
 			PipeFilterFluid filter = PipeFilterFluid.load(item.getTagCompound());

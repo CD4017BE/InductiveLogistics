@@ -14,7 +14,7 @@ public class ItemPipeRenderer extends TileEntitySpecialRenderer<ItemPipe> {
 	private final RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
 	@Override
-	public void renderTileEntityAt(ItemPipe te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void render(ItemPipe te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		if (te.content != null) renderItem(te.content, x, y, z);
 	}
 

@@ -1,5 +1,7 @@
 package cd4017be.indlog.item;
 
+import javax.annotation.Nullable;
+import net.minecraft.client.util.ITooltipFlag;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
@@ -57,7 +59,8 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 	}
 
 	@Override
-	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack item, @Nullable World player, List<String> list, ITooltipFlag b) {
 		NBTTagCompound nbt = item.getTagCompound();
 		if (nbt != null) list.add(TooltipUtil.formatLink(BlockPos.fromLong(nbt.getLong("pos")), EnumFacing.getFront(nbt.getByte("s")), nbt.getInteger("d")));
 		super.addInformation(item, player, list, b);

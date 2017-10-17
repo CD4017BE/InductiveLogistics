@@ -11,7 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class TankRenderer extends TileEntitySpecialRenderer<Tank> {
 
 	@Override
-	public void renderTileEntityAt(Tank te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void render(Tank te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		FluidStack fluid = te.fluid;
 		if (fluid != null) FluidRenderer.instance.render(fluid, te, x, y, z, 0.875D, (double)fluid.amount / (double)te.tank.cap);
 	}
