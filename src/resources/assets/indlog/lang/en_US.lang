@@ -47,6 +47,9 @@ tile.indlog.buffer\:i.tip=Item storage inventory with adjustable slot count & st
 tile.indlog.buffer.stor=%d / %d Slots filled @ Stack limit: %d
 tile.indlog.auto_craft.name=Automatic Crafter
 tile.indlog.auto_craft.tip=Takes items from neighboring inventories to perform\nautomatic crafting based on a side reference pattern.
+tile.indlog.inv_connector.name=Remote Access Pipe
+tile.indlog.inv_connector.tip=Provides remote access to capabilities\n(Item, Fluid, ...) of a connected Block.\nConnection shows green if linked and red if not.\nClick with empty hand to change orientation.
+
 #Items
 item.indlog.fluid_filter.name=Pipe Liquid-Filter
 item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).

@@ -45,6 +45,9 @@ tile.indlog.buffer\:14.name=Item Puffer §5ultimativ-L
 tile.indlog.buffer\:15.name=Item Puffer §5ultimativ-XL
 tile.indlog.buffer\:i.tip=Lagerinventar mit einstellbarer Slotanzahl & Stapelbegrenzung.
 tile.indlog.buffer.stor=%d / %d Slots gefüllt @ Stapellimit: %d
+tile.indlog.inv_connector.name=Block Fernzugriffsleitung
+tile.indlog.inv_connector.tip=Spiegelt die Capabilities des angeschlossenen\nBlocks wieder (Items, Flüssigkeiten, usw.).\nMarkierungen zeigen grün = verbunden, Rot = nicht\nInteragiere (ohne Item) zum neu orientieren.
+
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
 item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).

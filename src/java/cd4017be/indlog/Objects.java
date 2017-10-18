@@ -44,6 +44,7 @@ public class Objects {
 	public static final VariantBlock TANK = null;
 	public static final VariantBlock BUFFER = null;
 	public static final AdvancedBlock AUTO_CRAFT = null;
+	public static final BlockPipe INV_CONNECTOR = null;
 
 	//ItemBlocks
 	public static final ItemItemPipe item_pipe = null;
@@ -52,6 +53,7 @@ public class Objects {
 	public static final ItemTank tank = null;
 	public static final ItemBuffer buffer = null;
 	public static final BaseItemBlock auto_craft = null;
+	public static final BaseItemBlock inv_connector = null;
 
 	//Items
 	public static final ItemItemFilter item_filter = null;
@@ -73,7 +75,8 @@ public class Objects {
 			BlockPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(1.0F).setResistance(20F),
 			VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class).setCreativeTab(tabIndLog).setLightOpacity(0),
 			VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class).setCreativeTab(tabIndLog),
-			new AdvancedBlock("auto_craft", Material.IRON, SoundType.ANVIL, 0, AutoCrafter.class).setCreativeTab(tabIndLog)
+			new AdvancedBlock("auto_craft", Material.IRON, SoundType.ANVIL, 0, AutoCrafter.class).setCreativeTab(tabIndLog),
+			BlockPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F)
 		);
 	}
 
@@ -87,6 +90,7 @@ public class Objects {
 			new ItemTank(TANK),
 			new ItemBuffer(BUFFER),
 			new BaseItemBlock(AUTO_CRAFT),
+			new BaseItemBlock(INV_CONNECTOR),
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),
