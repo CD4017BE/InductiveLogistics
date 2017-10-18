@@ -2,6 +2,7 @@ package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.lib.script.ScriptFiles.Version;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -27,13 +28,14 @@ public class Main {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Objects.init();
+		MinecraftForge.EVENT_BUS.register(proxy);
 		RecipeScriptContext.instance.run(ConfigName + ".PRE_INIT");
-		proxy.init();
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
+		Objects.init();
+		proxy.init();
 		proxy.registerRenderers();
 	}
 
