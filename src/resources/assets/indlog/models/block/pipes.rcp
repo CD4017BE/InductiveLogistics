@@ -10,18 +10,22 @@
 		"indlog:block/item_ex",
 		"indlog:block/item_filter",
 		"indlog:block/warp",
-		"indlog:block/blocked_pipe"
+		"indlog:block/blocked_pipe",
+		"indlog:block/invcon_b",
+		"indlog:block/invcon_c",
+		"indlog:block/invcon_l"
 	];
+	sizes = [4,4,4,0,4,4,4,0,4,0,6,6,6]#;
 }
 
 core(t) {
 	texIdx(t);
-	pipe.core(4);
+	pipe.core(sizes:t);
 }
 
 con(t) {
 	texIdx(t);
-	pipe.con(4);
+	pipe.con(sizes:t);
 }
 
 conf(t) {
@@ -45,5 +49,5 @@ conx(t) {
 
 item(t) {
 	texIdx(t);
-	pipe.full(4);
+	pipe.full(sizes:t);
 }

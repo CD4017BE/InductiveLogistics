@@ -1,0 +1,25 @@
+{
+    "variants": {
+		"inventory": { "model": "indlog:_pipes.item(10)" },
+		"normal": { "model": "indlog:inv_connector" },
+		"base": { "model": "indlog:_pipes.core(10)"},
+		"cn0": { "model": "indlog:_pipes.con(10)" },
+		"ce0": { "model": "indlog:_pipes.con(10)#e" },
+		"cs0": { "model": "indlog:_pipes.con(10)#s" },
+		"cw0": { "model": "indlog:_pipes.con(10)#w" },
+		"cb0": { "model": "indlog:_pipes.con(10)#bn" },
+		"ct0": { "model": "indlog:_pipes.con(10)#tn" },
+		"cn1": { "model": "indlog:_pipes.con(11)" },
+		"ce1": { "model": "indlog:_pipes.con(11)#e" },
+		"cs1": { "model": "indlog:_pipes.con(11)#s" },
+		"cw1": { "model": "indlog:_pipes.con(11)#w" },
+		"cb1": { "model": "indlog:_pipes.con(11)#bn" },
+		"ct1": { "model": "indlog:_pipes.con(11)#tn" },
+		"cn2": { "model": "indlog:_pipes.con(12)" },
+		"ce2": { "model": "indlog:_pipes.con(12)#e" },
+		"cs2": { "model": "indlog:_pipes.con(12)#s" },
+		"cw2": { "model": "indlog:_pipes.con(12)#w" },
+		"cb2": { "model": "indlog:_pipes.con(12)#bn" },
+		"ct2": { "model": "indlog:_pipes.con(12)#tn" }
+	}
+}

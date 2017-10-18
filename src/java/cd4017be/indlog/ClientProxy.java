@@ -49,11 +49,13 @@ public class ClientProxy extends CommonProxy {
 		SpecialModelLoader.registerBlockModel(ITEM_PIPE, new MultipartModel(ITEM_PIPE).setPipeVariants(7));
 		SpecialModelLoader.registerBlockModel(FLUID_PIPE, new MultipartModel(FLUID_PIPE).setPipeVariants(7));
 		SpecialModelLoader.registerBlockModel(WARP_PIPE, new MultipartModel(WARP_PIPE).setPipeVariants(13));
+		SpecialModelLoader.registerBlockModel(INV_CONNECTOR, new MultipartModel(INV_CONNECTOR).setPipeVariants(3));
 		
 		ITEM_PIPE.setBlockLayer(BlockRenderLayer.CUTOUT);
 		FLUID_PIPE.setBlockLayer(BlockRenderLayer.CUTOUT);
 		WARP_PIPE.setBlockLayer(BlockRenderLayer.CUTOUT);
 		TANK.setBlockLayer(BlockRenderLayer.CUTOUT);
+		INV_CONNECTOR.setBlockLayer(BlockRenderLayer.CUTOUT);
 		
 		BlockItemRegistry.registerRenderBS(ITEM_PIPE, 0, 2);
 		BlockItemRegistry.registerRenderBS(FLUID_PIPE, 0, 2);
@@ -61,6 +63,7 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRenderBS(TANK, 0, 15);
 		BlockItemRegistry.registerRenderBS(BUFFER, 0, 15);
 		BlockItemRegistry.registerRender(AUTO_CRAFT);
+		BlockItemRegistry.registerRender(INV_CONNECTOR);
 		BlockItemRegistry.registerRender(fluid_filter);
 		BlockItemRegistry.registerRender(item_filter);
 		BlockItemRegistry.registerRender(portable_craft);
