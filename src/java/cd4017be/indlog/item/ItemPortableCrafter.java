@@ -2,8 +2,6 @@ package cd4017be.indlog.item;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-
 import cd4017be.indlog.render.gui.GuiPortableCrafting;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
@@ -34,6 +32,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -51,7 +50,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 			RESULT = "result",
 			DMG = "dmg",
 			NBT = "nbt",
-			RECIPE = "rcp",
+			RECIPE = "rcpId",
 			JEI_DATA = "grid";
 
 	public ItemPortableCrafter(String id) {
@@ -155,7 +154,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 	}
 
 	class Recipe {
-		int rcpIdx;
+		String rcpIdx;
 		IRecipe recipe;
 		ItemStack[] ingreds;
 		int[] indices;
@@ -165,19 +164,16 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 		Recipe(NBTTagCompound nbt) {
 			useDMG = nbt.getBoolean(DMG);
 			useNBT = nbt.getBoolean(NBT);
-			rcpIdx = nbt.getInteger(RECIPE);
+			rcpIdx = nbt.getString(RECIPE);
 			indices = nbt.getIntArray(INGRED_IDX);
 			ingreds = ItemFluidUtil.loadItems(nbt.getTagList(INGRED, Constants.NBT.TAG_COMPOUND));
 			result = nbt.hasKey(RESULT) ? new ItemStack(nbt.getCompoundTag(RESULT)) : ItemStack.EMPTY;
 			if (ingreds.length != indices.length) {
 				indices = new int[0];
 				ingreds = new ItemStack[0];
-				rcpIdx = -1;
+				rcpIdx = "";
 			}
-			if (rcpIdx >= 0) {
-				List<IRecipe> list = CraftingManager.REGISTRY;
-				if (rcpIdx < list.size()) recipe = list.get(rcpIdx);
-			}
+			if (!rcpIdx.isEmpty()) recipe = CraftingManager.REGISTRY.getObject(new ResourceLocation(rcpIdx));
 			if (recipe == null)	result = ItemStack.EMPTY;
 		}
 		
@@ -310,21 +306,19 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 		}
 		nbt.setIntArray(INGRED_IDX, Arrays.copyOf(indices, n));
 		nbt.setTag(INGRED, ItemFluidUtil.saveItems(Arrays.copyOf(ingreds, n)));
-		int rcpIdx = -1;
-		List<IRecipe> list = CraftingManager.REGISTRY;
-		for (int i = 0; i < list.size(); i++) {
-			IRecipe r = list.get(i);
+		String rcpIdx = "";
+		for (IRecipe r : CraftingManager.REGISTRY) {
 			if (r.matches(icr, player.world)) {
-				rcpIdx = i;
+				rcpIdx = r.getRegistryName().toString();
 				nbt.setTag(RESULT, (items[9] = r.getCraftingResult(icr)).writeToNBT(new NBTTagCompound()));
 				break;
 			}
 		}
-		if (rcpIdx < 0) {
+		if (rcpIdx.isEmpty()) {
 			nbt.removeTag(RESULT);
 			items[9] = ItemStack.EMPTY;
 		}
-		nbt.setInteger(RECIPE, rcpIdx);
+		nbt.setString(RECIPE, rcpIdx);
 	}
 
 	public static boolean itemEqual(ItemStack a, ItemStack b, boolean nbt, boolean dmg) {
