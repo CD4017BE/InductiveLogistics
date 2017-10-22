@@ -45,6 +45,8 @@ tile.indlog.buffer\:14.name=Item Puffer §5ultimativ-L
 tile.indlog.buffer\:15.name=Item Puffer §5ultimativ-XL
 tile.indlog.buffer\:i.tip=Lagerinventar mit einstellbarer Slotanzahl & Stapelbegrenzung.
 tile.indlog.buffer.stor=%d / %d Slots gefüllt @ Stapellimit: %d
+tile.indlog.auto_craft.name=Automatische Montage
+tile.indlog.auto_craft.tip=Verwendet Items aus benachbarten Inventaren um automatisch\nHerstellungsrezepte basierend auf einem Blockseitenmuster auszuführen.
 tile.indlog.inv_connector.name=Block Fernzugriffsleitung
 tile.indlog.inv_connector.tip=Spiegelt die Capabilities des angeschlossenen\nBlocks wieder (Items, Flüssigkeiten, usw.).\nMarkierungen zeigen grün = verbunden, Rot = nicht\nInteragiere (ohne Item) zum neu orientieren.
 
@@ -53,10 +55,18 @@ item.indlog.fluid_filter.name=Flüssigkeitsfilter
 item.indlog.fluid_filter.tip=Filter für §6Flüssigkeits(extraktions|injektions)rohr§7e.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
 item.indlog.item_filter.name=Itemfilter
 item.indlog.item_filter.tip=Filter für §6Item(extraktions|injektions)rohr§7e und den §6Itemsortierer§7.\nIn's Leere rechtsklicken um GUI zu öffnen.\nRohr rechtsklicken zum einsetzen (mit leerer Hand wieder entnehmen).
+item.indlog.portable_craft.name=Tragbares Montagegerät
+item.indlog.portable_craft.tip=Praktisches tragbares Montagegerät mit\neinmal-Stapelanfertigungs sowie Vorratsanfertigungs Funktion.\nInteragiere um GUI zu öffnen.
+item.indlog.remote_inv.name=Tragbarer Inventar-Fernzugriff
+item.indlog.remote_inv.tip=Erlaubt Fernzugriff auf das Inventar eines Blocks und\nkann automatisch Items zwischen diesem und deinem Inventar übertragen.\nInteragiere geduckt mit Blockseite zum verbinden.\nIn's Leere rechtsklicken um GUI zu öffnen.
+
+cd4017be.inv_con.noLink=Nicht Verbunden!
+cd4017be.inv_con.link=Verbunden mit %s @ %s
 
 #GUI namen
 gui.indlog.tank.name=Tank
 gui.indlog.buffer.name=Item Puffer
+gui.indlog.auto_craft.name=Automatische Montage
 #GUI Tooltips
 gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
 gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
@@ -98,6 +108,35 @@ gui.cd4017be.tank.del0=Tankinhalt löschen
 gui.cd4017be.tank.del1=§4Sicher? Er ist für immer verloren!
 gui.cd4017be.buffer.slots=Slot-Limit:\n%d / %d
 gui.cd4017be.buffer.stack=Stapel-Limit:\n%d / %d
-gui.cd4017be.buffer.info=Größenskalierung\nSlot Interaktion
-gui.cd4017be.buffer.info0=§7Mit den beiden Schiebereglern unten rechts kann eingestellt werden wieviele Slots für externe Automatisierung zur Verfügung gestellt werden sollen und bis zu welcher Stapelanzahl die Slots jeweils maximal gefüllt werden sollen. Dabei wird das Item-spezifische standart Stapellimit ignoriert.
-gui.cd4017be.buffer.info1=§7In diesem Inventar verhalten sich die Slots etwas anders als normalerweise, um mit übergroßen Item-Stapeln umgehen zu können:\n§7Klicke §emit Item am Cursor§7 zum hineinlegen, Rechtsklick: 1, Linksklick: alle, shift-RK: alle Items von gleichen Typ aus dem gesammten Inventar, shift-LK: alle Items von gleichen Typ aus dem gesammten Inventar + Item am Cursor.\n§7Klicke §eohne Item am cursor§7 zu herausnehmen: Linksklick: 1 Item, Rechtsklick: 8 Items, shift-LK: 1 ganzen Stapel, shift-RK: alles bis Inventar voll.
+gui.cd4017be.buffer.info=Größenskalierung\nSlot Interaktion@specialSlot
+gui.cd4017be.buffer.info0=§7Mit den beiden Schiebereglern unten rechts kann eingestellt werden, wieviele Slots für externe Automatisierung zur Verfügung gestellt werden sollen und bis zu welcher Stapelanzahl die Slots jeweils maximal gefüllt werden sollen. Dabei wird das Item-spezifische standart Stapellimit ignoriert.
+gui.cd4017be.craftAm=Herzustellende Anzahl
+gui.cd4017be.startCraft=Herstellung starten
+gui.cd4017be.autoCraft0=Angegebene Anzahl einmalig herstellen
+gui.cd4017be.autoCraft1=Angegebene Anzahl im Inventar auf Vorrat halten
+gui.cd4017be.craftDmg0=Schadenswert ignorieren.\n(Herstellung kann fehlschlagen)
+gui.cd4017be.craftDmg1=Schadenswert muss\nexakt übereinstimmen.
+gui.cd4017be.craftNBT0=NBT Daten ignorieren.\n(Herstellung kann fehlschlagen)
+gui.cd4017be.craftNBT1=NBT Daten müssen\nexakt übereinstimmen.
+gui.cd4017be.craft.info=Rezept-Feld\nManuelle Herstellung\nAutomatische Herstellung
+gui.cd4017be.craft.info0=§7Das Rezept-Feld enthält keine echten Items, sondern erzeugt nur Abbilder von den reingelegten Items. Es unterstützt ziehen.\n§7Statt Items direkt in die Slots zu klicken kann man auch auf die umliegenden Raster-Patterns klicken, um mehrere Slots auf einmal zu setzen.\n§7§mRezepte konnen auch direkt aus JEI über die Rezept-Transfer Schaltflächen importiert werden (Es ist dafür nicht nötig, alle Ingredienzen dabei zu haben).§r§4 <- kommt bald
+gui.cd4017be.craft.info1=§7Klicke auf das Rezeptergebnis um direkt §6links-Klick: 1 Item§7, §erechts-Klick: 8 Items§7, §aShift-L-K: 1 Stapel§7 oder §bShift-R-K: so viel wie möglich herzustellen§7.\n§7Die benötigten Ingredienzen werden automatisch deinem Inventar entnommen und das Ergebins (und mögliche Nebenprodukte) wieder hinein gelegt. Falls nicht genug Platz vorhanden ist, landen die Endprodukte vor dir auf dem Boden.
+gui.cd4017be.craft.info2=§7Es gibt zwei Arbeitsmodi: Im §6einmalig herstellen Modus§7 wird nur die angegebene Menge hergestellt und dann angehalten, wohingegen im §6Vorrats Modus§7 kontinuierlich nachproduziert wird, um die angegebene Menge vom Ausgangsprodukt im Inventar aufrecht zu erhalten.\n§7Nach Einstellung von Arbeitsmodus und Zielanzahl startet ein Klick auf die grünen Pfeile den Herstellungsprozess. Erneutes Klicken bricht ihn wieder ab.\n§7Wenn benötigte Ingredienzen fehlen, wartet der Prozess, bis diese geliefert werden. Er wird jedoch automatisch abgebrochen wenn Items wegen überfülltem Inventar auf den Boden geworfen wurden.
+gui.cd4017be.craft.in=Ingredienzaufnahmeseite
+gui.cd4017be.craft.out=Nebenproduktabgabeseite
+gui.cd4017be.craft.rsIn0=Immer Aktiv
+gui.cd4017be.craft.rsIn1=Aktiv wenn Redstone an
+gui.cd4017be.craft.rsOut0=Kein Redstone-Signal abgeben
+gui.cd4017be.craft.rsOut1=Auf Seiten, wo Ingredienzen fehlen\nein Redstone-Signal abgeben.
+gui.cd4017be.craft.infoB=Verwendung\nBetrieb\nRedstone Steuerung
+gui.cd4017be.craft.infoB0=§7Es wird hier nicht direkt das Rezept festgelegt, sondern nur, von welchem benachbarten Inventar die Slots jeweils ihre Ingredienzen nehmen sollen.\n§7Slots, die keiner Seite zugeordnet ist, bleiben leer und Slots die der gleichen Seite zugeordnet sind, erhalten alle auch immer das gleiche Item.\n§7Bei einigen Rezepten bleiben Items über (z.B. leere Eimer), diese werden standartmäßig in das Inventar zurückgeschickt aus dem sie kamen. Aber es kann auch eine spezielle Seite festgelegt werden, wo sie stattdessen abgelegt werden sollen.
+gui.cd4017be.craft.infoB1=§7Um etwas herzustellen, müssen alle Inventare mindestens ein Item in ausreichender Stückzahl besitzen, um die angegebene Zahl an Herstellungsprozessen versorgen zu können.\n§7Wenn das gebildete Rezept gültig ist, wird es ausgeführt und das Ergebnis in den Ausgabe-Slot gelegt (der extern zugänglich ist). Solange die Maschine einige Herstellungs- oder Nebenprodukte nicht loswerden kann, wird der weitere Betrieb angehalten.
+gui.cd4017be.craft.infoB2=§7Man kann einstellen, dass die Maschine nur arbeitet, wenn sie ein Redstone-Signal bekommt. Außerdem kann eingestellt werden, dass sie ein Redstone-Signal an Eingangsinventare abgeben soll, die den aktuellen Herstellungsprozess durch fehlende Ingredienzen aufhalten.\n§7Dies ist nützlich, um Bedarfs-Produktionsketten aus mehreren Montagemaschinen oder komplexe, Redstone gesteuerte Logistiksysteme aufzubauen.
+gui.cd4017be.inputFilter=Automatisch Items importieren?
+gui.cd4017be.outputFilter=Automatisch Items exportieren?
+gui.cd4017be.remote.invalid=Block hat kein Inventar!
+gui.cd4017be.remote.linked=Blockinventar verbunden
+gui.cd4017be.remote.notFound=§cInventar existiert nicht oder ist ungeladen!
+gui.cd4017be.remote.info=Funktion\nSlot Interaktion@specialSlot
+gui.cd4017be.remote.info0=§7Diese Slots dienen als Schnittstelle, um mit dem angeschlossenen Blockinventar zu interagieren. Welche Art der interaktion möglich ist, hängt daher vom Block ab und auf welcher Seite er verbunden wurde.\n§7Durch Einbauen von §6Itemfilter§7n können bestimmte Items automatisch aus dem angeschlossenen Block in dein Inventar transportiert werden oder umgekehrt. Dabei bezieht sich die Vorratsfunktion des Filters immer auf den Inhalt deines Inventars.\n§7Damit Zugriff möglich ist, muss der angeschlossene Block blos geladen sein, du kanns dich aber beliebig weit weg oder sogar in einer anderen Dimension aufhalten.
+gui.cd4017be.specialSlot=§eKlicke mit Item am Cursor zum hineinlegen:\n§aRechtsklick: 1 Item\n§aLinksklick: ganzen Stapel\n§aShift-RK: statt dem Cursorstapel alle gleichartigen Items aus deinem Inventar\n§aShift-LK: alle gleichartigen Items aus deinem Inventar und den Cursorstapel.\n§eKlicke ohne Item am Cursor zu herausnehmen:\n§aLinksklick: 1 Item\n§aRechtsklick: 8 Items\n§aShift-LK: 1 ganzen Stapel\n§aShift-RK: alles bis Inventar voll

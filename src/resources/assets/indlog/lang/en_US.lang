@@ -60,6 +60,9 @@ item.indlog.portable_craft.tip=Convenient portable crafting device with\nsingle 
 item.indlog.remote_inv.name=Portable Inventory Remote Access
 item.indlog.remote_inv.tip=Allows you to remotely access a block's inventory and\nautomatically transfer items between it and your own inventory.\nSneak-click block face to link.\nClick in air to open GUI.
 
+cd4017be.inv_con.noLink=Not Linked!
+cd4017be.inv_con.link=Linked to %s @ %s
+
 #GUI names
 gui.indlog.tank.name=Tank
 gui.indlog.buffer.name=Item Buffer

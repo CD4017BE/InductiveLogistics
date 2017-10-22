@@ -75,7 +75,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			else {
 				int m = content.getMaxStackSize() - content.getCount();
 				if (m <= 0) return true;
-				content.grow(ItemFluidUtil.drain(acc, ItemHandlerHelper.copyStackWithSize(content, m)));
+				content.grow(ItemFluidUtil.drain(acc, content, m));
 			}
 		} else {
 			int n;
@@ -83,9 +83,8 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			else if ((n = content.getCount()) >= content.getMaxStackSize()) return true;
 			ItemStack extr = filter.getExtract(getItem(0), acc);
 			if (extr.getCount() <= 0) return false;
-			int m = extr.getMaxStackSize() - n;
-			if (m < extr.getCount()) extr.setCount(m);
-			extr.setCount(ItemFluidUtil.drain(acc, extr) + n);
+			int m = Math.min(extr.getMaxStackSize() - n, extr.getCount());
+			extr.setCount(ItemFluidUtil.drain(acc, extr, m) + n);
 			content = extr;
 		}
 		return false;
