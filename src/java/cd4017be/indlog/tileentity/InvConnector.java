@@ -24,6 +24,7 @@ import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.tileentity.BaseTileEntity;
+import cd4017be.lib.util.TooltipUtil;
 import cd4017be.lib.util.Utils;
 
 public class InvConnector extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, ITilePlaceHarvest, ILinkedInventory, IModularTile, ITickable {
@@ -89,8 +90,8 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z) {
 		if (player.isSneaking() && item.isEmpty()) {
 			if (world.isRemote) return true;
-			if (linkObj == null) player.sendMessage(new TextComponentString("Not Linked!"));
-			else player.sendMessage(new TextComponentString(String.format("Linked to %s @ %s", world.getBlockState(linkPos).getBlock().getLocalizedName(), linkPos.toString())));
+			if (linkObj == null) player.sendMessage(new TextComponentString(TooltipUtil.translate("cd4017be.inv_con.noLink")));
+			else player.sendMessage(new TextComponentString(TooltipUtil.format("cd4017be.inv_con.link", world.getBlockState(linkPos).getBlock().getLocalizedName(), linkPos.toString())));
 			return true;
 		} else if (item.isEmpty()) {
 			if (!world.isRemote) this.connect();
