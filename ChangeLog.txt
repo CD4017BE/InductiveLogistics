@@ -1,3 +1,14 @@
+v0.2.1
+Changes:
+- compatibility with structure of new CD4017BE_lib
+- moved Remote Access Pipe from AutomatedRedstone into this mod
+- fixed item multiplication bug (#1)
+- made documentation texts and German localization up to date
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.1.0
+
 v0.2.0
 Changes:
 - added block Automatic Crafter
