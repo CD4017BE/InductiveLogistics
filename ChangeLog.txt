@@ -1,3 +1,12 @@
+v1.0.1
+Changes:
+- fixed item multiplication bug (#1)
+- made documentation texts and German localization up to date
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.0.1
+
 v1.0.0
 Changes:
 - updated to MC-1.12.2
