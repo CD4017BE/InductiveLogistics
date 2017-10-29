@@ -30,8 +30,8 @@ public class ItemTank extends ItemVariantBlock {
 	@Override
 	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
 		FluidStack fluid = FluidStack.loadFluidStackFromNBT(item.getTagCompound());
-		if (fluid == null) list.add(TooltipUtil.format("tile.indlog.tank.empty", (double)Tank.CAP[item.getItemDamage()] / 1000D));
-		else list.add(TooltipUtil.format("tile.indlog.tank.stor", fluid.getLocalizedName(), (double)fluid.amount / 1000D, (double)Tank.CAP[item.getItemDamage()] / 1000D));
+		if (fluid == null) list.add(TooltipUtil.format("tile.indlog.tank.empty", (double)cap(item) / 1000D));
+		else list.add(TooltipUtil.format("tile.indlog.tank.stor", fluid.getLocalizedName(), (double)fluid.amount / 1000D, (double)cap(item) / 1000D));
 		super.addInformation(item, player, list, b);
 	}
 
@@ -44,7 +44,7 @@ public class ItemTank extends ItemVariantBlock {
 
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt) {
-		return new FluidHandlerDirectNBT(stack, Tank.CAP[stack.getItemDamage()]);
+		return new FluidHandlerDirectNBT(stack, cap(stack));
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class ItemTank extends ItemVariantBlock {
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		if (!stack.hasTagCompound()) return 1;
-		return 1.0 - (double)stack.getTagCompound().getInteger("Amount") / (double)Tank.CAP[stack.getItemDamage()];
+		return 1.0 - (double)stack.getTagCompound().getInteger("Amount") / (double)cap(stack);
 	}
 
 	@Override
@@ -64,6 +64,11 @@ public class ItemTank extends ItemVariantBlock {
 		if (!stack.hasTagCompound()) return 0;
 		Fluid fluid = FluidRegistry.getFluid(stack.getTagCompound().getString("FluidName"));
 		return fluid == null ? 0 : FluidRenderer.instance.fluidColor(fluid);
+	}
+
+	private static int cap(ItemStack stack) {
+		int dmg = stack.getItemDamage();
+		return dmg < 0 || dmg >= Tank.CAP.length ? 0 : Tank.CAP[dmg];
 	}
 
 }
