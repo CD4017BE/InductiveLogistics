@@ -19,13 +19,19 @@ import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-import mezz.jei.transfer.RecipeTransferErrorInternal;
+import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
 
 /**
  * 
  * @author CD4017BE
  */
 public class PortableCraftingHandler implements IRecipeTransferHandler<TileContainer> {
+
+	private final IRecipeTransferHandlerHelper helper;
+
+	public PortableCraftingHandler(IRecipeTransferHandlerHelper helper) {
+		this.helper = helper;
+	}
 
 	@Override
 	public Class<TileContainer> getContainerClass() {
@@ -34,7 +40,7 @@ public class PortableCraftingHandler implements IRecipeTransferHandler<TileConta
 
 	@Override
 	public IRecipeTransferError transferRecipe(TileContainer container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
-		if (!(container.data instanceof ItemGuiData) || player.getHeldItemMainhand().getItem() != Objects.portable_craft) return RecipeTransferErrorInternal.INSTANCE;
+		if (!(container.data instanceof ItemGuiData) || player.getHeldItemMainhand().getItem() != Objects.portable_craft) return helper.createInternalError();
 		if (!doTransfer) return null;
 		IGuiItemStackGroup items = recipeLayout.getItemStacks();
 		ItemStack type, stack;
