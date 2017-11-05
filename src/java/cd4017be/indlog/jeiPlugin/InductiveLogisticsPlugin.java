@@ -25,7 +25,7 @@ public class InductiveLogisticsPlugin extends BlankModPlugin {
 		
 		registry.addRecipeClickArea(GuiPortableCrafting.class, 146, 19, 10, 10, VanillaRecipeCategoryUid.CRAFTING);
 		
-		recipeTransferRegistry.addRecipeTransferHandler(new PortableCraftingHandler(), VanillaRecipeCategoryUid.CRAFTING);
+		recipeTransferRegistry.addRecipeTransferHandler(new PortableCraftingHandler(registry.getJeiHelpers().recipeTransferHandlerHelper()), VanillaRecipeCategoryUid.CRAFTING);
 	}
 
 }
