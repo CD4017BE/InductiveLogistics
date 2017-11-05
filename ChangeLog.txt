@@ -1,3 +1,14 @@
+v0.2.2
+Changes:
+- added promised JEI plugin
+- Item Buffers can have side specific slot access configurations now
+- fixed special colored fluids rendered in tanks had red & blue swapped
+- fixed #3 crash with JEI
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.1.1
+
 v0.2.1
 Changes:
 - compatibility with structure of new CD4017BE_lib
