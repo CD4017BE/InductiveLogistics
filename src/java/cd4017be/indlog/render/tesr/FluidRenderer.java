@@ -47,7 +47,7 @@ public class FluidRenderer implements IModeledTESR {
 		fluidModels.put(fluid, m = baseModel.withTexture(tex));
 		return m;
 	}
-	
+
 	public int fluidColor(Fluid fluid) {
 		Integer c = fluidColors.get(fluid);
 		if (c != null) return c;
@@ -57,15 +57,16 @@ public class FluidRenderer implements IModeledTESR {
 		TextureAtlasSprite tex = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(res.toString());
 		if (tex == null) return fc;
 		int r = 0, g = 0, b = 0, n = 0;
-		for (int[] arr : tex.getFrameTextureData(0)) {
-			for (int k : arr) {
-				int a = k >> 24 & 0xff;
-				n += a;
-				r += (k >> 16 & 0xff) * a;
-				g += (k >> 8 & 0xff) * a;
-				b += (k & 0xff) * a;
+		for (int i = 0; i < tex.getFrameCount(); i++)
+			for (int[] arr : tex.getFrameTextureData(i)) {
+				for (int k : arr) {
+					int a = k >> 24 & 0xff;
+					n += a;
+					r += (k >> 16 & 0xff) * a;
+					g += (k >> 8 & 0xff) * a;
+					b += (k & 0xff) * a;
+				}
 			}
-		}
 		r = r / n * (fc >> 16 & 0xff) / 255 & 0xff;
 		g = g / n * (fc >> 8 & 0xff) / 255 & 0xff;
 		b = b / n * (fc & 0xff) / 255 & 0xff;
@@ -85,12 +86,16 @@ public class FluidRenderer implements IModeledTESR {
 		}
 	}
 
+	public static int RGBtoBGR(int c) {
+		return c & 0xff00ff00 | c << 16 & 0xff0000 | c >> 16 & 0xff;
+	}
+
 	public void render(FluidStack stack, TileEntity te, double x, double y, double z, double dxz, double dy) {
 		Fluid fluid = stack.getFluid();
 		IntArrayModel m = getFor(fluid);
 		GlStateManager.disableLighting();
 		GlStateManager.Profile.TRANSPARENT_MODEL.apply();
-		m.setColor(fluid.getColor(stack));
+		m.setColor(RGBtoBGR(fluid.getColor(stack)));
 		m.setBrightness(te.getWorld().getCombinedLight(te.getPos(), fluid.getLuminosity(stack)));
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.pushMatrix();

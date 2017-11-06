@@ -142,7 +142,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 		lockType = fluid != null && nbt.getBoolean("lock");
 		lastAmount = fluid != null ? fluid.amount : 0;
 		fill = nbt.getBoolean("fill");
-		type = nbt.getByte("type");
+		type = (byte)(nbt.getByte("type") & 0xf);
 		tank.cap = CAP[type];
 		checkTarget = true;
 		super.readFromNBT(nbt);

@@ -98,7 +98,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 		} break;
 		case 4: try {// set crafting grid (used for JEI recipe transfer)
 			NBTTagCompound tag = dis.readCompoundTag();
-			ItemStack[] inv = new ItemStack[9];
+			ItemStack[] inv = new ItemStack[10];
 			ItemFluidUtil.loadInventory(tag.getTagList(JEI_DATA, Constants.NBT.TAG_COMPOUND), inv);
 			saveInventory(item, player, inv);
 			byte n = tag.getByte(COUNT);
