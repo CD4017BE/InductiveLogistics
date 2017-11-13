@@ -5,11 +5,9 @@ import java.util.List;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.indlog.util.PipeFilterItem;
-import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.capability.LinkedInventory;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +23,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  *
  * @author CD4017BE
  */
-public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHandler> implements ITilePlaceHarvest {
+public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHandler> {
 
 	public static int TICKS;
 
@@ -148,12 +146,8 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	}
 
 	@Override
-	public void onPlaced(EntityLivingBase entity, ItemStack item) {
-	}
-
-	@Override
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
-		List<ItemStack> list = makeDefaultDrops(null);
+		List<ItemStack> list = super.dropItem(state, fortune);
 		if (content != null) list.add(content);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.item_filter);

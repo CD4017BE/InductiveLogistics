@@ -5,10 +5,8 @@ import java.util.List;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.IFluidPipeCon;
 import cd4017be.indlog.util.PipeFilterFluid;
-import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.capability.LinkedTank;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  *
  * @author CD4017BE
  */
-public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFluidHandler> implements ITilePlaceHarvest {
+public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFluidHandler> {
 
 	public static int CAP;
 	public static int TICKS;
@@ -148,12 +146,8 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	}
 
 	@Override
-	public void onPlaced(EntityLivingBase entity, ItemStack item) {
-	}
-
-	@Override
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
-		List<ItemStack> list = makeDefaultDrops(null);
+		List<ItemStack> list = super.dropItem(state, fortune);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.fluid_filter);
 			item.setTagCompound(PipeFilterFluid.save(filter));

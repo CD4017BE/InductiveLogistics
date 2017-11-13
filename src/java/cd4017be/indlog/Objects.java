@@ -6,7 +6,7 @@ import cd4017be.indlog.item.*;
 import cd4017be.indlog.multiblock.BasicWarpPipe;
 import cd4017be.indlog.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
-import cd4017be.lib.block.BlockPipe;
+import cd4017be.lib.block.BlockCoveredPipe;
 import cd4017be.lib.block.VariantBlock;
 import cd4017be.lib.item.BaseItemBlock;
 import cd4017be.lib.templates.TabMaterials;
@@ -38,13 +38,13 @@ public class Objects {
 	public static Capability<BasicWarpPipe> WARP_PIPE_CAP;
 
 	//Blocks
-	public static final BlockPipe ITEM_PIPE = null;
-	public static final BlockPipe FLUID_PIPE = null;
-	public static final BlockPipe WARP_PIPE = null;
+	public static final BlockCoveredPipe ITEM_PIPE = null;
+	public static final BlockCoveredPipe FLUID_PIPE = null;
+	public static final BlockCoveredPipe WARP_PIPE = null;
 	public static final VariantBlock TANK = null;
 	public static final VariantBlock BUFFER = null;
 	public static final AdvancedBlock AUTO_CRAFT = null;
-	public static final BlockPipe INV_CONNECTOR = null;
+	public static final BlockCoveredPipe INV_CONNECTOR = null;
 
 	//ItemBlocks
 	public static final ItemItemPipe item_pipe = null;
@@ -70,13 +70,13 @@ public class Objects {
 	public static void registerBlocks(RegistryEvent.Register<Block> ev) {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
-			BlockPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
-			BlockPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 3).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
-			BlockPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(1.0F).setResistance(20F),
+			BlockCoveredPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
+			BlockCoveredPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 3).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
+			BlockCoveredPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(1.0F).setResistance(20F),
 			VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class).setCreativeTab(tabIndLog).setLightOpacity(0),
 			VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class).setCreativeTab(tabIndLog),
 			new AdvancedBlock("auto_craft", Material.IRON, SoundType.ANVIL, 0, AutoCrafter.class).setCreativeTab(tabIndLog),
-			BlockPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F)
+			BlockCoveredPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F)
 		);
 	}
 
