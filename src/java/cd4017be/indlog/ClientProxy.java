@@ -40,11 +40,11 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(ItemPipe.class, new ItemPipeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(FluidPipe.class, new FluidPipeRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(Tank.class, new TankRenderer());
-		SpecialModelLoader.instance.tesrs.add(FluidRenderer.instance);
 	}
 
 	@SubscribeEvent
 	public void registerModels(ModelRegistryEvent ev) {
+		SpecialModelLoader.instance.tesrs.add(FluidRenderer.instance);
 		SpecialModelLoader.setMod(Main.ID);
 		SpecialModelLoader.registerBlockModel(ITEM_PIPE, new MultipartModel(ITEM_PIPE).setPipeVariants(7));
 		SpecialModelLoader.registerBlockModel(FLUID_PIPE, new MultipartModel(FLUID_PIPE).setPipeVariants(7));
