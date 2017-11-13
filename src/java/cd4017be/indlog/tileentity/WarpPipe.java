@@ -71,8 +71,10 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		} 
 		if (player.isSneaking()) return false;
 		else if (t < 2 && ConComp.createFromItem(item, comp, s)) {
-			item.grow(-1);
-			player.setHeldItem(hand, item);
+			if (!player.isCreative()) {
+				item.grow(-1);
+				player.setHeldItem(hand, item);
+			}
 			this.markUpdate();
 			return true;
 		} else return false;
