@@ -3,19 +3,19 @@
 itemGroup.indlog=Inductive Logistics
 #Blöcke
 tile.indlog.fluid_pipe\:0.name=Flüssigkeitstransportrohr
-tile.indlog.fluid_pipe\:0.tip=Besitzt ein \\<fluid_pipe_cap> mB Tank. Flüssigkeiten werden über (mehrere) §4Eingangsverbindungen§7 aufgenommen und über eine einzige §2Ausgangsverbindung§7 an das nächste Rohr weitergeleitet. Siehe auch §6Flüssigkeits(injektions|extraktions)rohr\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.fluid_pipe\:0.tip=Besitzt ein \\<fluid_pipe_cap> mB Tank. Flüssigkeiten werden über (mehrere) §4Eingangsverbindungen§7 aufgenommen und über eine einzige §2Ausgangsverbindung§7 an das nächste Rohr weitergeleitet. Siehe auch §6Flüssigkeits(injektions|extraktions)rohr\nInteragiere geduckt um Verbindungen zu trennen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.fluid_pipe\:1.name=Flüssigkeitsinjektionsrohr
-tile.indlog.fluid_pipe\:1.tip=Kann ein Rohrende darstellen und versucht Flüssigkeiten zunächst an angeschlossene Tanks abzugeben, bevor sie weitergeleitet werden.\nEs kann ein §6Flüssigkeitsfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.fluid_pipe\:1.tip=Kann ein Rohrende darstellen und versucht Flüssigkeiten zunächst an angeschlossene Tanks abzugeben, bevor sie weitergeleitet werden.\nEs kann ein §6Flüssigkeitsfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.fluid_pipe\:2.name=Flüssigkeitsextraktionsrohr
-tile.indlog.fluid_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Flüssigkeiten aus angeschlossenen Tanks um sie weiterzuleiten.\nEs kann ein §6Flüssigkeitsfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.fluid_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Flüssigkeiten aus angeschlossenen Tanks um sie weiterzuleiten.\nEs kann ein §6Flüssigkeitsfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.item_pipe\:0.name=Itemtransportrohr
-tile.indlog.item_pipe\:0.tip=Besitzt ein 1-Slot Inventar. Items werden über (mehrere) §4Eingangsverbindungen§7 aufgenommen und über eine einzige §2Ausgangsverbindung§7 an das nächste Rohr weitergeleitet. Siehe auch §6Item(injektions|extraktions)rohr\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.item_pipe\:0.tip=Besitzt ein 1-Slot Inventar. Items werden über (mehrere) §4Eingangsverbindungen§7 aufgenommen und über eine einzige §2Ausgangsverbindung§7 an das nächste Rohr weitergeleitet. Siehe auch §6Item(injektions|extraktions)rohr\nInteragiere geduckt um Verbindungen zu trennen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.item_pipe\:1.name=Iteminjektionsrohr
-tile.indlog.item_pipe\:1.tip=Kann ein Rohrende darstellen und versucht Items zunächst an angeschlossene Inventare abzugeben, bevor sie weitergeleitet werden.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.item_pipe\:1.tip=Kann ein Rohrende darstellen und versucht Items zunächst an angeschlossene Inventare abzugeben, bevor sie weitergeleitet werden.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.item_pipe\:2.name=Itemextraktionsrohr
-tile.indlog.item_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Items aus angeschlossenen Inventaren um sie weiterzuleiten.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.
+tile.indlog.item_pipe\:2.tip=Kann ein Rohranfang darstellen und zieht Items aus angeschlossenen Inventaren um sie weiterzuleiten.\nEs kann ein §6Itemfilter§7 eingefügt werden.\nInteragiere mit leerer Hand zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.warp_pipe.name=erweitertes Universalrohr
-tile.indlog.warp_pipe.tip=Transportiert sowohl Items als auch Flüssigkeiten zwischen angeschlossenen Blöcken ohne Verzögerung oder Zwischenlagerung.\nInteragiere mit §6(Item|Flüssigkeits)(extraktions|injektions)rohr§7 in der Hand auf die Seiten\num Items/Flüssigkeiten von dieser Seite zu extrahieren/injizieren.\n§6(Item|Flüssigkeits)filter§7 werden für alle Seiten separat verwendet.\nInteragiere mit leerer Hand auf Anschlüsse zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen bzw. Rohranschlüsse wieder zu entnehmen.
+tile.indlog.warp_pipe.tip=Transportiert sowohl Items als auch Flüssigkeiten zwischen angeschlossenen Blöcken ohne Verzögerung oder Zwischenlagerung.\nInteragiere mit §6(Item|Flüssigkeits)(extraktions|injektions)rohr§7 in der Hand auf die Seiten\num Items/Flüssigkeiten von dieser Seite zu extrahieren/injizieren.\n§6(Item|Flüssigkeits)filter§7 werden für alle Seiten separat verwendet.\nInteragiere mit leerer Hand auf Anschlüsse zum deaktivieren.\nInteragiere geduckt um Verbindungen zu trennen bzw. Rohranschlüsse wieder zu entnehmen.\nInteragiere mit block in der linken Hand zum abdecken.
 tile.indlog.tank\:0.name=Flüssigkeitstank §8winzig
 tile.indlog.tank\:1.name=Flüssigkeitstank §4klein
 tile.indlog.tank\:2.name=Flüssigkeitstank §6normal
@@ -48,7 +48,7 @@ tile.indlog.buffer.stor=%d / %d Slots gefüllt @ Stapellimit: %d
 tile.indlog.auto_craft.name=Automatische Montage
 tile.indlog.auto_craft.tip=Verwendet Items aus benachbarten Inventaren um automatisch\nHerstellungsrezepte basierend auf einem Blockseitenmuster auszuführen.
 tile.indlog.inv_connector.name=Block Fernzugriffsleitung
-tile.indlog.inv_connector.tip=Spiegelt die Capabilities des angeschlossenen\nBlocks wieder (Items, Flüssigkeiten, usw.).\nMarkierungen zeigen grün = verbunden, Rot = nicht\nInteragiere (ohne Item) zum neu orientieren.
+tile.indlog.inv_connector.tip=Spiegelt die Capabilities des angeschlossenen\nBlocks wieder (Items, Flüssigkeiten, usw.).\nMarkierungen zeigen grün = verbunden, Rot = nicht\nInteragiere (ohne Item) zum neu orientieren.\nInteragiere mit block in der linken Hand zum abdecken.
 
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter

@@ -26,10 +26,13 @@ import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
+import cd4017be.lib.templates.Cover;
 import cd4017be.lib.tileentity.MultiblockTile;
 import cd4017be.lib.util.Utils;
 
 public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IModularTile, IItemPipeCon, IFluidPipeCon {
+
+	private Cover cover = new Cover();
 
 	public WarpPipe() {
 		comp = new BasicWarpPipe(this);
@@ -45,6 +48,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	@Override
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (world.isRemote) return true;
+		if (cover.interact(this, player, hand, item, dir, X, Y, Z)) return true;
 		dir = Utils.hitSide(X, Y, Z);
 		byte s = (byte)dir.getIndex();
 		byte t = comp.con[s];
@@ -67,8 +71,10 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		} 
 		if (player.isSneaking()) return false;
 		else if (t < 2 && ConComp.createFromItem(item, comp, s)) {
-			item.grow(-1);
-			player.setHeldItem(hand, item);
+			if (!player.isCreative()) {
+				item.grow(-1);
+				player.setHeldItem(hand, item);
+			}
 			this.markUpdate();
 			return true;
 		} else return false;
@@ -76,11 +82,13 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 
 	@Override
 	public void onClicked(EntityPlayer player) {
+		if (!world.isRemote) cover.hit(this, player);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		comp.writeToNBT(nbt);
+		cover.writeNBT(nbt, "cover", false);
 		return super.writeToNBT(nbt);
 	}
 
@@ -88,6 +96,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		comp = BasicWarpPipe.readFromNBT(this, nbt);
+		cover.readNBT(nbt, "cover", null);
 	}
 
 	@Override
@@ -97,6 +106,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		if (data.length == 6) System.arraycopy(data, 0, comp.con, 0, 6);
 		comp.hasFilters = nbt.getByte("filt");
 		comp.isBlocked = nbt.getByte("block");
+		cover.readNBT(nbt, "cv", this);
 		this.markUpdate();
 	}
 
@@ -108,11 +118,13 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		nbt.setByteArray("con", data);
 		nbt.setByte("filt", comp.hasFilters);
 		nbt.setByte("block", comp.isBlocked);
+		cover.writeNBT(nbt, "cv", true);
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
 	@Override
 	public <T> T getModuleState(int m) {
+		if (m == 6) return cover.module();
 		byte t = comp.con[m];
 		if (t == 1) return cast(-1);
 		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 4 + (comp.isBlocked >> m & 1) * 8);
@@ -122,6 +134,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 
 	@Override
 	public boolean isModulePresent(int m) {
+		if (m == 6) return cover.state != null;
 		byte t = comp.con[m];
 		if (t == 1) return false;
 		else if (t > 1) return true;
@@ -152,6 +165,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 			ConComp con = comp.network.getConnector(comp, (byte)i);
 			if (con != null) con.dropContent(list);
 		}
+		if (cover.stack != null) list.add(cover.stack);
 		return list;
 	}
 

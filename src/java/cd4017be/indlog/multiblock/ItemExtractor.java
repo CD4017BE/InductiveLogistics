@@ -50,7 +50,7 @@ public class ItemExtractor extends ItemComp implements ITickable {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (super.onClicked(player, hand, item, uid)) return true;
 		if (player.isSneaking() && player.getHeldItemMainhand().isEmpty()) {
-			ItemFluidUtil.dropStack(new ItemStack(Objects.ITEM_PIPE, 1, 2), player);
+			if (!player.isCreative()) ItemFluidUtil.dropStack(new ItemStack(Objects.ITEM_PIPE, 1, 2), player);
 			pipe.network.remConnector(pipe, side);
 			return true;
 		}

@@ -42,7 +42,7 @@ public class FluidExtractor extends FluidComp implements ITickable {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
 		if (super.onClicked(player, hand, item, uid)) return true;
 		if (player.isSneaking() && player.getHeldItemMainhand().getCount() == 0) {
-			ItemFluidUtil.dropStack(new ItemStack(Objects.FLUID_PIPE, 1, 2), player);
+			if (!player.isCreative()) ItemFluidUtil.dropStack(new ItemStack(Objects.FLUID_PIPE, 1, 2), player);
 			pipe.network.remConnector(pipe, side);
 			return true;
 		}

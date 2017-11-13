@@ -23,6 +23,7 @@ import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
+import cd4017be.lib.templates.Cover;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.TooltipUtil;
 import cd4017be.lib.util.Utils;
@@ -33,6 +34,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 	private BlockPos linkPos = Utils.NOWHERE;
 	private TileEntity linkObj;
 	private EnumFacing conDir = EnumFacing.DOWN;
+	private Cover cover = new Cover();
 
 	@Override
 	public void neighborBlockChange(Block b, BlockPos src) {
@@ -48,12 +50,14 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		conDir = EnumFacing.getFront(nbt.getByte("dir"));
+		cover.readNBT(nbt, "cover", null);
 		linkUpdate = true;
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setByte("dir", (byte)conDir.ordinal());
+		cover.writeNBT(nbt, "cover", false);
 		return super.writeToNBT(nbt);
 	}
 
@@ -88,19 +92,21 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 
 	@Override
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z) {
+		if (world.isRemote) return true;
+		if (cover.interact(this, player, hand, item, s, X, Y, Z)) return true;
 		if (player.isSneaking() && item.isEmpty()) {
-			if (world.isRemote) return true;
 			if (linkObj == null) player.sendMessage(new TextComponentString(TooltipUtil.translate("cd4017be.inv_con.noLink")));
 			else player.sendMessage(new TextComponentString(TooltipUtil.format("cd4017be.inv_con.link", world.getBlockState(linkPos).getBlock().getLocalizedName(), linkPos.toString())));
 			return true;
 		} else if (item.isEmpty()) {
-			if (!world.isRemote) this.connect();
+			this.connect();
 			return true;
 		} else return false;
 	}
 
 	@Override
 	public void onClicked(EntityPlayer player) {
+		if (!world.isRemote) cover.hit(this, player);
 	}
 
 	@Override
@@ -111,6 +117,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 	@Override
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
 		List<ItemStack> list = makeDefaultDrops(null);
+		if (cover.stack != null) list.add(cover.stack);
 		return list;
 	}
 
@@ -129,8 +136,10 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		conDir = EnumFacing.getFront(pkt.getNbtCompound().getByte("dir"));
-		linkPos = pkt.getNbtCompound().getBoolean("link") ? new BlockPos(0, 0, 0) : new BlockPos(0, -1, 0);
+		NBTTagCompound nbt = pkt.getNbtCompound();
+		conDir = EnumFacing.getFront(nbt.getByte("dir"));
+		linkPos = nbt.getBoolean("link") ? new BlockPos(0, 0, 0) : new BlockPos(0, -1, 0);
+		cover.readNBT(nbt, "cover", this);
 		this.markUpdate();
 	}
 
@@ -139,6 +148,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setByte("dir", (byte)conDir.ordinal());
 		nbt.setBoolean("link", linkPos.getY() >= 0);
+		cover.writeNBT(nbt, "cover", true);
 		return new SPacketUpdateTileEntity(pos, -1, nbt);
 	}
 
@@ -170,6 +180,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getModuleState(int m) {
+		if (m == 6) return cover.module();
 		EnumFacing d = EnumFacing.VALUES[m];
 		return (T) Byte.valueOf(d == conDir ?
 				linkPos.getY() >= 0 ? (byte)2 : (byte)1 :
@@ -178,6 +189,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 
 	@Override
 	public boolean isModulePresent(int m) {
+		if (m == 6) return cover.state != null;
 		EnumFacing d = EnumFacing.VALUES[m];
 		if (d == conDir) return true;
 		TileEntity te = Utils.neighborTile(this, d);
