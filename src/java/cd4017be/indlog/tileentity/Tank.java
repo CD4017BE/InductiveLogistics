@@ -46,7 +46,9 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	private LinkedInventory inventory = new LinkedInventory(1, 64, (i)-> item, this::setItem);
 	private TileEntity target;
 	private byte type;
-	public boolean lockType, fill, updateItem, checkTarget = true;
+	public boolean lockType, fill, checkTarget = true;
+	/**0: done, 1: wait, 2: update */
+	public byte updateItem = 0;
 	private int lastAmount;
 
 	public Tank() {
@@ -62,17 +64,18 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	private void setFluid(FluidStack fluid) {
 		if (lockType && fluid == null && !world.isRemote) this.fluid.amount = 0;
 		else this.fluid = fluid;
+		if (updateItem == 1) updateItem = 2;
 	}
 
 	private void setItem(ItemStack item, int s) {
 		this.item = item;
-		updateItem = item.getCount() > 0;
+		updateItem = item.getCount() > 0 ? (byte)2 : (byte)0;
 	}
 
 	@Override
 	public void update() {
 		if (world.isRemote) return;
-		if (updateItem) useFluidContainer();
+		if (updateItem == 2) useFluidContainer();
 		if (checkTarget) {
 			checkTarget = false;
 			target = world.getTileEntity(pos.down());
@@ -98,24 +101,28 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	}
 
 	private void useFluidContainer() {
-		updateItem = false;
 		StackedFluidAccess acc = new StackedFluidAccess(item);
-		if (!acc.valid()) return;
+		if (!acc.valid()) {
+			updateItem = 0; //container invalid
+			return;
+		}
+		updateItem = 1;
 		if (fill) {
 			if (fluid == null || fluid.amount < item.getCount()) return;
 			fluid.amount -= acc.fill(fluid, true);
-			updateItem = acc.fill(new FluidStack(fluid, tank.cap), false) > 0;
+			if (acc.fill(new FluidStack(fluid, tank.cap), false) <= 0)
+				updateItem = 0; //container full
 			if (fluid.amount <= 0 && !lockType) fluid = null;
 		} else if (fluid == null) {
 			fluid = acc.drain(tank.cap, true);
-			updateItem = fluid != null && acc.drain(new FluidStack(fluid, tank.cap), false) != null;
+			if (fluid == null || acc.drain(new FluidStack(fluid, tank.cap), false) == null)
+				updateItem = 0; //container empty
 		} else {
 			if (fluid.amount > tank.cap - item.getCount()) return; 
 			FluidStack res = acc.drain(new FluidStack(fluid, tank.cap - fluid.amount), true);
-			if (res != null) {
-				fluid.amount += res.amount;
-				updateItem = acc.drain(new FluidStack(fluid, tank.cap), false) != null;
-			}
+			if (res != null) fluid.amount += res.amount;
+			if (acc.drain(new FluidStack(fluid, tank.cap), false) == null)
+				updateItem = 0; //container empty
 		}
 		item = acc.result();
 	}
@@ -236,7 +243,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 			} break;
 		case 1:
 			fill = !fill;
-			updateItem = !item.isEmpty();
+			updateItem = item.isEmpty() ? (byte)0 : (byte)2;
 			break;
 		case 2:
 			if (lockType) fluid.amount = 0;
