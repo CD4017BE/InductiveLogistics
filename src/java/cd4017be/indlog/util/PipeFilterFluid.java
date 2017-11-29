@@ -30,14 +30,7 @@ public class PipeFilterFluid implements PipeFilter<FluidStack, IFluidHandler> {
 	@Override
 	public int insertAmount(FluidStack stack, IFluidHandler inv) {
 		if (stack == null) return 0;
-		boolean listed = false;
-		for (Fluid fluid : list) {
-			if (stack.getFluid() == fluid){
-				listed = true;
-				break;
-			}
-		}
-		if (listed ^ (mode & 1) == 0) return 0;
+		if (!matches(stack)) return 0;
 		if (maxAmount == 0) return stack.amount;
 		int am = maxAmount;
 		FluidStack fluid;
@@ -55,14 +48,7 @@ public class PipeFilterFluid implements PipeFilter<FluidStack, IFluidHandler> {
 				if((stack = inf.getContents()) != null && inf.canDrainFluidType(stack) && (stack = getExtract(stack, inv)) != null) return stack;
 			return null;
 		}
-		boolean listed = false;
-		Fluid sFluid = stack.getFluid();
-		for (Fluid fluid : list)
-			if (sFluid == fluid){
-				listed = true;
-				break;
-			}
-		if (listed ^ (mode & 1) == 0) return null;
+		if (!matches(stack)) return null;
 		stack = inv.drain(stack, false);
 		if (maxAmount > 0 && stack != null) stack.amount -= maxAmount; 
 		return stack;
@@ -70,21 +56,20 @@ public class PipeFilterFluid implements PipeFilter<FluidStack, IFluidHandler> {
 
 	@Override
 	public boolean transfer(FluidStack stack) {
-		if ((mode & 2) == 0) return true;
-		else if (stack == null) return false;
-		boolean listed = false;
-		for (Fluid fluid : list) {
-			if (stack.getFluid() == fluid){
-				listed = true;
-				break;
-			}
-		}
-		return listed ^ (mode & 1) == 0;
+		return (mode & 2) == 0 || (stack != null && !matches(stack));
 	}
 
 	@Override
 	public boolean blocking() {
 		return (mode & 2) != 0;
+	}
+
+	public boolean matches(FluidStack stack) {
+		Fluid f = stack.getFluid();
+		for (Fluid fluid : list)
+			if (f == fluid)
+				return (mode & 1) == 0;
+		return (mode & 1) != 0;
 	}
 
 	public static PipeFilterFluid load(NBTTagCompound nbt) {
