@@ -27,6 +27,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -209,19 +210,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		if (player.isSneaking()) {
 			dir = Utils.hitSide(X, Y, Z);
 			int s = dir.getIndex();
-			int lock = getFlowBit(s) == 3 ? 0 : 3;
-			setFlowBit(s, lock);
-			if (lock != 0) flow |= 0x4000;
-			updateCon = true;
-			this.markUpdate();
-			ICapabilityProvider te = getTileOnSide(dir);
-			if (pipeClass().isInstance(te)) {
-				T pipe = pipeClass().cast(te);
-				pipe.setFlowBit(s^1, lock);
-				if (lock != 0) pipe.flow |= 0x4000;
-				pipe.updateCon = true;
-				pipe.markUpdate();
-			}
+			lockCon(s, getFlowBit(s) == 3);
 			return true;
 		} else if (filter == null) {
 			flow ^= 0x8000;
@@ -232,7 +221,31 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 
 	@Override
 	public void onClicked(EntityPlayer player) {
-		if (!world.isRemote) cover.hit(this, player);
+		if (world.isRemote) return;
+		if (cover.state == null) {
+			RayTraceResult hit = Utils.getHit(player, getBlockState(), pos);
+			if (hit != null) {
+				int i = hit.subHit - 1;
+				if (i >= 0 && getFlowBit(i) != 3)
+					lockCon(i, false);
+			}
+		} else cover.hit(this, player);
+	}
+
+	protected void lockCon(int s, boolean unlock) {
+		int lock = unlock ? 0 : 3;
+		setFlowBit(s, lock);
+		if (lock != 0) flow |= 0x4000;
+		updateCon = true;
+		this.markUpdate();
+		ICapabilityProvider te = getTileOnSide(EnumFacing.VALUES[s]);
+		if (pipeClass().isInstance(te)) {
+			T pipe = pipeClass().cast(te);
+			pipe.setFlowBit(s^1, lock);
+			if (lock != 0) pipe.flow |= 0x4000;
+			pipe.updateCon = true;
+			pipe.markUpdate();
+		}
 	}
 
 	@Override
