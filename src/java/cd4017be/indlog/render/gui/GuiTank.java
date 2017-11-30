@@ -30,6 +30,7 @@ public class GuiTank extends AdvancedGui {
 			if(confirm()) sendCommand(2);
 			else clickTime = System.currentTimeMillis();
 		}).texture(249, 0).setTooltip("tank.del#"));
+		guiComps.add(new Button(4, 176, 84, 7, 7, 0, ()-> tile.auto ? 1:0, (t)-> sendCommand(3)).texture(242, 14).setTooltip("tank.auto#"));
 	}
 
 	private boolean confirm() {
