@@ -166,19 +166,19 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 
 		@Override
 		public int fill(FluidStack res, boolean doFill) {
-			if (type == 2 || (type == 1 && !(PipeFilterFluid.isNullEq(filter) || filter.matches(res)))) return 0;
+			if (type == 1 || (type == 2 && !(PipeFilterFluid.isNullEq(filter) || filter.matches(res)))) return 0;
 			return super.fill(res, doFill);
 		}
 
 		@Override
 		public FluidStack drain(FluidStack res, boolean doDrain) {
-			if (type == 1 || (type == 2 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
+			if (type == 2 || (type == 1 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
 			return super.drain(res, doDrain);
 		}
 
 		@Override
 		public FluidStack drain(int m, boolean doDrain) {
-			if (type == 1 || (type == 2 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
+			if (type == 2 || (type == 1 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
 			return super.drain(m, doDrain);
 		}
 
