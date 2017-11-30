@@ -106,6 +106,8 @@ gui.cd4017be.tank.dir0=Behälter entleeren
 gui.cd4017be.tank.dir1=Behälter auffüllen
 gui.cd4017be.tank.del0=Tankinhalt löschen
 gui.cd4017be.tank.del1=§4Sicher? Er ist für immer verloren!
+gui.cd4017be.tank.auto0=Freie interaktion
+gui.cd4017be.tank.auto1=Automatisierungshilfe\n§7Stapellimit = 1\n§7erst entnehmbar, wenn fertig
 gui.cd4017be.buffer.slots=Slot-Limit:\n%d / %d
 gui.cd4017be.buffer.stack=Stapel-Limit:\n%d / %d
 gui.cd4017be.buffer.start=Start-Slot:\n%d

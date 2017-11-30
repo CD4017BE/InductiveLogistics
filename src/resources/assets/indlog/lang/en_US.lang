@@ -106,6 +106,8 @@ gui.cd4017be.tank.dir0=Drain fluid containers
 gui.cd4017be.tank.dir1=Fill fluid containers
 gui.cd4017be.tank.del0=Delete contained fluid
 gui.cd4017be.tank.del1=§4Sure? It's lost forever!
+gui.cd4017be.tank.auto0=Free access mode
+gui.cd4017be.tank.auto1=Automation mode\n§7max stacksize = 1\n§7extract only when done
 gui.cd4017be.buffer.slots=Slot Limit:\n%d / %d
 gui.cd4017be.buffer.stack=Stack size Limit:\n%d / %d
 gui.cd4017be.buffer.start=starting Slot:\n%d
