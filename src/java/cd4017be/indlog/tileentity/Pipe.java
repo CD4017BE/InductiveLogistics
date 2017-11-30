@@ -3,16 +3,20 @@ package cd4017be.indlog.tileentity;
 import static cd4017be.lib.property.PropertyByte.cast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
+import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
+import cd4017be.lib.templates.Cover;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.TileAccess;
 import cd4017be.lib.util.Utils;
 import cd4017be.indlog.util.PipeFilter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +27,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
@@ -30,7 +35,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
  *
  * @author CD4017BE
  */
-public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O, I>, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable {
+public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O, I>, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable, ITilePlaceHarvest {
 
 	public static boolean SAVE_PERFORMANCE;
 
@@ -44,6 +49,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected short flow;
 	private byte time;
 	protected boolean updateCon = true;
+	protected Cover cover = new Cover();
 
 	public Pipe() {}
 
@@ -199,23 +205,12 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@Override
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (world.isRemote) return true;
+		if (cover.interact(this, player, hand, item, dir, X, Y, Z)) return true;
 		if (item.getCount() > 0) return false;
 		if (player.isSneaking()) {
 			dir = Utils.hitSide(X, Y, Z);
 			int s = dir.getIndex();
-			int lock = getFlowBit(s) == 3 ? 0 : 3;
-			setFlowBit(s, lock);
-			if (lock != 0) flow |= 0x4000;
-			updateCon = true;
-			this.markUpdate();
-			ICapabilityProvider te = getTileOnSide(dir);
-			if (pipeClass().isInstance(te)) {
-				T pipe = pipeClass().cast(te);
-				pipe.setFlowBit(s^1, lock);
-				if (lock != 0) pipe.flow |= 0x4000;
-				pipe.updateCon = true;
-				pipe.markUpdate();
-			}
+			lockCon(s, getFlowBit(s) == 3);
 			return true;
 		} else if (filter == null) {
 			flow ^= 0x8000;
@@ -226,6 +221,31 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 
 	@Override
 	public void onClicked(EntityPlayer player) {
+		if (world.isRemote) return;
+		if (cover.state == null) {
+			RayTraceResult hit = Utils.getHit(player, getBlockState(), pos);
+			if (hit != null) {
+				int i = hit.subHit - 1;
+				if (i >= 0 && getFlowBit(i) != 3)
+					lockCon(i, false);
+			}
+		} else cover.hit(this, player);
+	}
+
+	protected void lockCon(int s, boolean unlock) {
+		int lock = unlock ? 0 : 3;
+		setFlowBit(s, lock);
+		if (lock != 0) flow |= 0x4000;
+		updateCon = true;
+		this.markUpdate();
+		ICapabilityProvider te = getTileOnSide(EnumFacing.VALUES[s]);
+		if (pipeClass().isInstance(te)) {
+			T pipe = pipeClass().cast(te);
+			pipe.setFlowBit(s^1, lock);
+			if (lock != 0) pipe.flow |= 0x4000;
+			pipe.updateCon = true;
+			pipe.markUpdate();
+		}
 	}
 
 	@Override
@@ -249,6 +269,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setByte("type", type);
 		nbt.setShort("flow", flow);
+		cover.writeNBT(nbt, "cover", false);
 		return super.writeToNBT(nbt);
 	}
 
@@ -257,14 +278,17 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		super.readFromNBT(nbt);
 		type = nbt.getByte("type");
 		flow = nbt.getShort("flow");
+		cover.readNBT(nbt, "cover", null);
 		updateCon = true;
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 		NBTTagCompound nbt = pkt.getNbtCompound();
+		IBlockState c = cover.state;
+		cover.readNBT(nbt, "cv", this);
 		short nf = nbt.getShort("flow");
-		if (onDataPacket(nbt) || nf != flow) {
+		if (onDataPacket(nbt) || nf != flow || cover.state != c) {
 			flow = nf;
 			this.markUpdate();
 		}
@@ -274,12 +298,14 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setShort("flow", flow);
+		cover.writeNBT(nbt, "cv", true);
 		getUpdatePacket(nbt);
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
 	@Override
 	public <M> M getModuleState(int m) {
+		if (m == 6) return cover.module();
 		int b = getFlowBit(m);
 		if (b == 3) return cast(-1);
 		EnumFacing f = EnumFacing.VALUES[m];
@@ -294,12 +320,24 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 
 	@Override
 	public boolean isModulePresent(int m) {
+		if (m == 6) return cover.state != null;
 		int b = getFlowBit(m);
 		if (b == 3) return false;
 		else if (b != 0) return true;
 		EnumFacing f = EnumFacing.VALUES[m];
 		TileEntity p = Utils.neighborTile(this, f);
 		return pipeClass().isInstance(p);
+	}
+
+	@Override
+	public void onPlaced(EntityLivingBase entity, ItemStack item) {
+	}
+
+	@Override
+	public List<ItemStack> dropItem(IBlockState state, int fortune) {
+		List<ItemStack> list = makeDefaultDrops(null);
+		if (cover.stack != null) list.add(cover.stack);
+		return list;
 	}
 
 	@Override

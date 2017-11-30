@@ -1,14 +1,14 @@
 package cd4017be.indlog.tileentity;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.IFluidPipeCon;
 import cd4017be.indlog.util.PipeFilterFluid;
-import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.capability.LinkedTank;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +24,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  *
  * @author CD4017BE
  */
-public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFluidHandler> implements ITilePlaceHarvest {
+public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFluidHandler> {
 
 	public static int CAP;
 	public static int TICKS;
@@ -39,7 +39,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	@Override
 	protected int resetTimer() {return TICKS;}
 	@Override
-	protected IFluidHandler createInv() {return new LinkedTank(CAP, this::getFluid, this::setFluid);}
+	protected IFluidHandler createInv() {return new Tank(CAP, this::getFluid, this::setFluid);}
 
 	private FluidStack getFluid() {
 		return content;
@@ -148,18 +148,40 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	}
 
 	@Override
-	public void onPlaced(EntityLivingBase entity, ItemStack item) {
-	}
-
-	@Override
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
-		List<ItemStack> list = makeDefaultDrops(null);
+		List<ItemStack> list = super.dropItem(state, fortune);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.fluid_filter);
 			item.setTagCompound(PipeFilterFluid.save(filter));
 			list.add(item);
 		}
 		return list;
+	}
+
+	private class Tank extends LinkedTank {
+
+		public Tank(int cap, Supplier<FluidStack> get, Consumer<FluidStack> set) {
+			super(cap, get, set);
+		}
+
+		@Override
+		public int fill(FluidStack res, boolean doFill) {
+			if (type == 2 || (type == 1 && !(PipeFilterFluid.isNullEq(filter) || filter.matches(res)))) return 0;
+			return super.fill(res, doFill);
+		}
+
+		@Override
+		public FluidStack drain(FluidStack res, boolean doDrain) {
+			if (type == 1 || (type == 2 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
+			return super.drain(res, doDrain);
+		}
+
+		@Override
+		public FluidStack drain(int m, boolean doDrain) {
+			if (type == 1 || (type == 2 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
+			return super.drain(m, doDrain);
+		}
+
 	}
 
 }

@@ -3,19 +3,19 @@
 itemGroup.indlog=Inductive Logistics
 #Blocks
 tile.indlog.fluid_pipe\:0.name=Fluid Transport Pipe
-tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Liquid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.
+tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Liquid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:1.name=Fluid Injection Pipe
-tile.indlog.fluid_pipe\:1.tip=Acts as destination Pipe. First tries to fill its fluid into connected tanks before passing it on.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.
+tile.indlog.fluid_pipe\:1.tip=Acts as destination Pipe. First tries to fill its fluid into connected tanks before passing it on.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:2.name=Fluid Extraction Pipe
-tile.indlog.fluid_pipe\:2.tip=Acts as source Pipe. Drains fluids out of connected tanks to pass them on to the next pipe.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.
+tile.indlog.fluid_pipe\:2.tip=Acts as source Pipe. Drains fluids out of connected tanks to pass them on to the next pipe.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.item_pipe\:0.name=Item Transport Pipe
-tile.indlog.item_pipe\:0.tip=Contains a one-Slot-Inventory. Receives items through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Item (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.
+tile.indlog.item_pipe\:0.tip=Contains a one-Slot-Inventory. Receives items through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Item (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.item_pipe\:1.name=Item Injection Pipe
-tile.indlog.item_pipe\:1.tip=Acts as destination Pipe. First tries to puts items into connected inventories before passing it on.\nCan be upgraded with an §6Item Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.
+tile.indlog.item_pipe\:1.tip=Acts as destination Pipe. First tries to puts items into connected inventories before passing it on.\nCan be upgraded with an §6Item Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.item_pipe\:2.name=Item Extraction Pipe
-tile.indlog.item_pipe\:2.tip=Acts as source Pipe. Pulls items out of connected inventories to pass them on to the next pipe.\nCan be upgraded with an §6Item Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.
+tile.indlog.item_pipe\:2.tip=Acts as source Pipe. Pulls items out of connected inventories to pass them on to the next pipe.\nCan be upgraded with an §6Item Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.warp_pipe.name=Advanced Universal Pipe
-tile.indlog.warp_pipe.tip=Transports items and fluids between connected blocks instantly without internal storage.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nsides to extract/inject items/fluids at that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nClick with empty hand on pipe connector to disable.\nSneak-click to remove a pipe connection.
+tile.indlog.warp_pipe.tip=Transports items and fluids between connected blocks instantly without internal storage.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nsides to extract/inject items/fluids at that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nClick with empty hand on pipe connector to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.tank\:0.name=Fluid Tank §8tiny
 tile.indlog.tank\:1.name=Fluid Tank §4small
 tile.indlog.tank\:2.name=Fluid Tank §6normal
@@ -48,7 +48,7 @@ tile.indlog.buffer.stor=%d / %d Slots filled @ Stack limit: %d
 tile.indlog.auto_craft.name=Automatic Crafter
 tile.indlog.auto_craft.tip=Takes items from neighboring inventories to perform\nautomatic crafting based on a side reference pattern.
 tile.indlog.inv_connector.name=Remote Access Pipe
-tile.indlog.inv_connector.tip=Provides remote access to capabilities\n(Item, Fluid, ...) of a connected Block.\nConnection shows green if linked and red if not.\nClick with empty hand to change orientation.
+tile.indlog.inv_connector.tip=Provides remote access to capabilities\n(Item, Fluid, ...) of a connected Block.\nConnection shows green if linked and red if not.\nClick with empty hand to change orientation.\nClick with block in offhand to cover.
 
 #Items
 item.indlog.fluid_filter.name=Pipe Liquid-Filter
@@ -106,6 +106,8 @@ gui.cd4017be.tank.dir0=Drain fluid containers
 gui.cd4017be.tank.dir1=Fill fluid containers
 gui.cd4017be.tank.del0=Delete contained fluid
 gui.cd4017be.tank.del1=§4Sure? It's lost forever!
+gui.cd4017be.tank.auto0=Free access mode
+gui.cd4017be.tank.auto1=Automation mode\n§7max stacksize = 1\n§7extract only when done
 gui.cd4017be.buffer.slots=Slot Limit:\n%d / %d
 gui.cd4017be.buffer.stack=Stack size Limit:\n%d / %d
 gui.cd4017be.buffer.start=starting Slot:\n%d

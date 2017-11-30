@@ -165,6 +165,10 @@ public class PipeFilterItem implements PipeFilter<ItemStack, IItemHandler> {
 		return false;
 	}
 
+	public boolean matches(ItemStack item) {
+		return getMatch(item) >= 0 ^ (mode & 1) != 0;
+	}
+
 	@Override
 	public boolean blocking() {
 		return (mode & 2) != 0;

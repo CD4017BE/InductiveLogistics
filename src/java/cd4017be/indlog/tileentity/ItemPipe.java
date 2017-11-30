@@ -1,15 +1,12 @@
 package cd4017be.indlog.tileentity;
 
 import java.util.List;
-
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.indlog.util.PipeFilterItem;
-import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
-import cd4017be.lib.capability.LinkedInventory;
+import cd4017be.lib.capability.AbstractInventory;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +22,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  *
  * @author CD4017BE
  */
-public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHandler> implements ITilePlaceHarvest {
+public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHandler> {
 
 	public static int TICKS;
 
@@ -39,7 +36,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	@Override
 	protected int resetTimer() {return TICKS;}
 	@Override
-	protected IItemHandler createInv() {return new LinkedInventory(1, 64, this::getItem, this::setItem);}
+	protected IItemHandler createInv() {return new Inventory();}
 
 	private ItemStack getItem(int i) {
 		return content == null ? ItemStack.EMPTY : content;
@@ -148,12 +145,8 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	}
 
 	@Override
-	public void onPlaced(EntityLivingBase entity, ItemStack item) {
-	}
-
-	@Override
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
-		List<ItemStack> list = makeDefaultDrops(null);
+		List<ItemStack> list = super.dropItem(state, fortune);
 		if (content != null) list.add(content);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.item_filter);
@@ -161,6 +154,37 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			list.add(item);
 		}
 		return list;
+	}
+
+	private class Inventory extends AbstractInventory {
+
+		@Override
+		public int insertAm(int slot, ItemStack item) {
+			if (type == 1 || (type == 2 && !(PipeFilterItem.isNullEq(filter) || filter.matches(item)))) return 0;
+			return Math.min(64, item.getMaxStackSize());
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if (type == 2 || (type == 1 && content != null && !(PipeFilterItem.isNullEq(filter) || filter.matches(content)))) return ItemStack.EMPTY;
+			return super.extractItem(slot, amount, simulate);
+		}
+
+		@Override
+		public void setStackInSlot(int slot, ItemStack stack) {
+			setItem(stack, slot);
+		}
+
+		@Override
+		public int getSlots() {
+			return 1;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return getItem(slot);
+		}
+
 	}
 
 }
