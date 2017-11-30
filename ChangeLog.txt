@@ -1,3 +1,14 @@
+v1.0.4
+Changes:
+- pipe connections can be removed by left-clicking (in survival mode) too now (enhances #5)
+- extraction/injection pipes and attached filters now limit accessibility of their internal item/fluid buffer (fixes #6)
+- added an (optional) automation mode to tanks for operation with fluid containers and external pipe interaction.
+- fixed tanks sometimes not continuing to fill/drain fluidContainers although new fluid/space available
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.0.6
+
 v1.0.3
 Changes:
 - made Universal Pipe interaction more creative-mode friendly (solves #2)
