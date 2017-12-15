@@ -49,6 +49,8 @@ tile.indlog.auto_craft.name=Automatische Montage
 tile.indlog.auto_craft.tip=Verwendet Items aus benachbarten Inventaren um automatisch\nHerstellungsrezepte basierend auf einem Blockseitenmuster auszuführen.
 tile.indlog.inv_connector.name=Block Fernzugriffsleitung
 tile.indlog.inv_connector.tip=Spiegelt die Capabilities des angeschlossenen\nBlocks wieder (Items, Flüssigkeiten, usw.).\nMarkierungen zeigen grün = verbunden, Rot = nicht\nInteragiere (ohne Item) zum neu orientieren.\nInteragiere mit block in der linken Hand zum abdecken.
+tile.indlog.trash.name=Überlauf Annihilator
+tile.indlog.trash.tip=Versucht erhaltene Items & Flüssigkeiten an den angeschlossenen Block weiterzugeben\nund löscht jeglichen Überschuss den dieser nicht annimmt.\n(Ist kein Block angeschlossen, so wird alles gelöscht)
 
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter

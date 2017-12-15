@@ -49,6 +49,8 @@ tile.indlog.auto_craft.name=Automatic Crafter
 tile.indlog.auto_craft.tip=Takes items from neighboring inventories to perform\nautomatic crafting based on a side reference pattern.
 tile.indlog.inv_connector.name=Remote Access Pipe
 tile.indlog.inv_connector.tip=Provides remote access to capabilities\n(Item, Fluid, ...) of a connected Block.\nConnection shows green if linked and red if not.\nClick with empty hand to change orientation.\nClick with block in offhand to cover.
+tile.indlog.trash.name=Overflow Trash
+tile.indlog.trash.tip=Tries to pass inserted items & fluids on to its connected block\nand deletes the excess that this block didn't take.\n(Deletes everything if not connected to a block)
 
 #Items
 item.indlog.fluid_filter.name=Pipe Liquid-Filter

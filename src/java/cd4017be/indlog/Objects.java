@@ -7,8 +7,10 @@ import cd4017be.indlog.multiblock.BasicWarpPipe;
 import cd4017be.indlog.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
 import cd4017be.lib.block.BlockCoveredPipe;
+import cd4017be.lib.block.OrientedBlock;
 import cd4017be.lib.block.VariantBlock;
 import cd4017be.lib.item.BaseItemBlock;
+import cd4017be.lib.property.PropertyOrientation;
 import cd4017be.lib.templates.TabMaterials;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
@@ -45,6 +47,7 @@ public class Objects {
 	public static final VariantBlock BUFFER = null;
 	public static final AdvancedBlock AUTO_CRAFT = null;
 	public static final BlockCoveredPipe INV_CONNECTOR = null;
+	public static final OrientedBlock TRASH = null;
 
 	//ItemBlocks
 	public static final ItemItemPipe item_pipe = null;
@@ -54,6 +57,7 @@ public class Objects {
 	public static final ItemBuffer buffer = null;
 	public static final BaseItemBlock auto_craft = null;
 	public static final BaseItemBlock inv_connector = null;
+	public static final BaseItemBlock trash = null;
 
 	//Items
 	public static final ItemItemFilter item_filter = null;
@@ -76,7 +80,8 @@ public class Objects {
 			VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class).setCreativeTab(tabIndLog).setLightOpacity(0),
 			VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class).setCreativeTab(tabIndLog),
 			new AdvancedBlock("auto_craft", Material.IRON, SoundType.ANVIL, 0, AutoCrafter.class).setCreativeTab(tabIndLog),
-			BlockCoveredPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F)
+			BlockCoveredPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F),
+			OrientedBlock.create("trash", Material.ROCK, SoundType.STONE, 0, OverflowTrash.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
 		);
 	}
 
@@ -91,6 +96,7 @@ public class Objects {
 			new ItemBuffer(BUFFER),
 			new BaseItemBlock(AUTO_CRAFT),
 			new BaseItemBlock(INV_CONNECTOR),
+			new BaseItemBlock(TRASH),
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),

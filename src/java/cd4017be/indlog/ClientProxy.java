@@ -53,6 +53,7 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRenderBS(BUFFER, 0, 15);
 		BlockItemRegistry.registerRender(AUTO_CRAFT);
 		BlockItemRegistry.registerRender(INV_CONNECTOR);
+		BlockItemRegistry.registerRender(TRASH);
 		
 		BlockItemRegistry.registerRender(fluid_filter);
 		BlockItemRegistry.registerRender(item_filter);
