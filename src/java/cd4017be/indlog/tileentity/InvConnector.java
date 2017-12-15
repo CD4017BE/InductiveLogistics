@@ -129,6 +129,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 				conDir = d;
 				this.markUpdate();
 				linkUpdate = true;
+				markDirty();
 				return;
 			}
 		}

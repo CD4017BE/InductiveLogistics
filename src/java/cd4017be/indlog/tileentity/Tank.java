@@ -67,17 +67,20 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 		if (lockType && fluid == null && !world.isRemote) this.fluid.amount = 0;
 		else this.fluid = fluid;
 		if (updateItem == 1) updateItem = 2;
+		markDirty();
 	}
 
 	private void setItem(ItemStack item, int s) {
 		this.item = item;
 		updateItem = item.getCount() > 0 ? (byte)2 : (byte)0;
+		markDirty();
 	}
 
 	@Override
 	public void update() {
 		if (world.isRemote) return;
 		if (updateItem == 2) useFluidContainer();
+		if ((world.getTotalWorldTime() & 7) != 0) return;
 		if (checkTarget) {
 			checkTarget = false;
 			target = world.getTileEntity(pos.down());
@@ -260,6 +263,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 			setInv();
 			break;
 		}
+		markDirty();
 	}
 
 	private void setInv() {

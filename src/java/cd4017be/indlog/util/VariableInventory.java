@@ -1,8 +1,8 @@
 package cd4017be.indlog.util;
 
 import java.util.Arrays;
-
 import cd4017be.lib.capability.AbstractInventory;
+import cd4017be.lib.util.Callback;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -10,8 +10,10 @@ public class VariableInventory extends AbstractInventory {
 
 	public ItemStack[] items;
 	public int slots, stackSize;
+	private final Callback onModified;
 
-	public VariableInventory(int maxSlots) {
+	public VariableInventory(int maxSlots, Callback modificationCallback) {
+		this.onModified = modificationCallback;
 		items = new ItemStack[maxSlots];
 		Arrays.fill(items, ItemStack.EMPTY);
 		slots = maxSlots;
@@ -20,6 +22,7 @@ public class VariableInventory extends AbstractInventory {
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
 		items[slot] = stack;
+		onModified.call();
 	}
 
 	@Override
