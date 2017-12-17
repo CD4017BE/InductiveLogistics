@@ -8,6 +8,7 @@ import cd4017be.lib.render.model.MultipartModel;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import cd4017be.indlog.render.gui.GuiAutoCrafter;
+import cd4017be.indlog.render.gui.GuiFluidIO;
 import cd4017be.indlog.render.gui.GuiItemBuffer;
 import cd4017be.indlog.render.gui.GuiTank;
 import cd4017be.indlog.render.tesr.FluidPipeRenderer;
@@ -40,6 +41,8 @@ public class ClientProxy extends CommonProxy {
 		BlockGuiHandler.registerGui(TANK, GuiTank.class);
 		BlockGuiHandler.registerGui(BUFFER, GuiItemBuffer.class);
 		BlockGuiHandler.registerGui(AUTO_CRAFT, GuiAutoCrafter.class);
+		BlockGuiHandler.registerGui(FLUID_INTAKE, GuiFluidIO.class);
+		BlockGuiHandler.registerGui(FLUID_OUTLET, GuiFluidIO.class);
 		SpecialModelLoader.registerBlockModel(INV_CONNECTOR, new MultipartModel(INV_CONNECTOR).setPipeVariants(3));
 	}
 
@@ -54,6 +57,8 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRender(AUTO_CRAFT);
 		BlockItemRegistry.registerRender(INV_CONNECTOR);
 		BlockItemRegistry.registerRender(TRASH);
+		BlockItemRegistry.registerRender(FLUID_INTAKE);
+		BlockItemRegistry.registerRender(FLUID_OUTLET);
 		
 		BlockItemRegistry.registerRender(fluid_filter);
 		BlockItemRegistry.registerRender(item_filter);

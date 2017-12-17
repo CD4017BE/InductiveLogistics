@@ -48,6 +48,8 @@ public class Objects {
 	public static final AdvancedBlock AUTO_CRAFT = null;
 	public static final BlockCoveredPipe INV_CONNECTOR = null;
 	public static final OrientedBlock TRASH = null;
+	public static final OrientedBlock FLUID_INTAKE = null;
+	public static final OrientedBlock FLUID_OUTLET = null;
 
 	//ItemBlocks
 	public static final ItemItemPipe item_pipe = null;
@@ -58,6 +60,8 @@ public class Objects {
 	public static final BaseItemBlock auto_craft = null;
 	public static final BaseItemBlock inv_connector = null;
 	public static final BaseItemBlock trash = null;
+	public static final BaseItemBlock fluid_intake = null;
+	public static final BaseItemBlock fluid_outlet = null;
 
 	//Items
 	public static final ItemItemFilter item_filter = null;
@@ -81,7 +85,9 @@ public class Objects {
 			VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class).setCreativeTab(tabIndLog),
 			new AdvancedBlock("auto_craft", Material.IRON, SoundType.ANVIL, 0, AutoCrafter.class).setCreativeTab(tabIndLog),
 			BlockCoveredPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F),
-			OrientedBlock.create("trash", Material.ROCK, SoundType.STONE, 0, OverflowTrash.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
+			OrientedBlock.create("trash", Material.ROCK, SoundType.STONE, 0, OverflowTrash.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
+			OrientedBlock.create("fluid_intake", Material.IRON, SoundType.METAL, 0, FluidIntake.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
+			OrientedBlock.create("fluid_outlet", Material.IRON, SoundType.METAL, 0, FluidOutlet.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
 		);
 	}
 
@@ -97,6 +103,8 @@ public class Objects {
 			new BaseItemBlock(AUTO_CRAFT),
 			new BaseItemBlock(INV_CONNECTOR),
 			new BaseItemBlock(TRASH),
+			new BaseItemBlock(FLUID_INTAKE),
+			new BaseItemBlock(FLUID_OUTLET),
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),
