@@ -5,6 +5,7 @@ import cd4017be.lib.capability.AbstractInventory;
 import cd4017be.lib.util.ItemFluidUtil.StackedFluidAccess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
@@ -16,6 +17,8 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
  * @author cd4017be
  */
 public class AdvancedTank extends AbstractInventory implements IFluidHandler, ITankContainer {
+	/**owner */
+	public final TileEntity tile;
 	/**stored fluid */
 	public FluidStack fluid;
 	/**internal fluid container slot */
@@ -36,8 +39,8 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	 * @param cap capacity
 	 * @param out whether this is considered as output tank
 	 */
-	public AdvancedTank(int cap, boolean out) {
-		this(cap, out, null);
+	public AdvancedTank(TileEntity tile, int cap, boolean out) {
+		this(tile, cap, out, null);
 	}
 
 	/**
@@ -46,7 +49,8 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	 * @param out whether this is considered as output tank
 	 * @param type fluid type to lock to
 	 */
-	public AdvancedTank(int cap, boolean out, Fluid type) {
+	public AdvancedTank(TileEntity tile, int cap, boolean out, Fluid type) {
+		this.tile = tile;
 		this.cap = cap;
 		this.output = out;
 		this.need = out ? Integer.MAX_VALUE : Integer.MIN_VALUE;
@@ -84,8 +88,10 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
 		cont = stack;
+		if (!tile.hasWorld() || tile.getWorld().isRemote) return;
 		if (output) fillContainer();
 		else drainContainer();
+		tile.markDirty();
 	}
 
 	@Override
@@ -127,7 +133,10 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	public int fill(FluidStack res, boolean doFill) {
 		if (fluid == null) {
 			int m = Math.min(res.amount, cap);
-			if (doFill) fluid = new FluidStack(res, m);
+			if (doFill) {
+				fluid = new FluidStack(res, m);
+				tile.markDirty();
+			}
 			return m;
 		} else if (fluid.isFluidEqual(res)) {
 			int m = Math.min(res.amount, cap - fluid.amount);
@@ -140,16 +149,18 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	public FluidStack drain(FluidStack res, boolean doDrain) {
 		if (fluid == null || fluid.amount <= 0 || !fluid.isFluidEqual(res)) return null;
 		int m = Math.min(res.amount, fluid.amount);
+		FluidStack ret = new FluidStack(fluid, m);
 		if (doDrain) decrement(m);
-		return new FluidStack(fluid, m);
+		return ret;
 	}
 
 	@Override
 	public FluidStack drain(int m, boolean doDrain) {
 		if (fluid == null || fluid.amount <= 0) return null;
 		if (fluid.amount < m) m = fluid.amount;
+		FluidStack ret = new FluidStack(fluid, m);
 		if (doDrain) decrement(m);
-		return new FluidStack(fluid, m);
+		return ret;
 	}
 
 	/**
@@ -172,7 +183,8 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	 */
 	public void increment(int n) {
 		n = fluid.amount += n;
-		if (output && n > need) fillContainer();
+		if (output && n >= need) fillContainer();
+		tile.markDirty();
 	}
 
 	/**
@@ -183,6 +195,7 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 		n = fluid.amount -= n;
 		if (n <= 0 && !lock) fluid = null;
 		if (!output && n <= need) drainContainer();
+		tile.markDirty();
 	}
 
 	/**
@@ -192,14 +205,16 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 	public void fillContainer() {
 		need = Integer.MAX_VALUE;
 		if (cont.getCount() == 0) return;
+		if (fluid == null) {
+			need = 0;
+			return;
+		}
 		StackedFluidAccess acc = new StackedFluidAccess(cont);
 		if (!acc.valid()) return;
-		if (fluid != null) {
-			int n = fluid.amount -= acc.fill(fluid, true);
-			if (n <= 0 && !lock) fluid = null;
-		}
-		int n = acc.fill(new FluidStack(fluid, cap), false);
-		if (n > 0) need = n;
+		int n = fluid.amount -= acc.fill(fluid, true);
+		int m = acc.fill(new FluidStack(fluid, cap), false);
+		if (m > 0) need = m;
+		if (n <= 0 && !lock) fluid = null;
 		cont = acc.result();
 	}
 

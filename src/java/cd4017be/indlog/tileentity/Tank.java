@@ -44,7 +44,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 
 	public static final int[] CAP = {8000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-	public AdvancedTank tank = new AdvancedTank(CAP[0], false);
+	public AdvancedTank tank = new AdvancedTank(this, CAP[0], false);
 	private IItemHandler inventory = new Inventory();
 	private TileEntity target;
 	private byte type;

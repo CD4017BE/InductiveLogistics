@@ -39,7 +39,7 @@ public class GuiTank extends AdvancedGui {
 		int i = gui.guiComps.size();
 		TileContainer cont = (TileContainer)gui.inventorySlots;
 		for (TankSlot tank : cont.tankSlots) {
-			gui.guiComps.add(gui.new Button(i++, 176, 15, 7, 7, 0, ()-> confirm() ? 1:0, (t)-> {
+			gui.guiComps.add(gui.new Button(i++, tank.xPos - 8, tank.yPos, 7, 7, 0, ()-> confirm() ? 1:0, (t)-> {
 			if(confirm()) {
 				gui.sendCommand(cmd + tank.tankNumber * 2);
 				clickTime = 0;
@@ -47,7 +47,7 @@ public class GuiTank extends AdvancedGui {
 		}).texture(249, 14).setTooltip("tank.del#"));
 			if (tank.inventory instanceof AdvancedTank) {
 				AdvancedTank at = (AdvancedTank)tank.inventory;
-				gui.guiComps.add(gui.new Button(i++, tank.xPos, tank.yPos, 7, 7, 0, ()-> at.lock ? 1:0, (t)-> gui.sendCommand(cmd + tank.tankNumber * 2 + 1)).texture(249, 0).setTooltip("tank.lock#"));
+				gui.guiComps.add(gui.new Button(i++, tank.xPos - 8, tank.yPos + (tank.size & 0xf) * 18 - 9, 7, 7, 0, ()-> at.lock ? 1:0, (t)-> gui.sendCommand(cmd + tank.tankNumber * 2 + 1)).texture(249, 0).setTooltip("tank.lock#"));
 			}
 		}
 	}

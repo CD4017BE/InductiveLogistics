@@ -31,7 +31,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 	public static int CAP = 8000, MAX_SIZE = 127, SEARCH_MULT = 3;
 
 	protected GameProfile lastUser = PermissionUtil.DEFAULT_PLAYER;
-	public AdvancedTank tank = new AdvancedTank(CAP, true);
+	public AdvancedTank tank = new AdvancedTank(this, CAP, true);
 	/**bits[0-7]: x, bits[8-15]: y, bits[16-23]: z, bits[24-26]: ld0, bits[27-29]: ld1, bit[30]: can back */
 	protected int[] blocks = new int[0];
 	protected int dist = -1;
