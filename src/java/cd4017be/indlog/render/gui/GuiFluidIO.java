@@ -31,9 +31,9 @@ public class GuiFluidIO extends AdvancedGui {
 		this.xSize = 226;
 		this.ySize = 98;
 		super.initGui();
-		this.titleX = xSize * 3 / 4;
+		this.titleX = xSize * 7 / 8;
 		boolean in = tile.tank.output;
-		guiComps.add(new Button(1, 183, 73, 18, 18, 0, ()-> tile.mode >> 8 & 1, (b)-> sendCommand(0)).texture(226, in ? 72:36).setTooltip(in ? "intake.update":"outlet.update"));
+		guiComps.add(new Button(1, 183, 73, 18, 18, 0, ()-> tile.mode >> 8 & 1, (b)-> sendCommand(0)).texture(226, in ? 72:36).setTooltip("fluidIO.update#"));
 		guiComps.add(new NumberSel(2, 201, 73, 18, 18, "%d", 0, FluidOutlet.MAX_SIZE, 8, ()-> tile.mode & 0xff, (n)-> {
 			PacketBuffer dos = BlockGuiHandler.getPacketTargetData(tile.pos());
 			tile.mode = (tile.mode & 0x100) | (n & 0xff);

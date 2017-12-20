@@ -18,21 +18,23 @@ public class FluidIntake extends FluidIO {
 
 	@Override
 	public void update() {
-		if (world.isRemote || blocks.length == 0 || tank.free() < 1000) return;
-		EnumFacing dir;
-		if (dist < 0) {
-			dir = getOrientation().front;
-			BlockPos pos = this.pos.offset(dir);
-			if (pos.getY() < 0 || pos.getY() >= 256 || !world.isBlockLoaded(pos)) return;
-			FluidStack fluid = Utils.getFluid(world, pos, blockNotify);
-			if (fluid != null && fluid.isFluidEqual(tank.fluid)) {
-				fluidId = fluid.getFluid();
-				goUp = fluidId.getDensity() > 0;
-				dist = 0;
-				blocks[dist] = (dir.getFrontOffsetX() & 0xff) | (dir.getFrontOffsetY() & 0xff) << 8 | (dir.getFrontOffsetZ() & 0xff) << 16 | dir.ordinal() << 24;
-			} else return;
+		if (world.isRemote || blocks.length == 0) return;
+		for (int i = SPEED; tank.free() >= 1000 && i > 0; i--) {
+			EnumFacing dir;
+			if (dist < 0) {
+				dir = getOrientation().front.getOpposite();
+				BlockPos pos = this.pos.offset(dir);
+				if (pos.getY() < 0 || pos.getY() >= 256 || !world.isBlockLoaded(pos)) return;
+				FluidStack fluid = Utils.getFluid(world, pos, blockNotify);
+				if (fluid != null && (tank.fluid == null || fluid.isFluidEqual(tank.fluid))) {
+					fluidId = fluid.getFluid();
+					goUp = fluidId.getDensity() > 0;
+					dist = 0;
+					blocks[dist] = (dir.getFrontOffsetX() & 0xff) | (dir.getFrontOffsetY() & 0xff) << 8 | (dir.getFrontOffsetZ() & 0xff) << 16 | dir.ordinal() << 24;
+				} else return;
+			}
+			super.update();
 		}
-		super.update();
 	}
 
 	@Override

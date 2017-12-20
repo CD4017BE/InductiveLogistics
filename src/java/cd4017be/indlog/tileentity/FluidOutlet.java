@@ -18,20 +18,22 @@ public class FluidOutlet extends FluidIO {
 
 	@Override
 	public void update() {
-		if (world.isRemote || blocks.length == 0 || tank.amount() < 1000) return;
-		Fluid fluid = tank.fluid.getFluid();
-		if (!fluid.canBePlacedInWorld()) return;
-		goUp = fluid.getDensity() <= 0;
-		blockId = fluid.getBlock();
-		EnumFacing dir;
-		if (dist < 0) {
-			dir = getOrientation().front;
-			if (canUse(pos.offset(dir))) {
-				dist = 0;
-				blocks[dist] = (dir.getFrontOffsetX() & 0xff) | (dir.getFrontOffsetY() & 0xff) << 8 | (dir.getFrontOffsetZ() & 0xff) << 16 | dir.ordinal() << 24;
-			} else return;
+		if (world.isRemote || blocks.length == 0) return;
+		for (int i = SPEED; tank.amount() >= 1000 && i > 0; i--) {
+			Fluid fluid = tank.fluid.getFluid();
+			if (!fluid.canBePlacedInWorld()) return;
+			goUp = fluid.getDensity() <= 0;
+			blockId = fluid.getBlock();
+			EnumFacing dir;
+			if (dist < 0) {
+				dir = getOrientation().front.getOpposite();
+				if (canUse(pos.offset(dir))) {
+					dist = 0;
+					blocks[dist] = (dir.getFrontOffsetX() & 0xff) | (dir.getFrontOffsetY() & 0xff) << 8 | (dir.getFrontOffsetZ() & 0xff) << 16 | dir.ordinal() << 24;
+				} else return;
+			}
+			super.update();
 		}
-		super.update();
 	}
 
 	@Override

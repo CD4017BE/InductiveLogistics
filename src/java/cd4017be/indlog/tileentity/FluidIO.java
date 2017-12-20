@@ -28,10 +28,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
  */
 public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiData, ClientPacketReceiver {
 
-	public static int CAP = 8000, MAX_SIZE = 127, SEARCH_MULT = 3;
+	public static int CAP = 8000, MAX_SIZE = 127, SEARCH_MULT = 3, SPEED = 1;
 
 	protected GameProfile lastUser = PermissionUtil.DEFAULT_PLAYER;
-	public AdvancedTank tank = new AdvancedTank(this, CAP, true);
+	public AdvancedTank tank = new AdvancedTank(this, CAP, this instanceof FluidIntake);
 	/**bits[0-7]: x, bits[8-15]: y, bits[16-23]: z, bits[24-26]: ld0, bits[27-29]: ld1, bit[30]: can back */
 	protected int[] blocks = new int[0];
 	protected int dist = -1;
@@ -56,6 +56,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 				target = 0;
 			} else if (s != ld0) {
 				target = s << 24 | ld0 << 27;
+				if (dist == 0) target |= 0x40000000;
 			} else {
 				target &= 0x7f000000;
 				if (!canBack && ld1 >= 2) {
@@ -84,7 +85,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		if (isValidPos(x + ld.getFrontOffsetX(), y, z + ld.getFrontOffsetZ()))
 			return ld;
 		if (canBack && isValidPos(x - ld.getFrontOffsetX(), y, z - ld.getFrontOffsetZ()))
-			ld.getOpposite();
+			return ld.getOpposite();
 		return null;
 	}
 
@@ -130,6 +131,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		case 2: if (tank.fluid != null) tank.decrement(tank.fluid.amount); break;
 		case 3: tank.setLock(!tank.lock); break;
 		}
+		markDirty();
 	}
 
 	@Override

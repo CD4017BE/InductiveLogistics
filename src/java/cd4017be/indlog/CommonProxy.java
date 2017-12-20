@@ -47,6 +47,7 @@ public class CommonProxy {
 		FluidIO.CAP = (int)cfg.getNumber("fluid_io_cap", 8000);
 		FluidIO.MAX_SIZE = Math.min((int)cfg.getNumber("fluid_io_range", 127), 127);
 		FluidIO.SEARCH_MULT = Math.max((int)cfg.getNumber("fluid_io_path", 3), 1);
+		FluidIO.SPEED = (int)cfg.getNumber("fluid_io_speed", 1);
 	}
 
 	public void registerRenderers() {
