@@ -1,0 +1,11 @@
+{
+	"parent": "indlog:block/base",
+	"textures": {
+		"top": "indlog:block/fluid_intake1",
+		"bot": "indlog:block/fluid_intake1",
+		"front": "indlog:block/fluid_intake0",
+		"back": "indlog:block/fluid_intake1",
+		"left": "indlog:block/fluid_intake1",
+		"right": "indlog:block/fluid_intake1"
+	}
+}

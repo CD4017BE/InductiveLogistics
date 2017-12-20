@@ -1,4 +1,4 @@
-VERSION = 24;
+VERSION = 29;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -20,6 +20,8 @@ fluid_io_range = 127;
 !length multiplier for fluid path finding (3 is enough to reach all blocks in a cubic area without obstacles)
 !higher values can handle fractured terrain better but may slightly decrease performance.
 fluid_io_path = 3;
+!operations performed by fluid intake/outlet per tick. Set this higher if you want them insanely fast.
+fluid_io_speed = 1;
 
 {
 	!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)
@@ -42,10 +44,10 @@ INIT() {
 	add("shaped", it("tile.auto_craft", 1), "010/131/020", "ingotIron", "dustRedstone", it("minecraft:piston"), it("minecraft:crafting_table"));
 	add("shaped", it("tile.inv_connector", 12), "000/121/000", "gemQuartz", "blockGlass", it("minecraft:ender_eye"));
 	add("shaped", it("tile.trash", 1), "000/132/000", "cobblestone", it("itemPipeT"), it("fluidPipeT"), it("minecraft:lava_bucket"));
-	Loc mat = "ingotCopper"; if (#ores(mat) < 1) mat = "ingotIron";
-	add("shaped", it("tile.fluid_intake", 1, "010/020/ 3 ", mat, it("minecraft:iron_bars"), it("minecraft:sticky_piston"), it("tile.tank", 1)))
-	mat = "ingotTin"; if (#ores(mat) < 1) mat = "ingotIron";
-	add("shaped", it("tile.fluid_outlet", 1, "010/020/ 3 ", mat, it("minecraft:iron_bars"), it("minecraft:piston"), it("tile.tank", 1)))
+	Loc mat = "ingotCopper"; if (#ores(mat) < 1) {mat = "ingotIron";}
+	add("shaped", it("tile.fluid_intake", 1), "010/020/ 3 ", mat, it("minecraft:iron_bars"), it("minecraft:sticky_piston"), it("tile.tank", 1, 1));
+	mat = "ingotTin"; if (#ores(mat) < 1) {mat = "ingotIron";}
+	add("shaped", it("tile.fluid_outlet", 1), " 3 /020/010", mat, it("minecraft:iron_bars"), it("minecraft:piston"), it("tile.tank", 1, 1));
 	add("shaped", it("item.portable_craft", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("tile.auto_craft"), "string", "slabWood");
 	add("shaped", it("item.remote_inv", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("minecraft:ender_chest"), "string", "gemDiamond");
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
