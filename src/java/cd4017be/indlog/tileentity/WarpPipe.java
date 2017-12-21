@@ -57,15 +57,19 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 			ConComp con = comp.network.connectors.get(uid);
 			if (con != null && con.onClicked(player, hand, item, uid)) {
 				markUpdate();
+				markDirty();
 				return true;
 			}
 		} else if (player.isSneaking() && item.getCount() == 0) {
 			comp.setConnect(s, t != 0);
 			this.markUpdate();
+			markDirty();
 			TileEntity te = Utils.neighborTile(this, dir);
 			if (te instanceof WarpPipe) {
-				((WarpPipe)te).comp.setConnect((byte)(s^1), t != 0);
-				((WarpPipe)te).markUpdate();
+				WarpPipe wp = (WarpPipe)te;
+				wp.comp.setConnect((byte)(s^1), t != 0);
+				wp.markUpdate();
+				wp.markDirty();
 			}
 			return true;
 		} 
@@ -76,6 +80,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 				player.setHeldItem(hand, item);
 			}
 			this.markUpdate();
+			markDirty();
 			return true;
 		} else return false;
 	}

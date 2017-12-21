@@ -9,11 +9,15 @@ import cd4017be.indlog.multiblock.ItemExtractor;
 import cd4017be.indlog.tileentity.FluidPipe;
 import cd4017be.indlog.tileentity.AutoCrafter;
 import cd4017be.indlog.tileentity.Buffer;
+import cd4017be.indlog.tileentity.DropedItemInterface;
+import cd4017be.indlog.tileentity.EntityInterface;
+import cd4017be.indlog.tileentity.FluidIO;
 import cd4017be.indlog.tileentity.ItemPipe;
 import cd4017be.indlog.tileentity.Pipe;
 import cd4017be.indlog.tileentity.Tank;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.TickRegistry;
+import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.TileContainer;
 
 public class CommonProxy {
@@ -25,6 +29,9 @@ public class CommonProxy {
 		BlockGuiHandler.registerContainer(Objects.TANK, TileContainer.class);
 		BlockGuiHandler.registerContainer(Objects.BUFFER, TileContainer.class);
 		BlockGuiHandler.registerContainer(Objects.AUTO_CRAFT, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.FLUID_INTAKE, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.FLUID_OUTLET, TileContainer.class);
+		BlockGuiHandler.registerContainer(Objects.DROP_INTERFACE, DataContainer.class);
 	}
 
 	private void setConfig() {
@@ -41,6 +48,14 @@ public class CommonProxy {
 		ItemPortableCrafter.INTERVAL = (int)cfg.getNumber("portable_craft_tick", 20);
 		ItemRemoteInv.INTERVAL = (int)cfg.getNumber("remote_inv_tick", 20);
 		AutoCrafter.INTERVAL = Math.max((int)cfg.getNumber("auto_craft_tick", 20), 1);
+		FluidIO.CAP = (int)cfg.getNumber("fluid_io_cap", 8000);
+		FluidIO.MAX_SIZE = Math.min((int)cfg.getNumber("fluid_io_range", 127), 127);
+		FluidIO.SEARCH_MULT = Math.max((int)cfg.getNumber("fluid_io_path", 3), 1);
+		FluidIO.SPEED = (int)cfg.getNumber("fluid_io_speed", 1);
+		DropedItemInterface.INTERVAL = (int)cfg.getNumber("drop_interface_tick", 50);
+		DropedItemInterface.MAX_RANGE = Math.max((int)cfg.getNumber("drop_interface_range", 15), 1);
+		DropedItemInterface.INV_SIZE = (int)cfg.getNumber("drop_interface_slots", 5);
+		EntityInterface.INTERVAL = (int)cfg.getNumber("entity_interface_tick", 10);
 	}
 
 	public void registerRenderers() {

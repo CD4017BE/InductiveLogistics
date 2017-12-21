@@ -50,6 +50,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	private byte time;
 	protected boolean updateCon = true;
 	protected Cover cover = new Cover();
+	private boolean onChunkBorder;
 
 	public Pipe() {}
 
@@ -61,8 +62,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@Override
 	public void update() {
 		if (world.isRemote) return;
-		if (updateCon) updateConnections();
 		if (world.getTotalWorldTime() % resetTimer() == time) {
+			if (updateCon) updateConnections();
 			if ((flow & 0x3000) == 0x3000) {
 				switch(type) {
 				case 1:
@@ -78,6 +79,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 						else {
 							target.content = content;
 							content = null;
+							markDirty();
+							if (onChunkBorder) target.markDirty();
 						}
 					}
 					break;
@@ -94,6 +97,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 						else {
 							target.content = content;
 							content = null;
+							markDirty();
+							if (onChunkBorder) target.markDirty();
 						}
 					}
 				}
@@ -121,7 +126,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			target = null;
 			dest = -1;
 		}
-		if (unloadedNeighbor()) return;
+		if (onChunkBorder && unloadedNeighbor()) return;
 		
 		EnumFacing dir;
 		TileEntity te;
@@ -189,6 +194,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		flow &= 0xbfff;
 		if (flow != lFlow) {
 			this.markUpdate();
+			this.markDirty();
 			for (T pipe : updateList) pipe.updateCon = true;
 		}
 	}
@@ -215,6 +221,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		} else if (filter == null) {
 			flow ^= 0x8000;
 			markUpdate();
+			markDirty();
 			return true;
 		} else return false;
 	}
@@ -238,6 +245,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		if (lock != 0) flow |= 0x4000;
 		updateCon = true;
 		this.markUpdate();
+		this.markDirty();
 		ICapabilityProvider te = getTileOnSide(EnumFacing.VALUES[s]);
 		if (pipeClass().isInstance(te)) {
 			T pipe = pipeClass().cast(te);
@@ -245,6 +253,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			if (lock != 0) pipe.flow |= 0x4000;
 			pipe.updateCon = true;
 			pipe.markUpdate();
+			if (onChunkBorder) pipe.markDirty();
 		}
 	}
 
@@ -263,6 +272,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		super.setPos(posIn);
 		if ((posIn.getX() + posIn.getY() + posIn.getZ() & 1) == 0) time = 0;
 		else time = (byte) Math.min(127, resetTimer() / 2);
+		onChunkBorder = (posIn.getX() + 1 & 15) <= 1 || (posIn.getZ() + 1 & 15) <= 1;
 	}
 
 	@Override

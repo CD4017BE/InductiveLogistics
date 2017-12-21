@@ -10,6 +10,8 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import cd4017be.indlog.render.gui.GuiAutoCrafter;
+import cd4017be.indlog.render.gui.GuiDropInterface;
+import cd4017be.indlog.render.gui.GuiFluidIO;
 import cd4017be.indlog.render.gui.GuiItemBuffer;
 import cd4017be.indlog.render.gui.GuiTank;
 import cd4017be.indlog.render.tesr.FluidPipeRenderer;
@@ -32,6 +34,9 @@ public class ClientProxy extends CommonProxy {
 		BlockGuiHandler.registerGui(TANK, GuiTank.class);
 		BlockGuiHandler.registerGui(BUFFER, GuiItemBuffer.class);
 		BlockGuiHandler.registerGui(AUTO_CRAFT, GuiAutoCrafter.class);
+		BlockGuiHandler.registerGui(FLUID_INTAKE, GuiFluidIO.class);
+		BlockGuiHandler.registerGui(FLUID_OUTLET, GuiFluidIO.class);
+		BlockGuiHandler.registerGui(DROP_INTERFACE, GuiDropInterface.class);
 	}
 
 	@Override
@@ -64,6 +69,11 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRenderBS(BUFFER, 0, 15);
 		BlockItemRegistry.registerRender(AUTO_CRAFT);
 		BlockItemRegistry.registerRender(INV_CONNECTOR);
+		BlockItemRegistry.registerRender(TRASH);
+		BlockItemRegistry.registerRender(FLUID_INTAKE);
+		BlockItemRegistry.registerRender(FLUID_OUTLET);
+		BlockItemRegistry.registerRender(DROP_INTERFACE);
+		BlockItemRegistry.registerRender(ENTITY_INTERFACE);
 		BlockItemRegistry.registerRender(fluid_filter);
 		BlockItemRegistry.registerRender(item_filter);
 		BlockItemRegistry.registerRender(portable_craft);

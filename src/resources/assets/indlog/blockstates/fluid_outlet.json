@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"inventory": { "model": "indlog:fluid_outlet" },
+		"orient=s": { "model": "indlog:fluid_outlet" },
+		"orient=w": { "model": "indlog:fluid_outlet" , "y": 90 },
+		"orient=n": { "model": "indlog:fluid_outlet" , "y": 180 },
+		"orient=e": { "model": "indlog:fluid_outlet" , "y": 270 },
+		"orient=tn": { "model": "indlog:fluid_outlet" , "x": 90 },
+		"orient=bn": { "model": "indlog:fluid_outlet" , "x": 270 }
+	}
+}

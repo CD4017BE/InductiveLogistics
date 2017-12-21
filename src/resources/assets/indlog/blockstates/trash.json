@@ -1,0 +1,11 @@
+{
+    "variants": {
+		"inventory": { "model": "indlog:trash" },
+		"orient=n": { "model": "indlog:trash" },
+		"orient=e": { "model": "indlog:trash" , "y": 90 },
+		"orient=s": { "model": "indlog:trash" , "y": 180 },
+		"orient=w": { "model": "indlog:trash" , "y": 270 },
+		"orient=bn": { "model": "indlog:trash" , "x": 90 },
+		"orient=tn": { "model": "indlog:trash" , "x": 270 }
+	}
+}

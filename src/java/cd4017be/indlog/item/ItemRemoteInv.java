@@ -137,6 +137,12 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 				NBTTagCompound nbt = item.getTagCompound();
 				link = getLink(nbt);
 				linkedInv = link != null ? link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[(nbt.getByte("s") & 0xff) % 6]) : null;
+				if (linkedInv != null && (linkedInv == cont.player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN)
+						|| linkedInv == cont.player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH)
+						|| linkedInv == cont.player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))) {
+					cont.player.sendMessage(new TextComponentString(TooltipUtil.translate("gui.cd4017be.remote.selfAcc")));
+					link = null;
+				}
 			} else if (size > 0) {
 				linkedInv = new BasicInventory(size);
 				//Workaround to fix an inventory sync bug. Sends a request to server that it should send the inventory data again.

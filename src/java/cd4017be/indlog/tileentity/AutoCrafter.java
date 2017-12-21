@@ -102,6 +102,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 					if (n > 0) {//this shouldn't happen but in case it does: ABORT!
 						results[i] = ItemHandlerHelper.copyStackWithSize(ingreds[i].stack, inputs[i] * amount - n);
 						for (i--; i >= 0; i--) results[i] = ItemHandlerHelper.copyStackWithSize(ingreds[i].stack, inputs[i] * amount);
+						markDirty();
 						return;
 					}
 				}
@@ -178,6 +179,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 				outEmpty &= stack.getCount() <= 0;
 			}
 		}
+		markDirty();
 	}
 
 	private boolean hasRSInput() {
@@ -309,6 +311,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 			rsMode ^= 2;
 			if ((rsMode & 2) == 0) updateRS((byte) 0);
 		}
+		markDirty();
 	}
 
 	@Override
