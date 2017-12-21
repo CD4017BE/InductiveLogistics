@@ -47,6 +47,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 
 	private void setFluid(FluidStack fluid) {
 		content = fluid;
+		markDirty();
 	}
 
 	@Override
@@ -63,18 +64,25 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 			if (m <= 0 || (content.amount -= acc.fill(new FluidStack(content, m), true)) > 0) return false;
 		}
 		content = null;
+		markDirty();
 		return true;
 	}
 
 	@Override
 	protected boolean transferIn(IFluidHandler acc) {
 		if (PipeFilterFluid.isNullEq(filter)) {
-			if (content == null) content = acc.drain(CAP, true);
+			if (content == null) {
+				if((content = acc.drain(CAP, true)) != null)
+					markDirty();
+			}
 			else {
 				int m = CAP - content.amount;
 				if (m <= 0) return true;
 				FluidStack fluid = acc.drain(new FluidStack(content, m), true);
-				if (fluid != null) content.amount += fluid.amount;
+				if (fluid != null) {
+					content.amount += fluid.amount;
+					markDirty();
+				}
 			}
 		} else {
 			int n;
@@ -86,6 +94,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 			if (m < fluid.amount) fluid.amount = m;
 			fluid.amount = acc.drain(fluid, true).amount + n;
 			content = fluid;
+			markDirty();
 		}
 		return false;
 	}
@@ -100,6 +109,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 			flow |= 0x8000;
 			player.setHeldItem(hand, item);
 			markUpdate();
+			markDirty();
 			return true;
 		} else if (filter == null && type != 0 && item.getItem() == Objects.fluid_filter && item.getTagCompound() != null) {
 			filter = PipeFilterFluid.load(item.getTagCompound());
@@ -107,6 +117,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			markUpdate();
+			markDirty();
 			return true;
 		} else return false;
 	}

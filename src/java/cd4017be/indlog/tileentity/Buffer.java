@@ -37,13 +37,13 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	public byte type;
 
 	public Buffer() {
-		inventory = new VariableInventory(0);
+		inventory = new VariableInventory(0, this::markDirty);
 	}
 
 	public Buffer(IBlockState state) {
 		super(state);
 		type = (byte)blockType.getMetaFromState(state);
-		inventory = new VariableInventory(SLOTS[type]);
+		inventory = new VariableInventory(SLOTS[type], this::markDirty);
 		inventory.stackSize = STACKS[type];
 	}
 
@@ -222,6 +222,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 			acc.setRange(data.readByte() & 0xff, data.readByte() & 0xff);
 		} break;
 		}
+		markDirty();
 	}
 
 }

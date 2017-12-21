@@ -44,6 +44,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 
 	private void setItem(ItemStack item, int i) {
 		content = item.isEmpty() ? null : item;
+		markDirty();
 	}
 
 	@Override
@@ -73,6 +74,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 				int m = content.getMaxStackSize() - content.getCount();
 				if (m <= 0) return true;
 				content.grow(ItemFluidUtil.drain(acc, content, m));
+				markDirty();
 			}
 		} else {
 			int n;
@@ -83,6 +85,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			int m = Math.min(extr.getMaxStackSize() - n, extr.getCount());
 			extr.setCount(ItemFluidUtil.drain(acc, extr, m) + n);
 			content = extr;
+			markDirty();
 		}
 		return false;
 	}
@@ -97,6 +100,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			flow |= 0x8000;
 			player.setHeldItem(hand, item);
 			markUpdate();
+			markDirty();
 			return true;
 		} else if (filter == null && type != 0 && item.getItem() == Objects.item_filter && item.getTagCompound() != null) {
 			filter = PipeFilterItem.load(item.getTagCompound());
@@ -104,6 +108,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			markUpdate();
+			markDirty();
 			return true;
 		} else return false;
 	}

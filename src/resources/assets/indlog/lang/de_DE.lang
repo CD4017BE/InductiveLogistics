@@ -49,6 +49,16 @@ tile.indlog.auto_craft.name=Automatische Montage
 tile.indlog.auto_craft.tip=Verwendet Items aus benachbarten Inventaren um automatisch\nHerstellungsrezepte basierend auf einem Blockseitenmuster auszuführen.
 tile.indlog.inv_connector.name=Block Fernzugriffsleitung
 tile.indlog.inv_connector.tip=Spiegelt die Capabilities des angeschlossenen\nBlocks wieder (Items, Flüssigkeiten, usw.).\nMarkierungen zeigen grün = verbunden, Rot = nicht\nInteragiere (ohne Item) zum neu orientieren.\nInteragiere mit block in der linken Hand zum abdecken.
+tile.indlog.trash.name=Überlauf Annihilator
+tile.indlog.trash.tip=Versucht erhaltene Items & Flüssigkeiten an den angeschlossenen Block weiterzugeben\nund löscht jeglichen Überschuss den dieser nicht annimmt.\n(Ist kein Block angeschlossen, so wird alles gelöscht)
+tile.indlog.fluid_outlet.name=Flüssigkeitsausguss
+tile.indlog.fluid_outlet.tip=Füllt Hohlräume unterhalb des Blockes mit der zugeführten Flüssigkeit.
+tile.indlog.fluid_intake.name=Flüssigkeitsabfluss
+tile.indlog.fluid_intake.tip=Entleert oberhalb des Blockes gelegene verbundene Flüssigkeitsbecken in seinen internen Tank.
+tile.indlog.drop_interface.name=Item-Auswurfschnittstelle
+tile.indlog.drop_interface.tip=Das Inventar dieses Blocks spiegelt die vor ihm liegenden Items wieder.\nEinfügen von Items lässt diese auf den Boden fallen\nund herausnehmen von Items sammelt diese auf.
+tile.indlog.entity_interface.name=Entitätenschnittstelle
+tile.indlog.entity_interface.tip=Spiegelt die Capabilities der sich vor\ndem Block befindlichen Entität wieder.\n(um z.B. auf das Inventar von Güterloren zuzugreifen)
 
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
@@ -67,6 +77,9 @@ cd4017be.inv_con.link=Verbunden mit %s @ %s
 gui.indlog.tank.name=Tank
 gui.indlog.buffer.name=Item Puffer
 gui.indlog.auto_craft.name=Automatische Montage
+gui.indlog.fluid_outlet.name=Ausguss
+gui.indlog.fluid_intake.name=Abfluss
+gui.indlog.drop_interface.name=Gebieteinstellungen
 #GUI Tooltips
 gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
 gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
@@ -148,7 +161,20 @@ gui.cd4017be.inputFilter=Automatisch Items importieren?
 gui.cd4017be.outputFilter=Automatisch Items exportieren?
 gui.cd4017be.remote.invalid=Block hat kein Inventar!
 gui.cd4017be.remote.linked=Blockinventar verbunden
+gui.cd4017be.remote.selfAcc=Um auf dein eigenes Inventar zuzugreifen, ist die anwendung dieses Gerätes nicht erforderlich!
 gui.cd4017be.remote.notFound=§cInventar existiert nicht oder ist ungeladen!
 gui.cd4017be.remote.info=Funktion\nSlot Interaktion@specialSlot
 gui.cd4017be.remote.info0=§7Diese Slots dienen als Schnittstelle, um mit dem angeschlossenen Blockinventar zu interagieren. Welche Art der interaktion möglich ist, hängt daher vom Block ab und auf welcher Seite er verbunden wurde.\n§7Durch Einbauen von §6Itemfilter§7n können bestimmte Items automatisch aus dem angeschlossenen Block in dein Inventar transportiert werden oder umgekehrt. Dabei bezieht sich die Vorratsfunktion des Filters immer auf den Inhalt deines Inventars.\n§7Damit Zugriff möglich ist, muss der angeschlossene Block blos geladen sein, du kanns dich aber beliebig weit weg oder sogar in einer anderen Dimension aufhalten.
 gui.cd4017be.specialSlot=§eKlicke mit Item am Cursor zum hineinlegen:\n§aRechtsklick: 1 Item\n§aLinksklick: ganzen Stapel\n§aShift-RK: statt dem Cursorstapel alle gleichartigen Items aus deinem Inventar\n§aShift-LK: alle gleichartigen Items aus deinem Inventar und den Cursorstapel.\n§eKlicke ohne Item am Cursor zu herausnehmen:\n§aLinksklick: 1 Item\n§aRechtsklick: 8 Items\n§aShift-LK: 1 ganzen Stapel\n§aShift-RK: alles bis Inventar voll
+gui.cd4017be.fluidIO.update0=ohne Blockupdates
+gui.cd4017be.fluidIO.update1=mit Blockupdates
+gui.cd4017be.fluidIO.range=maximale Arbeitsreichweite
+gui.cd4017be.fluidIO.pos=§7>§2%s§7>§2%s§7>§2%s §7[%+4d,%+4d,%+4d]
+gui.cd4017be.dropInterf.drop=Entfernung zum abwerfen\neingefügter Items
+gui.cd4017be.dropInterf.front=Ausdehnung nach vorne
+gui.cd4017be.dropInterf.left=Ausdehnung nach links
+gui.cd4017be.dropInterf.right=Ausdehnung nach rechts
+gui.cd4017be.dropInterf.down=Ausdehnung nach unten
+gui.cd4017be.dropInterf.up=Ausdehnung nach oben
+gui.cd4017be.dropInterf.size=b*h*l:\n%d*%d*%d
+gui.cd4017be.dropInterf.sizeI=Gesammtgröße des Gebiets

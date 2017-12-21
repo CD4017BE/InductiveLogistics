@@ -1,0 +1,11 @@
+{
+	"parent": "indlog:block/base",
+    "textures": {
+		"bot": "indlog:block/trash_s",
+		"top": "indlog:block/trash_s",
+		"right": "indlog:block/trash_s",
+		"left": "indlog:block/trash_s",
+		"front": "indlog:block/trash_f",
+		"back": "indlog:block/trash_b"
+    }
+}
