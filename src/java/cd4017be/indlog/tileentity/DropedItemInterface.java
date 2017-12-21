@@ -53,7 +53,7 @@ public class DropedItemInterface extends BaseTileEntity implements IGuiData, Cli
 		EntityItem e = entities.get(slot);
 		if (e != null) {
 			if (e.isDead) entities.set(slot, null);
-			else return e.getEntityItem();
+			else return e.getItem();
 		}
 		return ItemStack.EMPTY;
 	}
@@ -82,12 +82,12 @@ public class DropedItemInterface extends BaseTileEntity implements IGuiData, Cli
 			}
 			return n > 0 ? ItemHandlerHelper.copyStackWithSize(stack, n) : ItemStack.EMPTY;
 		}
-		ItemStack item = e.getEntityItem();
+		ItemStack item = e.getItem();
 		int m = item.getMaxStackSize() - item.getCount();
 		if (m < 0 || !ItemHandlerHelper.canItemStacksStack(stack, item)) return stack;
 		if (!simulate) {
 			item.grow(n < m ? n : m);
-			e.setEntityItemStack(item);
+			e.setItem(item);
 			if (e.getAge() > 4800) e.setAgeToCreativeDespawnTime();
 		}
 		return (n -= m) > 0 ? ItemHandlerHelper.copyStackWithSize(item, n) : ItemStack.EMPTY;
@@ -98,14 +98,14 @@ public class DropedItemInterface extends BaseTileEntity implements IGuiData, Cli
 		EntityItem e = entities.get(slot);
 		if (e == null) return ItemStack.EMPTY;
 		if (!e.isDead) {
-			ItemStack stack = e.getEntityItem();
+			ItemStack stack = e.getItem();
 			int n = stack.getCount();
 			if (n > 0) {
 				if (n < amount) amount = n;
 				ItemStack item = ItemHandlerHelper.copyStackWithSize(stack, amount);
 				if (!simulate) {
 					stack.setCount(n -= amount);
-					e.setEntityItemStack(stack);
+					e.setItem(stack);
 					if (n <= 0) entities.set(slot, null);
 				}
 				return item;
