@@ -1,3 +1,14 @@
+v0.3.0
+Changes:
+- added new features: Overflow Trash, Fluid Intake, Fluid Outlet, Dropped Item Interface, Entity Interface
+- slightly changed the way tanks update their fluid container filling/draining
+- fixed TileEntity states not being saved due to missing chunk notification
+- fixed Z-fighting issue with covered pipes
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.1.4
+
 v0.2.3
 Changes:
 - pipe connections can be removed by left-clicking (in survival mode) too now (enhances #5)
