@@ -55,6 +55,8 @@ tile.indlog.fluid_outlet.name=Flüssigkeitsausguss
 tile.indlog.fluid_outlet.tip=Füllt Hohlräume unterhalb des Blockes mit der zugeführten Flüssigkeit.
 tile.indlog.fluid_intake.name=Flüssigkeitsabfluss
 tile.indlog.fluid_intake.tip=Entleert oberhalb des Blockes gelegene verbundene Flüssigkeitsbecken in seinen internen Tank.
+tile.indlog.drop_interface.name=Item-Auswurfschnittstelle
+tile.indlog.drop_interface.tip=Das Inventar dieses Blocks spiegelt die vor ihm liegenden Items wieder.\nEinfügen von Items lässt diese auf den Boden fallen\nund herausnehmen von Items sammelt diese auf.
 
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
@@ -75,6 +77,7 @@ gui.indlog.buffer.name=Item Puffer
 gui.indlog.auto_craft.name=Automatische Montage
 gui.indlog.fluid_outlet.name=Ausguss
 gui.indlog.fluid_intake.name=Abfluss
+gui.indlog.drop_interface.name=Gebieteinstellungen
 #GUI Tooltips
 gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
 gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
@@ -164,3 +167,11 @@ gui.cd4017be.fluidIO.update0=ohne Blockupdates
 gui.cd4017be.fluidIO.update1=mit Blockupdates
 gui.cd4017be.fluidIO.range=maximale Arbeitsreichweite
 gui.cd4017be.fluidIO.pos=§7>§2%s§7>§2%s§7>§2%s §7[%+4d,%+4d,%+4d]
+gui.cd4017be.dropInterf.drop=Entfernung zum abwerfen\neingefügter Items
+gui.cd4017be.dropInterf.front=Ausdehnung nach vorne
+gui.cd4017be.dropInterf.left=Ausdehnung nach links
+gui.cd4017be.dropInterf.right=Ausdehnung nach rechts
+gui.cd4017be.dropInterf.down=Ausdehnung nach unten
+gui.cd4017be.dropInterf.up=Ausdehnung nach oben
+gui.cd4017be.dropInterf.size=b*h*l:\n%d*%d*%d
+gui.cd4017be.dropInterf.sizeI=Gesammtgröße des Gebiets

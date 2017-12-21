@@ -50,6 +50,7 @@ public class Objects {
 	public static final OrientedBlock TRASH = null;
 	public static final OrientedBlock FLUID_INTAKE = null;
 	public static final OrientedBlock FLUID_OUTLET = null;
+	public static final OrientedBlock DROP_INTERFACE = null;
 
 	//ItemBlocks
 	public static final ItemItemPipe item_pipe = null;
@@ -62,6 +63,7 @@ public class Objects {
 	public static final BaseItemBlock trash = null;
 	public static final BaseItemBlock fluid_intake = null;
 	public static final BaseItemBlock fluid_outlet = null;
+	public static final BaseItemBlock drop_interface = null;
 
 	//Items
 	public static final ItemItemFilter item_filter = null;
@@ -87,7 +89,8 @@ public class Objects {
 			BlockCoveredPipe.create("inv_connector", Material.GLASS, SoundType.GLASS, InvConnector.class, 1).setSize(0.375).setLightOpacity(0).setCreativeTab(tabIndLog).setHardness(0.5F),
 			OrientedBlock.create("trash", Material.ROCK, SoundType.STONE, 0, OverflowTrash.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
 			OrientedBlock.create("fluid_intake", Material.IRON, SoundType.METAL, 0, FluidIntake.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
-			OrientedBlock.create("fluid_outlet", Material.IRON, SoundType.METAL, 0, FluidOutlet.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
+			OrientedBlock.create("fluid_outlet", Material.IRON, SoundType.METAL, 0, FluidOutlet.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
+			OrientedBlock.create("drop_interface", Material.WOOD, SoundType.WOOD, 0, DropedItemInterface.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
 		);
 	}
 
@@ -105,6 +108,7 @@ public class Objects {
 			new BaseItemBlock(TRASH),
 			new BaseItemBlock(FLUID_INTAKE),
 			new BaseItemBlock(FLUID_OUTLET),
+			new BaseItemBlock(DROP_INTERFACE),
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),

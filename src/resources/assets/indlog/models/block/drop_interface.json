@@ -1,0 +1,11 @@
+{
+	"parent": "indlog:block/base",
+	"textures": {
+		"top": "indlog:block/drop_interface0",
+		"bot": "indlog:block/drop_interface0",
+		"front": "indlog:block/drop_interface1",
+		"back": "indlog:block/drop_interface0",
+		"left": "indlog:block/drop_interface0",
+		"right": "indlog:block/drop_interface0"
+	}
+}
