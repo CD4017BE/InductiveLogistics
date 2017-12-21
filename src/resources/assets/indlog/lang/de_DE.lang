@@ -57,6 +57,8 @@ tile.indlog.fluid_intake.name=Flüssigkeitsabfluss
 tile.indlog.fluid_intake.tip=Entleert oberhalb des Blockes gelegene verbundene Flüssigkeitsbecken in seinen internen Tank.
 tile.indlog.drop_interface.name=Item-Auswurfschnittstelle
 tile.indlog.drop_interface.tip=Das Inventar dieses Blocks spiegelt die vor ihm liegenden Items wieder.\nEinfügen von Items lässt diese auf den Boden fallen\nund herausnehmen von Items sammelt diese auf.
+tile.indlog.entity_interface.name=Entitätenschnittstelle
+tile.indlog.entity_interface.tip=Spiegelt die Capabilities der sich vor\ndem Block befindlichen Entität wieder.\n(um z.B. auf das Inventar von Güterloren zuzugreifen)
 
 #Items
 item.indlog.fluid_filter.name=Flüssigkeitsfilter
@@ -159,6 +161,7 @@ gui.cd4017be.inputFilter=Automatisch Items importieren?
 gui.cd4017be.outputFilter=Automatisch Items exportieren?
 gui.cd4017be.remote.invalid=Block hat kein Inventar!
 gui.cd4017be.remote.linked=Blockinventar verbunden
+gui.cd4017be.remote.selfAcc=Um auf dein eigenes Inventar zuzugreifen, ist die anwendung dieses Gerätes nicht erforderlich!
 gui.cd4017be.remote.notFound=§cInventar existiert nicht oder ist ungeladen!
 gui.cd4017be.remote.info=Funktion\nSlot Interaktion@specialSlot
 gui.cd4017be.remote.info0=§7Diese Slots dienen als Schnittstelle, um mit dem angeschlossenen Blockinventar zu interagieren. Welche Art der interaktion möglich ist, hängt daher vom Block ab und auf welcher Seite er verbunden wurde.\n§7Durch Einbauen von §6Itemfilter§7n können bestimmte Items automatisch aus dem angeschlossenen Block in dein Inventar transportiert werden oder umgekehrt. Dabei bezieht sich die Vorratsfunktion des Filters immer auf den Inhalt deines Inventars.\n§7Damit Zugriff möglich ist, muss der angeschlossene Block blos geladen sein, du kanns dich aber beliebig weit weg oder sogar in einer anderen Dimension aufhalten.

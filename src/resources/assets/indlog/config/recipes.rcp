@@ -1,4 +1,4 @@
-VERSION = 30;
+VERSION = 31;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -24,6 +24,9 @@ fluid_io_speed = 1; !operations performed by fluid intake/outlet per tick. (sign
 drop_interface_tick = 50; !amount of ticks to wait before rescanning the area for new items
 drop_interface_range = 15; !maximum range of the area
 drop_interface_slots = 5; !maximum amount of empty "on-demand" slots (allows inserting multiple stacks within one scan interval)
+
+!Entity Interface settings
+entity_interface_tick = 10; !amount of ticks to wait before rescanning entities
 
 {
 	!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)
@@ -51,6 +54,7 @@ INIT() {
 	mat = "ingotTin"; if (#ores(mat) < 1) {mat = "ingotIron";}
 	add("shaped", it("tile.fluid_outlet", 1), " 3 /020/010", mat, it("minecraft:iron_bars"), it("minecraft:piston"), it("tile.tank", 1, 1));
 	add("shaped", it("tile.drop_interface", 1), "000/123/000", "plankWood", it("minecraft:hopper"), it("minecraft:ender_eye"), it("minecraft:dropper"));
+	add("shaped", it("tile.entity_interface", 1), "010/020", "ingotIron", it("minecraft:lead"), it("tile.inv_connector"));
 	add("shaped", it("item.portable_craft", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("tile.auto_craft"), "string", "slabWood");
 	add("shaped", it("item.remote_inv", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("minecraft:ender_chest"), "string", "gemDiamond");
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));

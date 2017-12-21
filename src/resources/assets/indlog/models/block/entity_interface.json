@@ -1,0 +1,11 @@
+{
+	"parent": "indlog:block/base",
+	"textures": {
+		"top": "indlog:block/entity_interface0",
+		"bot": "indlog:block/entity_interface0",
+		"front": "indlog:block/entity_interface1",
+		"back": "indlog:block/entity_interface0",
+		"left": "indlog:block/entity_interface0",
+		"right": "indlog:block/entity_interface0"
+	}
+}

@@ -62,6 +62,7 @@ public class ClientProxy extends CommonProxy {
 		BlockItemRegistry.registerRender(FLUID_INTAKE);
 		BlockItemRegistry.registerRender(FLUID_OUTLET);
 		BlockItemRegistry.registerRender(DROP_INTERFACE);
+		BlockItemRegistry.registerRender(ENTITY_INTERFACE);
 		
 		BlockItemRegistry.registerRender(fluid_filter);
 		BlockItemRegistry.registerRender(item_filter);

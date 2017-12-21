@@ -10,6 +10,7 @@ import cd4017be.indlog.tileentity.FluidPipe;
 import cd4017be.indlog.tileentity.AutoCrafter;
 import cd4017be.indlog.tileentity.Buffer;
 import cd4017be.indlog.tileentity.DropedItemInterface;
+import cd4017be.indlog.tileentity.EntityInterface;
 import cd4017be.indlog.tileentity.FluidIO;
 import cd4017be.indlog.tileentity.ItemPipe;
 import cd4017be.indlog.tileentity.Pipe;
@@ -54,6 +55,7 @@ public class CommonProxy {
 		DropedItemInterface.INTERVAL = (int)cfg.getNumber("drop_interface_tick", 50);
 		DropedItemInterface.MAX_RANGE = Math.max((int)cfg.getNumber("drop_interface_range", 15), 1);
 		DropedItemInterface.INV_SIZE = (int)cfg.getNumber("drop_interface_slots", 5);
+		EntityInterface.INTERVAL = (int)cfg.getNumber("entity_interface_tick", 10);
 	}
 
 	public void registerRenderers() {

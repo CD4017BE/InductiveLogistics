@@ -6,6 +6,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.EmptyHandler;
 
 /**
  * 
@@ -34,13 +38,22 @@ public class EntityInterface extends BaseTileEntity {
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing side) {
 		getEntity(cap, side);
-		return entity != null && entity.hasCapability(cap, side);
+		return entity != null && entity.hasCapability(cap, side)
+				|| cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
+				|| cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing side) {
 		getEntity(cap, side);
-		return entity == null ? null : entity.getCapability(cap, side);
+		if (entity != null) {
+			T obj = entity.getCapability(cap, side);
+			if (obj != null) return obj;
+		}
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) EmptyHandler.INSTANCE;
+		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) return (T) EmptyFluidHandler.INSTANCE;
+		return null;
 	}
 
 }

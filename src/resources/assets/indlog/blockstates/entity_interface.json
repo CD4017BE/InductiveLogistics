@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"inventory": { "model": "indlog:entity_interface" },
+		"orient=n": { "model": "indlog:entity_interface" },
+		"orient=e": { "model": "indlog:entity_interface" , "y": 90 },
+		"orient=s": { "model": "indlog:entity_interface" , "y": 180 },
+		"orient=w": { "model": "indlog:entity_interface" , "y": 270 },
+		"orient=bn": { "model": "indlog:entity_interface" , "x": 90 },
+		"orient=tn": { "model": "indlog:entity_interface" , "x": 270 }
+	}
+}
