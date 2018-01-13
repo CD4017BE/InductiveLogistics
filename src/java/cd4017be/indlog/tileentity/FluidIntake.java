@@ -1,6 +1,5 @@
 package cd4017be.indlog.tileentity;
 
-import cd4017be.api.protect.PermissionUtil;
 import cd4017be.lib.util.Utils;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -50,15 +49,9 @@ public class FluidIntake extends FluidIO {
 		BlockPos pos = this.pos.add(x, y, z);
 		if (pos.getY() < 0 || pos.getY() >= 256 || !world.isBlockLoaded(pos)) return;
 		FluidStack fluid = Utils.getFluid(world, pos, blockNotify);
-		if (fluid != null && tank.fill(fluid, false) == fluid.amount)
-			if (PermissionUtil.handler.canEdit(world, pos, lastUser)) {
-				if (world.setBlockState(pos, Blocks.AIR.getDefaultState(), blockNotify ? 3 : 2))
-					tank.fill(fluid, true);
-			} else {
-				//reduce range to get out of protected area
-				int l = Math.max(Math.abs(x), Math.max(Math.abs(y), Math.abs(z))) - 1;
-				mode = (mode & 0xf00) | (l & 0xff);
-			}
+		if (fluid != null && tank.fill(fluid, false) == fluid.amount && world.setBlockState(pos, Blocks.AIR.getDefaultState(), blockNotify ? 3 : 2)) {
+			tank.fill(fluid, true);
+		}
 	}
 
 }

@@ -124,9 +124,8 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 			byte l = data.readByte();
 			if (l < 0) l = 0;
 			else if (l > MAX_SIZE) l = (byte) MAX_SIZE;
-			blocks = new int[l * SEARCH_MULT];
-			dist = -1;
 			mode = (mode & 0xf00) | (l & 0xff);
+			setDist();
 			break;
 		case 2: if (tank.fluid != null) tank.decrement(tank.fluid.amount); break;
 		case 3: tank.setLock(!tank.lock); break;
@@ -147,10 +146,20 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		super.readFromNBT(nbt);
 		tank.readNBT(nbt.getCompoundTag("tank"));
 		mode = nbt.getInteger("mode");
-		blocks = new int[(mode & 0x7f) * SEARCH_MULT];
 		blockNotify = (mode & 0x100) != 0;
-		dist = -1;
 		lastUser = PermissionUtil.readOwner(nbt);
+		setDist();
+	}
+
+	protected void setDist() {
+		int l = mode & 0x7f;
+		if (PermissionUtil.handler.canEdit(world, pos.add(-l, -l, -l), pos.add(l, l, l), lastUser)) {
+			blocks = new int[l == 1 ? 1 : l * SEARCH_MULT];
+		} else {
+			mode &= 0xff00;
+			blocks = new int[0];
+		}
+		dist = -1;
 	}
 
 	@Override
