@@ -1,3 +1,12 @@
+v1.1.1
+Changes:
+- Fluid Intake & Outlets now only use the block directly in front when range set to 1
+- fixed #9 pipes not operating anymore after chunk un- and reload
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.0.8
+
 v1.1.0
 Changes:
 - added new features: Overflow Trash, Fluid Intake, Fluid Outlet, Dropped Item Interface, Entity Interface
