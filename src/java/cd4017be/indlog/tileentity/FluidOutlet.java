@@ -1,6 +1,5 @@
 package cd4017be.indlog.tileentity;
 
-import cd4017be.api.protect.PermissionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -51,17 +50,12 @@ public class FluidOutlet extends FluidIO {
 	protected void moveBack(int x, int y, int z) {
 		dist--;
 		BlockPos pos = this.pos.add(x, y, z);
-		if (canUse(pos))
-			if (PermissionUtil.handler.canEdit(world, pos, lastUser)) {
-				IBlockState state = world.getBlockState(pos);
-				Block block = state.getBlock();
-				block.dropBlockAsItem(world, pos, state, 0);
-				if (world.setBlockState(pos, blockId.getDefaultState(), blockNotify ? 3 : 2)) tank.drain(1000, true);
-			} else {
-				//reduce range to get out of protected area
-				int l = Math.max(Math.abs(x), Math.max(Math.abs(y), Math.abs(z))) - 1;
-				mode = (mode & 0xf00) | (l & 0xff);
-			}
+		if (canUse(pos)) {
+			IBlockState state = world.getBlockState(pos);
+			Block block = state.getBlock();
+			block.dropBlockAsItem(world, pos, state, 0);
+			if (world.setBlockState(pos, blockId.getDefaultState(), blockNotify ? 3 : 2)) tank.drain(1000, true);
+		}
 	}
 
 }
