@@ -126,10 +126,23 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			target = null;
 			dest = -1;
 		}
-		if (onChunkBorder && unloadedNeighbor()) return;
+		TileEntity te;
+		if (onChunkBorder && unloadedNeighbor()) {
+			//only refresh cached tiles
+			for (EnumFacing s : EnumFacing.values()) {
+				int io = getFlowBit(s.ordinal());
+				if (io == 0 || io == 3) continue;
+				te = Utils.neighborTile(this, s);
+				if (te == null) continue;
+				if (pipeClass().isInstance(te)) {
+					if (io == 1 && target == null) target = pipeClass().cast(te);
+				} else if(te.hasCapability(capability(), s.getOpposite()) && io == type)
+					invs.add(new TileAccess(te, s.getOpposite()));
+			}
+			return;
+		}
 		
 		EnumFacing dir;
-		TileEntity te;
 		ArrayList<T> updateList = new ArrayList<T>();
 		/** -1: fine, 0: best match, 1: any match, 2: no match */
 		int newDest = target == null || target.getFlowBit(dest^1) != 2 || (target.getFlowBit(6) & 1) == 0 ? 2 : -1;
