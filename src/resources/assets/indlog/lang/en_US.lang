@@ -3,7 +3,7 @@
 itemGroup.indlog=Inductive Logistics
 #Blocks
 tile.indlog.fluid_pipe\:0.name=Fluid Transport Pipe
-tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Liquid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
+tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Fluid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:1.name=Fluid Injection Pipe
 tile.indlog.fluid_pipe\:1.tip=Acts as destination Pipe. First tries to fill its fluid into connected tanks before passing it on.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:2.name=Fluid Extraction Pipe
@@ -61,8 +61,8 @@ tile.indlog.entity_interface.name=Entity Interface
 tile.indlog.entity_interface.tip=Provides access to the capabilities of the entity in front of it.\n(for example to access the inventory of Chest Carts)
 
 #Items
-item.indlog.fluid_filter.name=Pipe Liquid-Filter
-item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
+item.indlog.fluid_filter.name=Pipe Fluid-Filter
+item.indlog.fluid_filter.tip=A filter for §6Fluid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.item_filter.name=Pipe Item-Filter
 item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.portable_craft.name=Portable Autocrafter
