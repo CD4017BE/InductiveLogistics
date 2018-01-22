@@ -2,12 +2,14 @@
 #CreativeTab
 itemGroup.indlog=集成物流
 #Blocks
+tile.indlog.fluid_pipe.name=流体传输管道
 tile.indlog.fluid_pipe\:0.name=流体传输管道
 tile.indlog.fluid_pipe\:0.tip=内部可存储 \\<fluid_pipe_cap> mB 流体。从§4输入端§7接收流体，并从唯一的§2输出端§7传输给接下来的管道。另请参阅§6流体（注入|提取）管道§7\n潜行并右击来移除一个管道连接。\n右击可将副手的方块覆盖在管道上。
 tile.indlog.fluid_pipe\:1.name=流体注入管道
 tile.indlog.fluid_pipe\:1.tip=作为目标管道。流体经过时会先尝试存入与管道相连的容器。\n可安装§6流体管道滤器§7。\n空手右击可禁用之。\n潜行并右击来移除一个管道连接。\n右击可将副手的方块覆盖在管道上。
 tile.indlog.fluid_pipe\:2.name=流体提取管道
 tile.indlog.fluid_pipe\:2.tip=作为来源管道。将流体从相连的储罐中取出，并传输给接下来的管道。\n可安装§6流体管道滤器§7。\n空手右击可禁用之。\n潜行并右击来移除一个管道连接。\n右击可将副手的方块覆盖在管道上。
+tile.indlog.item_pipe.name=物品传输管道
 tile.indlog.item_pipe\:0.name=物品传输管道
 tile.indlog.item_pipe\:0.tip=拥有一格物品栏。从§4输入端§7接收物品，并从唯一的§2输出端§7传输给接下来的管道。另请参阅§6物品（注入|提取）管道§7\n潜行并右击来移除一个管道连接。\n右击可将副手的方块覆盖在管道上。
 tile.indlog.item_pipe\:1.name=物品注入管道
@@ -16,6 +18,7 @@ tile.indlog.item_pipe\:2.name=物品提取管道
 tile.indlog.item_pipe\:2.tip=作为来源管道。将流体从相连的容器中取出，并传输给接下来的管道。\n可安装§6物品管道滤器§7。\n空手右击可禁用之。\n潜行并右击来移除一个管道连接。\n右击可将副手的方块覆盖在管道上。
 tile.indlog.warp_pipe.name=高级通用管道
 tile.indlog.warp_pipe.tip=瞬间、无内部存储地将物品或流体传输给相连的方块。\n手持§6（物品|流体）（提取|注入）管道§7右击\n可在该面上提取/注入物品/流体。\n可在每个面上安装§6（物品|流体）管道滤器§7。\n空手右击管道连接处可将其禁用。\n潜行并右击来移除一个管道连接。\n右击可将副手的方块覆盖在管道上。
+tile.indlog.tank.name=流体储罐
 tile.indlog.tank\:0.name=流体储罐 §8微型
 tile.indlog.tank\:1.name=流体储罐 §4小型
 tile.indlog.tank\:2.name=流体储罐 §6中型
@@ -27,6 +30,7 @@ tile.indlog.tank\:7.name=流体储罐 §5终极
 tile.indlog.tank\:i.tip=自动向底部输出内含的流体。\n能自动排/灌装液体容器。\n被破坏后会保留其内容物。
 tile.indlog.tank.stor=盛装%s: %1$.5uB / %2$.5uB
 tile.indlog.tank.empty=容量：%.5uB
+tile.indlog.buffer.name=物品缓存器
 tile.indlog.buffer\:0.name=物品缓存器 §6初级-S
 tile.indlog.buffer\:1.name=物品缓存器 §6初级-M
 tile.indlog.buffer\:2.name=物品缓存器 §6初级-L
