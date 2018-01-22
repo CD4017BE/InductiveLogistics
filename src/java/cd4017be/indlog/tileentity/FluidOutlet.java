@@ -17,15 +17,19 @@ public class FluidOutlet extends FluidIO {
 
 	@Override
 	public void update() {
-		if (world.isRemote || blocks.length == 0) return;
+		if (world.isRemote || range == 0) return;
 		for (int i = SPEED; tank.amount() >= 1000 && i > 0; i--) {
 			Fluid fluid = tank.fluid.getFluid();
 			if (!fluid.canBePlacedInWorld()) return;
 			goUp = fluid.getDensity() <= 0;
 			blockId = fluid.getBlock();
-			EnumFacing dir;
 			if (dist < 0) {
-				dir = getOrientation().front.getOpposite();
+				EnumFacing dir = getOrientation().front.getOpposite();
+				if (range == 1) {
+					dist = 0;
+					moveBack(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
+					return;
+				}
 				if (canUse(pos.offset(dir))) {
 					dist = 0;
 					blocks[dist] = (dir.getFrontOffsetX() & 0xff) | (dir.getFrontOffsetY() & 0xff) << 8 | (dir.getFrontOffsetZ() & 0xff) << 16 | dir.ordinal() << 24;
@@ -43,7 +47,7 @@ public class FluidOutlet extends FluidIO {
 		if (block.isAir(state, world, pos)) return true;
 		if (block == blockId) return state != block.getDefaultState();
 		Material material = state.getMaterial();
-		return material.isReplaceable() && !material.isLiquid();
+		return material.isReplaceable() && !(material.isLiquid() && state == block.getDefaultState());
 	}
 
 	@Override

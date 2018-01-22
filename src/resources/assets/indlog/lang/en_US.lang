@@ -2,12 +2,14 @@
 #CreativeTab
 itemGroup.indlog=Inductive Logistics
 #Blocks
+tile.indlog.fluid_pipe.name=Fluid Pipe
 tile.indlog.fluid_pipe\:0.name=Fluid Transport Pipe
 tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Fluid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:1.name=Fluid Injection Pipe
 tile.indlog.fluid_pipe\:1.tip=Acts as destination Pipe. First tries to fill its fluid into connected tanks before passing it on.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:2.name=Fluid Extraction Pipe
 tile.indlog.fluid_pipe\:2.tip=Acts as source Pipe. Drains fluids out of connected tanks to pass them on to the next pipe.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
+tile.indlog.item_pipe.name=Item Pipe
 tile.indlog.item_pipe\:0.name=Item Transport Pipe
 tile.indlog.item_pipe\:0.tip=Contains a one-Slot-Inventory. Receives items through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Item (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.item_pipe\:1.name=Item Injection Pipe
@@ -16,6 +18,7 @@ tile.indlog.item_pipe\:2.name=Item Extraction Pipe
 tile.indlog.item_pipe\:2.tip=Acts as source Pipe. Pulls items out of connected inventories to pass them on to the next pipe.\nCan be upgraded with an §6Item Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.warp_pipe.name=Advanced Universal Pipe
 tile.indlog.warp_pipe.tip=Transports items and fluids between connected blocks instantly without internal storage.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nsides to extract/inject items/fluids at that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nClick with empty hand on pipe connector to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
+tile.indlog.tank.name=Fluid Tank
 tile.indlog.tank\:0.name=Fluid Tank §8tiny
 tile.indlog.tank\:1.name=Fluid Tank §4small
 tile.indlog.tank\:2.name=Fluid Tank §6normal
@@ -27,6 +30,7 @@ tile.indlog.tank\:7.name=Fluid Tank §5ultimate
 tile.indlog.tank\:i.tip=Automatically outputs contained fluids to the bottom.\nCapable of automatic draining/filling fluid containers.\nKeeps its content when broken.
 tile.indlog.tank.stor=Contains %s: %1$.5uB / %2$.5uB
 tile.indlog.tank.empty=Capacity: %.5uB
+tile.indlog.buffer.name=Item Buffer
 tile.indlog.buffer\:0.name=Item Buffer §6normal-S
 tile.indlog.buffer\:1.name=Item Buffer §6normal-M
 tile.indlog.buffer\:2.name=Item Buffer §6normal-L
