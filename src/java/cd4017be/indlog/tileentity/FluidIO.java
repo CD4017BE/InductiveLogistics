@@ -1,6 +1,7 @@
 package cd4017be.indlog.tileentity;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.mojang.authlib.GameProfile;
 
@@ -12,8 +13,12 @@ import cd4017be.lib.Gui.SlotTank;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
+import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.tileentity.BaseTileEntity;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
@@ -26,7 +31,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
  * 
  * @author cd4017be
  */
-public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiData, ClientPacketReceiver {
+public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiData, ClientPacketReceiver, ITilePlaceHarvest {
 
 	public static int CAP = 8000, MAX_SIZE = 127, SEARCH_MULT = 3, SPEED = 1;
 
@@ -192,6 +197,17 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 
 	@Override
 	public void updateClientChanges(DataContainer container, PacketBuffer dis) {
+	}
+
+	@Override
+	public void onPlaced(EntityLivingBase entity, ItemStack item) {
+	}
+
+	@Override
+	public List<ItemStack> dropItem(IBlockState state, int fortune) {
+		List<ItemStack> list = makeDefaultDrops(null);
+		tank.addToList(list);
+		return list;
 	}
 
 }
