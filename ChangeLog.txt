@@ -1,3 +1,17 @@
+v0.3.2
+Changes:
+- added Chinese localization made by @Snownee
+- made Fluid Intake / Outlet always use path lenght of max range to reduce change of incomplete coverage
+- made pipes render in transparent mode to support semi-transparent cover blocks (#12)
+- made Item Injecton Pipes insert items stacked
+- fixed some missing localizations (#13)
+- fixed fluid containers not being dropped when breaking Fluid Intake / Outlet
+- fixed universal pipes getting disconnected on right click with items
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.2.0
+
 v0.3.1
 Changes:
 - Fluid Intake & Outlets now only use the block directly in front when range set to 1
