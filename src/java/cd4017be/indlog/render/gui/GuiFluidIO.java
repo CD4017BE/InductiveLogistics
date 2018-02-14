@@ -33,11 +33,10 @@ public class GuiFluidIO extends AdvancedGui {
 		super.initGui();
 		this.titleX = xSize * 7 / 8;
 		boolean in = tile.tank.output;
-		guiComps.add(new Button(1, 183, 73, 18, 18, 0, ()-> tile.mode >> 8 & 1, (b)-> sendCommand(0)).texture(226, in ? 72:36).setTooltip("fluidIO.update#"));
-		guiComps.add(new NumberSel(2, 201, 73, 18, 18, "%d", 0, FluidOutlet.MAX_SIZE, 8, ()-> tile.mode & 0xff, (n)-> {
+		guiComps.add(new Button(1, 183, 73, 18, 18, 0, ()-> tile.blockNotify ? 1 : 0, (b)-> sendCommand(0)).texture(226, in ? 72:36).setTooltip("fluidIO.update#"));
+		guiComps.add(new NumberSel(2, 201, 73, 18, 18, "%d", 0, FluidOutlet.MAX_SIZE, 8, ()-> tile.range, (n)-> {
 			PacketBuffer dos = BlockGuiHandler.getPacketTargetData(tile.pos());
-			tile.mode = (tile.mode & 0x100) | (n & 0xff);
-			dos.writeByte(1).writeByte(n);
+			dos.writeByte(1).writeByte(tile.range = n);
 			BlockGuiHandler.sendPacketToServer(dos);
 		}).setTooltip("fluidIO.range"));
 		guiComps.add(new Text<Object[]>(3, 0, ySize, xSize, 8, "fluidIO.pos", ()-> new Object[]{

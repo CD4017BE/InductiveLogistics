@@ -55,11 +55,11 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	@Override
 	protected boolean transferOut(IItemHandler acc) {
 		if (PipeFilterItem.isNullEq(filter)) {
-			if ((content = ItemHandlerHelper.insertItem(acc, content, false)).getCount() > 0) return false;
+			if ((content = ItemHandlerHelper.insertItemStacked(acc, content, false)).getCount() > 0) return false;
 		} else {
 			int m = filter.insertAmount(content, acc);
 			if (m <= 0) return false;
-			content.grow(ItemHandlerHelper.insertItem(acc, content.splitStack(m), false).getCount());
+			content.grow(ItemHandlerHelper.insertItemStacked(acc, content.splitStack(m), false).getCount());
 			if (content.getCount() > 0) return false;
 		}
 		content = null;

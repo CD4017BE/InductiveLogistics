@@ -1,6 +1,7 @@
 package cd4017be.indlog.tileentity;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.mojang.authlib.GameProfile;
 
@@ -12,8 +13,12 @@ import cd4017be.lib.Gui.SlotTank;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
+import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.tileentity.BaseTileEntity;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.EnumFacing;
@@ -26,18 +31,18 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
  * 
  * @author cd4017be
  */
-public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiData, ClientPacketReceiver {
+public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiData, ClientPacketReceiver, ITilePlaceHarvest {
 
 	public static int CAP = 8000, MAX_SIZE = 127, SEARCH_MULT = 3, SPEED = 1;
 
 	protected GameProfile lastUser = PermissionUtil.DEFAULT_PLAYER;
 	public AdvancedTank tank = new AdvancedTank(this, CAP, this instanceof FluidIntake);
 	/**bits[0-7]: x, bits[8-15]: y, bits[16-23]: z, bits[24-26]: ld0, bits[27-29]: ld1, bit[30]: can back */
-	protected int[] blocks = new int[0];
+	protected int[] blocks = new int[MAX_SIZE * SEARCH_MULT];
 	protected int dist = -1;
 	protected boolean goUp;
 	public boolean blockNotify;
-	public int mode, debugI;
+	public int range, debugI;
 
 	@Override
 	public void update() {
@@ -90,11 +95,14 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 	}
 
 	protected boolean isValidPos(int x, int y, int z) {
-		int l = mode & 0xff;
+		int l = range;
 		if (x > l || -x > l || y > l || -y > l || z > l || -z > l || !canUse(pos.add(x, y, z))) return false;
 		int p = (x & 0xff) | (y & 0xff) << 8 | (z & 0xff) << 16;
-		for (int i = dist - 1; i >= 0; i -= 2)
-			if ((blocks[i] & 0xffffff) == p) return false;
+		for (int i = dist - 1; i >= 0; i -= 2) {
+			int b = blocks[i] ^ p;
+			if ((b & 0xffffff) == 0) return false;
+			if ((b & 0x00ff00) != 0) return true;
+		}
 		return true;
 	}
 
@@ -117,14 +125,12 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		switch(data.readByte()) {
 		case 0:
 			blockNotify = !blockNotify;
-			mode = (mode & 0xff) | (blockNotify ? 0x100 : 0);
 			break;
 		case 1:
 			lastUser = sender.getGameProfile();
-			byte l = data.readByte();
-			if (l < 0) l = 0;
-			else if (l > MAX_SIZE) l = (byte) MAX_SIZE;
-			mode = (mode & 0xf00) | (l & 0xff);
+			range = data.readByte();
+			if (range < 0) range = 0;
+			else if (range > MAX_SIZE) range = MAX_SIZE;
 			setDist();
 			break;
 		case 2: if (tank.fluid != null) tank.decrement(tank.fluid.amount); break;
@@ -136,7 +142,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setTag("tank", tank.writeNBT(new NBTTagCompound()));
-		nbt.setInteger("mode", mode);
+		nbt.setInteger("mode", range & 0xff | (blockNotify ? 0x100 : 0));
 		PermissionUtil.writeOwner(nbt, lastUser);
 		return super.writeToNBT(nbt);
 	}
@@ -145,20 +151,17 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		tank.readNBT(nbt.getCompoundTag("tank"));
-		mode = nbt.getInteger("mode");
-		blockNotify = (mode & 0x100) != 0;
+		range = nbt.getInteger("mode");
+		blockNotify = (range & 0x100) != 0;
+		range &= 0xff;
 		lastUser = PermissionUtil.readOwner(nbt);
 		setDist();
 	}
 
 	protected void setDist() {
-		int l = mode & 0x7f;
-		if (PermissionUtil.handler.canEdit(world, pos.add(-l, -l, -l), pos.add(l, l, l), lastUser)) {
-			blocks = new int[l == 1 ? 1 : l * SEARCH_MULT];
-		} else {
-			mode &= 0xff00;
-			blocks = new int[0];
-		}
+		int l = range;
+		if (!PermissionUtil.handler.canEdit(world, pos.add(-l, -l, -l), pos.add(l, l, l), lastUser))
+			range = 0;
 		dist = -1;
 	}
 
@@ -172,13 +175,17 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 
 	@Override
 	public int[] getSyncVariables() {
-		return new int[]{mode, dist >= 0 ? blocks[dist] : 0};
+		return new int[]{range & 0xff | (blockNotify ? 0x100 : 0) | (tank.lock ? 0x200 : 0), dist >= 0 ? blocks[dist] : 0};
 	}
 
 	@Override
 	public void setSyncVariable(int i, int v) {
 		switch(i) {
-		case 0: mode = v; break;
+		case 0:
+			range = v & 0xff;
+			blockNotify = (v & 0x100) != 0;
+			tank.lock = (v & 0x200) != 0;
+			break;
 		case 1: debugI = v; break;
 		}
 	}
@@ -190,6 +197,17 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 
 	@Override
 	public void updateClientChanges(DataContainer container, PacketBuffer dis) {
+	}
+
+	@Override
+	public void onPlaced(EntityLivingBase entity, ItemStack item) {
+	}
+
+	@Override
+	public List<ItemStack> dropItem(IBlockState state, int fortune) {
+		List<ItemStack> list = makeDefaultDrops(null);
+		tank.addToList(list);
+		return list;
 	}
 
 }
