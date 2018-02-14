@@ -2,12 +2,14 @@
 #CreativeTab
 itemGroup.indlog=Inductive Logistics
 #Blocks
+tile.indlog.fluid_pipe.name=Fluid Pipe
 tile.indlog.fluid_pipe\:0.name=Fluid Transport Pipe
-tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Liquid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
+tile.indlog.fluid_pipe\:0.tip=Stores \\<fluid_pipe_cap> mB internally. Receives fluids through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Fluid (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:1.name=Fluid Injection Pipe
 tile.indlog.fluid_pipe\:1.tip=Acts as destination Pipe. First tries to fill its fluid into connected tanks before passing it on.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.fluid_pipe\:2.name=Fluid Extraction Pipe
 tile.indlog.fluid_pipe\:2.tip=Acts as source Pipe. Drains fluids out of connected tanks to pass them on to the next pipe.\nCan be upgraded with a §6Fluid Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
+tile.indlog.item_pipe.name=Item Pipe
 tile.indlog.item_pipe\:0.name=Item Transport Pipe
 tile.indlog.item_pipe\:0.tip=Contains a one-Slot-Inventory. Receives items through its §4input connections§7 and passes them on to the next pipe through its single §2output connection§7. See also §6Item (Injection|Extraction) Pipe§7\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.item_pipe\:1.name=Item Injection Pipe
@@ -16,6 +18,7 @@ tile.indlog.item_pipe\:2.name=Item Extraction Pipe
 tile.indlog.item_pipe\:2.tip=Acts as source Pipe. Pulls items out of connected inventories to pass them on to the next pipe.\nCan be upgraded with an §6Item Pipe Filter§7.\nClick with empty hand to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
 tile.indlog.warp_pipe.name=Advanced Universal Pipe
 tile.indlog.warp_pipe.tip=Transports items and fluids between connected blocks instantly without internal storage.\nClick with §6(Item|Fluid) (Extraction|Injection) Pipe§7 on\nsides to extract/inject items/fluids at that side.\n§6(Item|Fluid) Pipe Filter§7s are applied per connected side.\nClick with empty hand on pipe connector to disable.\nSneak-click to remove a pipe connection.\nClick with block in offhand to cover.
+tile.indlog.tank.name=Fluid Tank
 tile.indlog.tank\:0.name=Fluid Tank §8tiny
 tile.indlog.tank\:1.name=Fluid Tank §4small
 tile.indlog.tank\:2.name=Fluid Tank §6normal
@@ -27,6 +30,7 @@ tile.indlog.tank\:7.name=Fluid Tank §5ultimate
 tile.indlog.tank\:i.tip=Automatically outputs contained fluids to the bottom.\nCapable of automatic draining/filling fluid containers.\nKeeps its content when broken.
 tile.indlog.tank.stor=Contains %s: %1$.5uB / %2$.5uB
 tile.indlog.tank.empty=Capacity: %.5uB
+tile.indlog.buffer.name=Item Buffer
 tile.indlog.buffer\:0.name=Item Buffer §6normal-S
 tile.indlog.buffer\:1.name=Item Buffer §6normal-M
 tile.indlog.buffer\:2.name=Item Buffer §6normal-L
@@ -61,10 +65,10 @@ tile.indlog.entity_interface.name=Entity Interface
 tile.indlog.entity_interface.tip=Provides access to the capabilities of the entity in front of it.\n(for example to access the inventory of Chest Carts)
 
 #Items
-item.indlog.fluid_filter.name=Pipe Liquid-Filter
-item.indlog.fluid_filter.tip=A filter for §6Liquid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
+item.indlog.fluid_filter.name=Pipe Fluid-Filter
+item.indlog.fluid_filter.tip=A filter for §6Fluid (Extraction|Injection) Pipe§7s.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.item_filter.name=Pipe Item-Filter
-item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Item Sorter§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
+item.indlog.item_filter.tip=A filter for §6Item (Extraction|Injection) Pipe§7s and §6Portable Inventory Remote Access§7.\nClick in air to open GUI.\nClick on pipe to insert (with empty hand to extract).
 item.indlog.portable_craft.name=Portable Autocrafter
 item.indlog.portable_craft.tip=Convenient portable crafting device with\nsingle batch processing and stock-keeping ability.\nClick to open GUI.
 item.indlog.remote_inv.name=Portable Inventory Remote Access

@@ -71,7 +71,6 @@ public class ConComp {
 
 	public static boolean createFromItem(ItemStack item, BasicWarpPipe pipe, byte side) {
 		if (item.getCount() == 0 || pipe.con[side] >= 2) return false;
-		pipe.setConnect(side, false);
 		Item type = item.getItem();
 		ConComp con;
 		if (type == Objects.item_pipe && item.getItemDamage() == 1) {
@@ -87,6 +86,7 @@ public class ConComp {
 			con = new FluidExtractor(pipe, side);
 			pipe.con[side] = 5;
 		} else return false;
+		pipe.setConnect(side, false);
 		pipe.network.addConnector(pipe, con);
 		pipe.isBlocked |= 1 << side;
 		return true;

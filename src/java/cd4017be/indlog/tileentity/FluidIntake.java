@@ -17,11 +17,16 @@ public class FluidIntake extends FluidIO {
 
 	@Override
 	public void update() {
-		if (world.isRemote || blocks.length == 0) return;
+		if (world.isRemote || range == 0) return;
 		for (int i = SPEED; tank.free() >= 1000 && i > 0; i--) {
 			EnumFacing dir;
 			if (dist < 0) {
 				dir = getOrientation().front.getOpposite();
+				if (range == 1) {
+					dist = 0;
+					moveBack(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
+					return;
+				}
 				BlockPos pos = this.pos.offset(dir);
 				if (pos.getY() < 0 || pos.getY() >= 256 || !world.isBlockLoaded(pos)) return;
 				FluidStack fluid = Utils.getFluid(world, pos, blockNotify);
