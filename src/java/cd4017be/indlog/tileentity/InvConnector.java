@@ -42,7 +42,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 	}
 
 	@Override
-	public void neighborTileChange(BlockPos src) {
+	public void neighborTileChange(TileEntity te, EnumFacing side) {
 		linkUpdate = true;
 	}
 
@@ -175,7 +175,13 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing s) {
-		return linkObj == null ? null : linkObj.getCapability(cap, s);
+		if (linkObj == null) return null;
+		if (linkObj.isInvalid()) {
+			linkObj = null;
+			linkUpdate = true;
+			return null;
+		}
+		return linkObj.getCapability(cap, s);
 	}
 
 	@SuppressWarnings("unchecked")
