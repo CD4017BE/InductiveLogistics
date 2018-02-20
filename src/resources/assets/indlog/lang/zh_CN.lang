@@ -84,6 +84,10 @@ gui.indlog.auto_craft.name=自动合成器
 gui.indlog.fluid_outlet.name=排出口
 gui.indlog.fluid_intake.name=引入口
 gui.indlog.drop_interface.name=范围设置
+gui.indlog.portable_craft.name=便携式自动合成器
+gui.indlog.remote_inv.name=便携式远程物品栏
+gui.indlog.fluid_filter.name=流体管道滤器
+gui.indlog.item_filter.name=物品管道滤器
 #GUI tooltips
 gui.cd4017be.filter.infoF=行为\n保留存储\n通用管道
 gui.cd4017be.filter.infoF0=§7提取管道只会从相连的储罐中提取和滤器匹配的流体。\n§7对于注入管道，只有与滤器匹配的流体才能被注入相连的储罐（若可能），其它流体将会被直接传输到接下来的管道。如果有流体无法被注入，则会根据设置来确定传输至别处或等待流体全部注入该储罐。
