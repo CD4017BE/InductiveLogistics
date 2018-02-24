@@ -84,6 +84,10 @@ gui.indlog.auto_craft.name=Automatische Montage
 gui.indlog.fluid_outlet.name=Ausguss
 gui.indlog.fluid_intake.name=Abfluss
 gui.indlog.drop_interface.name=Gebieteinstellungen
+gui.indlog.portable_craft.name=Rezeptraster
+gui.indlog.remote_inv.name=Fernzugriff-Inventar
+gui.indlog.fluid_filter.name=Flüssigkeitsfilter
+gui.indlog.item_filter.name=Itemfilter
 #GUI Tooltips
 gui.cd4017be.filter.infoF=Funktionsweise\nVorratshaltung\nUniversalrohre
 gui.cd4017be.filter.infoF0=§7Bei Extraktionsrohren werden aus den angeschlossenen Tanks nur Flüssigkeiten entnommen, die dem Filter entsprechen.\n§7Bei Injektionsrohren werden nur Flüssigkeiten, die dem Filter entsprechen, in die angeschlossenen Tanks gefüllt (sofern möglich), alle anderen werden direkt an das nächste Rohr weitergeleitet. Bleibt beim versuch die Tanks zu befüllen ein Rest übrig, so wird dieser gemäß der entsprechenden Einstellung entweder weitergeleitet oder der gesammte Weiterfluss solange blockiert bis eine vollständige Abgabe an die Tanks erreicht werden konnte.
