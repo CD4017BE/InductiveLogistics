@@ -64,19 +64,14 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	@Override
 	public void update() {
 		if (world.isRemote || (world.getTotalWorldTime() & 7) != 0) return;
-		if (checkTarget) {
+		if (checkTarget || target != null && target.isInvalid()) {
 			checkTarget = false;
 			target = world.getTileEntity(pos.down());
 			if (target != null && !target.hasCapability(FLUID_HANDLER_CAPABILITY, EnumFacing.UP)) target = null;
 		}
 		if (target != null && tank.amount() > 0) {
-			if (target.isInvalid()) {
-				target = null;
-				checkTarget = true;
-			} else {
-				IFluidHandler acc = target.getCapability(FLUID_HANDLER_CAPABILITY, EnumFacing.UP);
-				if (acc != null) tank.decrement(acc.fill(tank.fluid, true));
-			}
+			IFluidHandler acc = target.getCapability(FLUID_HANDLER_CAPABILITY, EnumFacing.UP);
+			if (acc != null) tank.decrement(acc.fill(tank.fluid, true));
 		}
 		int n = lastAmount - tank.amount();
 		if (n != 0 && (lastAmount == 0 || tank.fluid == null || Math.abs(n) > tank.cap / 64)) {
@@ -160,8 +155,11 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	}
 
 	@Override
-	public void neighborTileChange(BlockPos src) {
-		if (src.equals(pos.down())) checkTarget = true;
+	public void neighborTileChange(TileEntity te, EnumFacing side) {
+		if (side == EnumFacing.DOWN) {
+			target = te;
+			checkTarget = false;
+		}
 	}
 
 	@Override

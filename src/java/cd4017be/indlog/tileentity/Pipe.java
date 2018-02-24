@@ -122,7 +122,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		updateCon = false;
 		if (invs != null) invs.clear();
 		else if (type != 0) invs = new ArrayList<TileAccess>(5);
-		if (target != null && ((TileEntity)target).isInvalid()) {
+		if (target != null && target.invalid()) {
 			target = null;
 			dest = -1;
 		}
@@ -170,7 +170,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 					else nDirIO &= 3;
 					if (nDirIO == 3) nDirIO = 0;
 					if (nDirIO == 0) {
-						if (pDirIO != 1 && pHasIO == 1) nDirIO = 1;							
+						if (pDirIO != 1 && pHasIO == 1 || pDirIO == 2 && pHasIO == 3 && newDest == 2 && type == 1) nDirIO = 1;
 						else if (pDirIO != 2 && pHasIO == 2) nDirIO = 2;
 					}
 					if (nDirIO == 1) {
@@ -276,7 +276,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	}
 
 	@Override
-	public void neighborTileChange(BlockPos src) {
+	public void neighborTileChange(TileEntity te, EnumFacing side) {
 		updateCon = true;
 	}
 

@@ -170,7 +170,7 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 			ItemStack item = player.inventory.mainInventory.get(player.inventory.currentItem);
 			if (player.isDead || item.getItem() != this.item || !item.hasTagCompound()) return false;
 			if (size == 0) return true;
-			if (link == null || link.isInvalid()) return false;
+			if (link == null || link != Utils.getTileAt(link.getWorld(), link.getPos())) return false;
 			IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[(item.getTagCompound().getByte("s") & 0xff) % 6]);
 			return acc != null && acc.getSlots() == size;
 		}
