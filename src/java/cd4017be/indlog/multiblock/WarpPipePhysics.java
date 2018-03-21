@@ -16,9 +16,13 @@ import cd4017be.lib.templates.SharedNetwork;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Utils;
 
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
 public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> {
 
-	public HashMap<Long, ConComp> connectors = new HashMap<Long, ConComp>();
 	public HashSet<ITickable> activeCon = new HashSet<ITickable>();
 	public ArrayList<IItemDest> itemDest = new ArrayList<IItemDest>();
 	public ArrayList<IFluidDest> fluidDest = new ArrayList<IFluidDest>();
@@ -27,21 +31,27 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 
 	public WarpPipePhysics(BasicWarpPipe core) {
 		super(core);
+		for (ConComp c : core.cons)
+			if (c != null)
+				addConnector(c);
 	}
-	
+
 	protected WarpPipePhysics(HashMap<Long, BasicWarpPipe> comps) {
 		super(comps);
 	}
-	
+
 	public void addConnector(BasicWarpPipe pipe, ConComp con) {
-		this.addConnector(SharedNetwork.SidedPosUID(pipe.getUID(), con.side), con);
+		pipe.cons[con.side] = con;
+		this.addConnector(con);
 		if (con instanceof IObjLink) pipe.updateCon = true;
 		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
 	}
-	
+
 	public ConComp remConnector(BasicWarpPipe pipe, byte side) {
 		pipe.con[side] = 0;
-		ConComp con = remConnector(SharedNetwork.SidedPosUID(pipe.getUID(), side));
+		ConComp con = pipe.cons[side];
+		remConnector(con);
+		pipe.cons[side] = null;
 		pipe.updateCon = true;
 		pipe.hasFilters &= ~(1 << side);
 		((BaseTileEntity)pipe.tile).markUpdate();
@@ -49,18 +59,13 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		return con;
 	}
 
-	public ConComp getConnector(BasicWarpPipe pipe, byte side) {
-		return connectors.get(SharedNetwork.SidedPosUID(pipe.getUID(), side));
-	}
-
 	public void reorder(ConComp con) {
 		if (con instanceof IItemDest) sortItemDest = true;
 		if (con instanceof IFluidDest) sortFluidDest = true;
 	}
-	
-	private void addConnector(long pos, ConComp con) {
+
+	private void addConnector(ConComp con) {
 		if (con == null) return;
-		connectors.put(pos, con);
 		if (con instanceof ITickable) activeCon.add((ITickable)con);
 		if (con instanceof IItemDest) {
 			itemDest.add((IItemDest)con);
@@ -71,32 +76,36 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 			sortFluidDest = true;
 		}
 	}
-	
+
 	@SuppressWarnings("unlikely-arg-type")
-	private ConComp remConnector(long pos) {
-		ConComp con = connectors.remove(pos);
+	private void remConnector(ConComp con) {
 		if (con instanceof ITickable) activeCon.remove(con);
 		if (con instanceof IItemDest) itemDest.remove(con);
 		if (con instanceof IFluidDest) fluidDest.remove(con);
-		return con;
 	}
-	
+
 	@Override
 	public void onMerged(WarpPipePhysics network) {
 		super.onMerged(network);
-		for (Entry<Long, ConComp> e : network.connectors.entrySet())
-			this.addConnector(e.getKey(), e.getValue());
+		activeCon.addAll(network.activeCon);
+		if (!network.itemDest.isEmpty()) {
+			itemDest.addAll(network.itemDest);
+			sortItemDest = true;
+		}
+		if (!network.fluidDest.isEmpty()) {
+			fluidDest.addAll(network.fluidDest);
+			sortFluidDest = true;
+		}
 	}
 
 	@Override
 	public WarpPipePhysics onSplit(HashMap<Long, BasicWarpPipe> comps) {
 		WarpPipePhysics physics = new WarpPipePhysics(comps);
-		long l;
 		for (Entry<Long, BasicWarpPipe> e : comps.entrySet())
-			for (int i = 0; i < 6; i++)
-				if (e.getValue().con[i] >= 2) {
-					l = SidedPosUID(e.getKey(), i);
-					physics.addConnector(l, this.remConnector(l));
+			for (ConComp c : e.getValue().cons)
+				if (c != null) {
+					remConnector(c);
+					physics.addConnector(c);
 				}
 		return physics;
 	}
@@ -104,23 +113,18 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	@Override
 	public void remove(BasicWarpPipe comp) {
 		super.remove(comp);
-		long l;
-		for (int i = 0; i < 6; i++)
-			if (comp.con[i] >= 2) {
-				l = SharedNetwork.SidedPosUID(comp.getUID(), i);
-				this.remConnector(l);
-			}
+		for (ConComp c : comp.cons)
+			if (c != null)
+				remConnector(c);
 	}
 
 
 	@Override
 	public void updateCompCon(BasicWarpPipe comp) {
 		super.updateCompCon(comp);
-		for (byte s : sides())
-			if (comp.con[s] >= 2) {
-				ConComp con = getConnector(comp, s);
-				if (con instanceof IObjLink) ((IObjLink)con).updateLink();
-			}
+		for (ConComp con : comp.cons)
+			if (con instanceof IObjLink)
+				((IObjLink)con).updateLink();
 	}
 
 	@Override
@@ -135,14 +139,13 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		}
 		for (ITickable con : activeCon) con.update();
 	}
-	
+
 	/**
 	 * Insert an item stack into valid destinations
 	 * @param item
 	 * @return the result if not possible
 	 */
-	public ItemStack insertItem(ItemStack item, byte pr)
-	{
+	public ItemStack insertItem(ItemStack item, byte pr) {
 		for (IItemDest dest : itemDest) {
 			if (dest.getPriority() <= pr && dest.isValid()) {
 				item = dest.insertItem(item);
@@ -152,14 +155,13 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		}
 		return item;
 	}
-	
+
 	/**
 	 * Insert an fluid stack into valid destinations
 	 * @param fluid
 	 * @return the result if not possible
 	 */
-	public FluidStack insertFluid(FluidStack fluid, byte pr)
-	{
+	public FluidStack insertFluid(FluidStack fluid, byte pr) {
 		if (fluid == null) return null;
 		for (IFluidDest dest : fluidDest) {
 			if (dest.getPriority() <= pr && dest.isValid()) {
@@ -170,26 +172,26 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		}
 		return fluid;
 	}
-	
+
 	public static interface IObjLink {
 		public boolean isValid();
 		public void updateLink();
 	}
-	
+
 	public static interface IPrioritySorted {
 		public byte getPriority();
 	}
-	
+
 	public static interface IItemDest extends IObjLink, IPrioritySorted {
 		public ItemStack insertItem(ItemStack item);
 		public boolean blockItem(ItemStack item);
 	}
-	
+
 	public static interface IFluidDest extends IObjLink, IPrioritySorted {
 		public FluidStack insertFluid(FluidStack fluid);
 		public boolean blockFluid(FluidStack fluid);
 	}
-	
+
 	public static final Comparator<IPrioritySorted> destSort = new Comparator<IPrioritySorted>(){
 		@Override
 		public int compare(IPrioritySorted arg0, IPrioritySorted arg1) {

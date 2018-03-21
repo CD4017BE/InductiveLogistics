@@ -59,7 +59,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	}
 
 	@Override
-	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
+	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
 		if (item.getCount() == 0) {
 			if (filter != null) {
 				item = new ItemStack(Objects.fluid_filter);

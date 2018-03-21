@@ -6,13 +6,18 @@ import net.minecraftforge.common.capabilities.Capability;
 import cd4017be.api.IAbstractTile;
 import cd4017be.indlog.Objects;
 import cd4017be.lib.templates.MultiblockComp;
-import cd4017be.lib.templates.SharedNetwork;
 
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
 public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics> {
 
 	public final byte[] con = new byte[6];
 	public byte hasFilters = 0, isBlocked = 0;
 	public boolean redstone = false;
+	public ConComp[] cons = new ConComp[6];
 
 	public BasicWarpPipe(IAbstractTile pipe) {
 		super(pipe);
@@ -22,14 +27,6 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 	public void setUID(long uid) {
 		super.setUID(uid);
 		if (network == null) new WarpPipePhysics(this);
-		else {
-			ConComp comp;
-			for (int i = 0; i < 6; i++)
-				if (con[i] >= 2) {
-					comp = network.connectors.remove(SharedNetwork.SidedPosUID(0, i));
-					if (comp != null) network.connectors.put(SharedNetwork.SidedPosUID(uid, i), comp);
-				}
-		}
 	}
 
 	@Override
@@ -51,13 +48,13 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 
 	public static BasicWarpPipe readFromNBT(IAbstractTile tile, NBTTagCompound nbt) {
 		BasicWarpPipe pipe = new BasicWarpPipe(tile);
-		WarpPipePhysics physics = new WarpPipePhysics(pipe);
 		NBTTagList list = nbt.getTagList("connectors", 10);
 		for (int i = 0; i < list.tagCount(); i++) {
 			ConComp con = ConComp.readFromNBT(pipe, list.getCompoundTagAt(i));
-			if (con != null) physics.addConnector(pipe, con);
+			if (con != null) pipe.cons[con.side] = con;
 		}
 		pipe.isBlocked = nbt.getByte("block");
+		new WarpPipePhysics(pipe);
 		return pipe;
 	}
 
@@ -68,8 +65,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 		for (byte i = 0; i < con.length; i++)
 			if (con[i] > 0) {
 				tag = ConComp.writeToNBT(con[i], i);
-				comp = network.getConnector(this, i);
-				if (comp != null) comp.save(tag);
+				if ((comp = cons[i]) != null) comp.save(tag);
 				list.appendTag(tag);
 			}
 		if (!list.hasNoTags()) nbt.setTag("connectors", list);

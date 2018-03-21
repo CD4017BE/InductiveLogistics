@@ -65,7 +65,7 @@ public class ConComp {
 		return nbt;
 	}
 
-	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
+	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
 		return false;
 	}
 

@@ -30,6 +30,11 @@ import cd4017be.lib.templates.Cover;
 import cd4017be.lib.tileentity.MultiblockTile;
 import cd4017be.lib.util.Utils;
 
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
 public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IModularTile, IItemPipeCon, IFluidPipeCon {
 
 	private Cover cover = new Cover();
@@ -53,9 +58,8 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		byte s = (byte)dir.getIndex();
 		byte t = comp.con[s];
 		if (t >= 2) {
-			long uid = WarpPipePhysics.SidedPosUID(comp.getUID(), s);
-			ConComp con = comp.network.connectors.get(uid);
-			if (con != null && con.onClicked(player, hand, item, uid)) {
+			ConComp con = comp.cons[s];
+			if (con != null && con.onClicked(player, hand, item)) {
 				markUpdate();
 				markDirty();
 				return true;
@@ -100,6 +104,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		if (comp.network != null) comp.network.remove(comp);
 		comp = BasicWarpPipe.readFromNBT(this, nbt);
 		cover.readNBT(nbt, "cover", null);
 	}
@@ -167,7 +172,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
 		List<ItemStack> list = makeDefaultDrops(null);
 		for (int i = 0; i < 6; i++) {
-			ConComp con = comp.network.getConnector(comp, (byte)i);
+			ConComp con = comp.cons[i];
 			if (con != null) con.dropContent(list);
 		}
 		if (cover.stack != null) list.add(cover.stack);

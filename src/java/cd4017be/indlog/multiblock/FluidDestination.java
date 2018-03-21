@@ -17,8 +17,8 @@ public class FluidDestination extends FluidComp implements IFluidDest {
 	}
 
 	@Override
-	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
-		if (super.onClicked(player, hand, item, uid)) return true;
+	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
+		if (super.onClicked(player, hand, item)) return true;
 		if (item.getCount() == 0 && player.isSneaking()) {
 			if (!player.isCreative()) ItemFluidUtil.dropStack(new ItemStack(Objects.FLUID_PIPE, 1, 1), player);
 			pipe.network.remConnector(pipe, side);
