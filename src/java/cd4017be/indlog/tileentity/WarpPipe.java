@@ -1,5 +1,6 @@
 package cd4017be.indlog.tileentity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +11,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
 import static cd4017be.lib.property.PropertyByte.cast;
 
@@ -27,7 +28,7 @@ import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.templates.Cover;
-import cd4017be.lib.tileentity.MultiblockTile;
+import cd4017be.lib.tileentity.PassiveMultiblockTile;
 import cd4017be.lib.util.Utils;
 
 /**
@@ -35,7 +36,7 @@ import cd4017be.lib.util.Utils;
  * @author CD4017BE
  *
  */
-public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IModularTile, IItemPipeCon, IFluidPipeCon {
+public class WarpPipe extends PassiveMultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, IModularTile, IItemPipeCon, IFluidPipeCon {
 
 	private Cover cover = new Cover();
 
@@ -44,10 +45,8 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	}
 
 	@Override
-	public void update() {
-		if (world.isRemote) return;
-		super.update();
-		comp.redstone = world.isBlockPowered(pos);
+	public void process() {
+		super.process();
 	}
 
 	@Override
@@ -177,6 +176,12 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		}
 		if (cover.stack != null) list.add(cover.stack);
 		return list;
+	}
+
+	@Override
+	public void neighborBlockChange(Block b, BlockPos src) {
+		comp.redstone = world.isBlockPowered(pos);
+		super.neighborBlockChange(b, src);
 	}
 
 }

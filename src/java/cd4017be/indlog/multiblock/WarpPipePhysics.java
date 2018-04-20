@@ -12,6 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
+import cd4017be.lib.TickRegistry;
+import cd4017be.lib.TickRegistry.ITickReceiver;
 import cd4017be.lib.templates.SharedNetwork;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Utils;
@@ -21,13 +23,17 @@ import cd4017be.lib.util.Utils;
  * @author CD4017BE
  *
  */
-public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> {
+public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> implements ITickReceiver {
+
+	public static byte TICKS;
 
 	public HashSet<ITickable> activeCon = new HashSet<ITickable>();
 	public ArrayList<IItemDest> itemDest = new ArrayList<IItemDest>();
 	public ArrayList<IFluidDest> fluidDest = new ArrayList<IFluidDest>();
 	public boolean sortItemDest = false;
 	public boolean sortFluidDest = false;
+	public boolean disabled = true;
+	public byte timer;
 
 	public WarpPipePhysics(BasicWarpPipe core) {
 		super(core);
@@ -38,12 +44,24 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 
 	protected WarpPipePhysics(HashMap<Long, BasicWarpPipe> comps) {
 		super(comps);
+		enable();
+	}
+
+	public void enable() {
+		if (disabled) {
+			disabled = false;
+			TickRegistry.instance.add(this);
+		}
+	}
+
+	public void disable() {
+		disabled = true;
 	}
 
 	public void addConnector(BasicWarpPipe pipe, ConComp con) {
 		pipe.cons[con.side] = con;
 		this.addConnector(con);
-		if (con instanceof IObjLink) pipe.updateCon = true;
+		if (con instanceof IObjLink) pipe.markDirty();
 		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
 	}
 
@@ -52,7 +70,7 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		ConComp con = pipe.cons[side];
 		remConnector(con);
 		pipe.cons[side] = null;
-		pipe.updateCon = true;
+		pipe.markDirty();
 		pipe.hasFilters &= ~(1 << side);
 		((BaseTileEntity)pipe.tile).markUpdate();
 		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
@@ -118,17 +136,10 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 				remConnector(c);
 	}
 
-
 	@Override
-	public void updateCompCon(BasicWarpPipe comp) {
-		super.updateCompCon(comp);
-		for (ConComp con : comp.cons)
-			if (con instanceof IObjLink)
-				((IObjLink)con).updateLink();
-	}
-
-	@Override
-	public void updatePhysics() {
+	public boolean tick() {
+		disabled |= components.isEmpty();
+		if (disabled) return false;
 		if (sortItemDest) {
 			Collections.sort(itemDest, destSort);
 			sortItemDest = false;
@@ -137,7 +148,11 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 			Collections.sort(fluidDest, destSort);
 			sortFluidDest = false;
 		}
-		for (ITickable con : activeCon) con.update();
+		if (++timer >= TICKS) {
+			timer = 0;
+			for (ITickable con : activeCon) con.update();
+		}
+		return true;
 	}
 
 	/**

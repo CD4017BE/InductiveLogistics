@@ -5,6 +5,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.capabilities.Capability;
 import cd4017be.api.IAbstractTile;
 import cd4017be.indlog.Objects;
+import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
 import cd4017be.lib.templates.MultiblockComp;
 
 /**
@@ -27,6 +28,15 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 	public void setUID(long uid) {
 		super.setUID(uid);
 		if (network == null) new WarpPipePhysics(this);
+		if (!tile.isClient()) network.enable();
+	}
+
+	@Override
+	public void updateCons() {
+		super.updateCons();
+		for (ConComp con : cons)
+			if (con instanceof IObjLink)
+				((IObjLink)con).updateLink();
 	}
 
 	@Override
@@ -42,7 +52,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 			network.onDisconnect(this, side);
 		} else if (c && c0 == 1) {
 			con[side] = 0;
-			updateCon = true;
+			markDirty();
 		}
 	}
 
@@ -54,6 +64,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 			if (con != null) pipe.cons[con.side] = con;
 		}
 		pipe.isBlocked = nbt.getByte("block");
+		pipe.redstone = nbt.getBoolean("rs");
 		new WarpPipePhysics(pipe);
 		return pipe;
 	}
@@ -70,6 +81,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 			}
 		if (!list.hasNoTags()) nbt.setTag("connectors", list);
 		nbt.setByte("block", isBlocked);
+		nbt.setBoolean("rs", redstone);
 	}
 
 	@Override

@@ -14,9 +14,6 @@ import net.minecraftforge.items.IItemHandler;
 
 public class ItemExtractor extends ItemComp implements ITickable {
 
-	public static byte TICKS;
-
-	private byte timer = 0;
 	private int slotIdx;
 
 	public ItemExtractor(BasicWarpPipe pipe, byte side) {
@@ -26,8 +23,7 @@ public class ItemExtractor extends ItemComp implements ITickable {
 
 	@Override
 	public void update() {
-		if ((++timer & 0xff) < TICKS || !isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return;
-		timer = 0;
+		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[this.side^1]);
 		if (acc == null) return;
 		int s, target = -1, m = acc.getSlots();
