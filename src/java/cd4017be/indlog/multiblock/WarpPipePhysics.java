@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.function.ToIntFunction;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -205,6 +206,18 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	public static interface IFluidDest extends IObjLink, IPrioritySorted {
 		public FluidStack insertFluid(FluidStack fluid);
 		public boolean blockFluid(FluidStack fluid);
+	}
+
+	public static interface IItemSrc extends IObjLink, IPrioritySorted {
+		public int extractItem(ItemStack item, int max);
+		public boolean extractItem(ToIntFunction<ItemStack> acceptor);
+		public boolean blockItem();
+	}
+
+	public static interface IFluidSrc extends IObjLink, IPrioritySorted {
+		public int extractFluid(FluidStack fluid, int max);
+		public boolean extractFluid(ToIntFunction<FluidStack> acceptor);
+		public boolean blockFluid();
 	}
 
 	public static final Comparator<IPrioritySorted> destSort = new Comparator<IPrioritySorted>(){

@@ -1,17 +1,17 @@
 package cd4017be.indlog.multiblock;
 
-import java.util.List;
-
 import cd4017be.indlog.Objects;
-import cd4017be.lib.util.ItemFluidUtil;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
 public class ItemExtractor extends ItemComp implements ITickable {
 
 	private int slotIdx;
@@ -43,20 +43,8 @@ public class ItemExtractor extends ItemComp implements ITickable {
 	}
 
 	@Override
-	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
-		if (super.onClicked(player, hand, item)) return true;
-		if (player.isSneaking() && player.getHeldItemMainhand().isEmpty()) {
-			if (!player.isCreative()) ItemFluidUtil.dropStack(new ItemStack(Objects.ITEM_PIPE, 1, 2), player);
-			pipe.network.remConnector(pipe, side);
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void dropContent(List<ItemStack> list) {
-		list.add(new ItemStack(Objects.ITEM_PIPE, 1, 2));
-		super.dropContent(list);
+	protected ItemStack moduleItem() {
+		return new ItemStack(Objects.ITEM_PIPE, 1, 2);
 	}
 
 }

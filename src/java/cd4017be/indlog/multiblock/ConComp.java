@@ -3,18 +3,26 @@ package cd4017be.indlog.multiblock;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
+import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 
-public class ConComp {
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
+public abstract class ConComp {
 
 	public final byte side;
+	public final BasicWarpPipe pipe;
 
-	public ConComp(byte side) {
+	public ConComp(BasicWarpPipe pipe, byte side) {
 		this.side = side;
+		this.pipe = pipe;
 	}
 
 	public void load(NBTTagCompound nbt) {}
@@ -66,6 +74,11 @@ public class ConComp {
 	}
 
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
+		if (item.getCount() == 0 && player.isSneaking()) {
+			if (!player.isCreative()) ItemFluidUtil.dropStack(moduleItem(), player);
+			pipe.network.remConnector(pipe, side);
+			return true;
+		}
 		return false;
 	}
 
@@ -93,6 +106,9 @@ public class ConComp {
 	}
 
 	public void dropContent(List<ItemStack> list) {
+		list.add(moduleItem());
 	}
+
+	protected abstract ItemStack moduleItem();
 
 }

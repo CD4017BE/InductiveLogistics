@@ -18,18 +18,20 @@ import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.util.ItemFluidUtil;
 
-public class ItemComp extends ConComp implements IObjLink {
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
+public abstract class ItemComp extends ConComp implements IObjLink {
 
-	public final BasicWarpPipe pipe;
 	public ICapabilityProvider link;
 	public PipeFilterItem filter;
-	
-	public ItemComp(BasicWarpPipe pipe, byte side)
-	{
-		super(side);
-		this.pipe = pipe;
+
+	public ItemComp(BasicWarpPipe pipe, byte side) {
+		super(pipe, side);
 	}
-	
+
 	@Override
 	public void load(NBTTagCompound nbt) {
 		if (nbt.hasKey("mode")) {
@@ -48,8 +50,7 @@ public class ItemComp extends ConComp implements IObjLink {
 	 * @return
 	 */
 	@Override
-	public boolean isValid()
-	{
+	public boolean isValid() {
 		if (link == null) return false;
 		if (((TileEntity)link).isInvalid()) this.updateLink();
 		return link != null;
@@ -85,17 +86,17 @@ public class ItemComp extends ConComp implements IObjLink {
 			pipe.isBlocked &= ~(1 << side);
 			return true;
 		}
-		return false;
+		return super.onClicked(player, hand, item);
 	}
 
 	@Override
 	public void dropContent(List<ItemStack> list) {
-		super.dropContent(list);
 		if (filter != null) {
 			ItemStack item = new ItemStack(Objects.item_filter);
 			item.setTagCompound(PipeFilterItem.save(filter));
 			list.add(item);
 		}
+		super.dropContent(list);
 	}
 
 	/**

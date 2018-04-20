@@ -18,15 +18,18 @@ import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
 import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.util.ItemFluidUtil;
 
-public class FluidComp extends ConComp implements IObjLink {
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
+public abstract class FluidComp extends ConComp implements IObjLink {
 
-	public final BasicWarpPipe pipe;
 	public ICapabilityProvider link;
 	public PipeFilterFluid filter;
-	
+
 	public FluidComp(BasicWarpPipe pipe, byte side) {
-		super(side);
-		this.pipe = pipe;
+		super(pipe, side);
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class FluidComp extends ConComp implements IObjLink {
 			pipe.isBlocked &= ~(1 << side);
 			return true;
 		}
-		return false;
+		return super.onClicked(player, hand, item);
 	}
 
 	@Override
@@ -93,6 +96,7 @@ public class FluidComp extends ConComp implements IObjLink {
 			item.setTagCompound(PipeFilterFluid.save(filter));
 			list.add(item);
 		}
+		super.dropContent(list);
 	}
 
 	/**
@@ -100,8 +104,7 @@ public class FluidComp extends ConComp implements IObjLink {
 	 * @param fluid
 	 * @return true if not
 	 */
-	public boolean blockFluid(FluidStack fluid)
-	{
+	public boolean blockFluid(FluidStack fluid) {
 		return filter != null && !filter.transfer(fluid);
 	}
 
