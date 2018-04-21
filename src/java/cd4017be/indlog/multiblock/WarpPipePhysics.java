@@ -27,12 +27,14 @@ import cd4017be.lib.util.Utils;
 public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> implements ITickReceiver {
 
 	public static byte TICKS;
+	private static final byte SID = 1, SIS = 2, SFD = 4, SFS = 8;
 
 	public HashSet<ITickable> activeCon = new HashSet<ITickable>();
 	public ArrayList<IItemDest> itemDest = new ArrayList<IItemDest>();
 	public ArrayList<IFluidDest> fluidDest = new ArrayList<IFluidDest>();
-	public boolean sortItemDest = false;
-	public boolean sortFluidDest = false;
+	public ArrayList<IItemSrc> itemSrc = new ArrayList<IItemSrc>();
+	public ArrayList<IFluidSrc> fluidSrc = new ArrayList<IFluidSrc>();
+	private byte sort = 0;
 	public boolean disabled = true;
 	public byte timer;
 
@@ -79,21 +81,19 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	}
 
 	public void reorder(ConComp con) {
-		if (con instanceof IItemDest) sortItemDest = true;
-		if (con instanceof IFluidDest) sortFluidDest = true;
+		if (con instanceof IItemDest) sort |= SID;
+		if (con instanceof IFluidDest) sort |= SFD;
+		if (con instanceof IItemSrc) sort |= SIS;
+		if (con instanceof IFluidSrc) sort |= SFS;
 	}
 
 	private void addConnector(ConComp con) {
-		if (con == null) return;
 		if (con instanceof ITickable) activeCon.add((ITickable)con);
-		if (con instanceof IItemDest) {
-			itemDest.add((IItemDest)con);
-			sortItemDest = true;
-		}
-		if (con instanceof IFluidDest) {
-			fluidDest.add((IFluidDest)con);
-			sortFluidDest = true;
-		}
+		if (con instanceof IItemDest) itemDest.add((IItemDest)con);
+		if (con instanceof IFluidDest) fluidDest.add((IFluidDest)con);
+		if (con instanceof IItemSrc) itemSrc.add((IItemSrc)con);
+		if (con instanceof IFluidSrc) fluidSrc.add((IFluidSrc)con);
+		reorder(con);
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
@@ -101,6 +101,8 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		if (con instanceof ITickable) activeCon.remove(con);
 		if (con instanceof IItemDest) itemDest.remove(con);
 		if (con instanceof IFluidDest) fluidDest.remove(con);
+		if (con instanceof IItemSrc) itemSrc.remove(con);
+		if (con instanceof IFluidSrc) fluidSrc.remove(con);
 	}
 
 	@Override
@@ -109,11 +111,19 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		activeCon.addAll(network.activeCon);
 		if (!network.itemDest.isEmpty()) {
 			itemDest.addAll(network.itemDest);
-			sortItemDest = true;
+			sort |= SID;
 		}
 		if (!network.fluidDest.isEmpty()) {
 			fluidDest.addAll(network.fluidDest);
-			sortFluidDest = true;
+			sort |= SFD;
+		}
+		if (!network.itemSrc.isEmpty()) {
+			itemSrc.addAll(network.itemSrc);
+			sort |= SIS;
+		}
+		if (!network.fluidSrc.isEmpty()) {
+			fluidSrc.addAll(network.fluidSrc);
+			sort |= SFS;
 		}
 	}
 
@@ -141,13 +151,12 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	public boolean tick() {
 		disabled |= components.isEmpty();
 		if (disabled) return false;
-		if (sortItemDest) {
-			Collections.sort(itemDest, destSort);
-			sortItemDest = false;
-		}
-		if (sortFluidDest) {
-			Collections.sort(fluidDest, destSort);
-			sortFluidDest = false;
+		if (sort != 0) {
+			if ((sort & SID) != 0) Collections.sort(itemDest, destSort);
+			if ((sort & SFD) != 0) Collections.sort(fluidDest, destSort);
+			if ((sort & SIS) != 0) Collections.sort(itemSrc, srcSort);
+			if ((sort & SFS) != 0) Collections.sort(fluidSrc, srcSort);
+			sort = 0;
 		}
 		if (++timer >= TICKS) {
 			timer = 0;
@@ -158,7 +167,8 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 
 	/**
 	 * Insert an item stack into valid destinations
-	 * @param item
+	 * @param item to insert
+	 * @param pr node priority to start with
 	 * @return the result if not possible
 	 */
 	public ItemStack insertItem(ItemStack item, byte pr) {
@@ -173,8 +183,9 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	}
 
 	/**
-	 * Insert an fluid stack into valid destinations
-	 * @param fluid
+	 * Insert a fluid stack into valid destinations
+	 * @param fluid to insert
+	 * @param pr node priority to start with
 	 * @return the result if not possible
 	 */
 	public FluidStack insertFluid(FluidStack fluid, byte pr) {
@@ -187,6 +198,90 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 			}
 		}
 		return fluid;
+	}
+
+	/**
+	 * Extract a given item stack from valid sources
+	 * @param item type to search for
+	 * @param am maximum amount to extract
+	 * @param pr node priority to start with
+	 * @return amount that could be extracted
+	 */
+	public int extractItem(ItemStack item, int am, byte pr) {
+		int n = am;
+		for (IItemSrc src : itemSrc) {
+			if (src.getPriority() >= pr && src.isValid()) {
+				n -= src.extractItem(item, n);
+				if (n <= 0 || src.blockItem()) break;
+			}
+		}
+		return am - n;
+	}
+
+	/**
+	 * Extract a matching item stack from valid sources
+	 * @param acceptor filter function that returns the maximum accepted amount for a given item stack
+	 * @param pr node priority to start with
+	 * @return the item stack that was extracted 
+	 */
+	public ItemStack extractItem(ToIntFunction<ItemStack> acceptor, byte pr) {
+		ItemStack stack = null;
+		int n = Integer.MAX_VALUE;
+		for (IItemSrc src : itemSrc) {
+			if (src.getPriority() >= pr && src.isValid()) {
+				if (stack != null) n -= src.extractItem(stack, n);
+				else if ((stack = src.findItem(acceptor)) != null) {
+					n = stack.getCount();
+					n -= src.extractItem(stack, n);
+				}
+				if (src.blockItem() || n <= 0) break;
+			}
+		}
+		if (stack == null) return null;
+		stack.grow(-n);
+		return stack;
+	}
+
+	/**
+	 * Extract a given fluid stack from valid sources
+	 * @param fluid type to search for
+	 * @param am maximum amount to extract
+	 * @param pr node priority to start with
+	 * @return amount that could be extracted
+	 */
+	public int extractFluid(FluidStack fluid, int am, byte pr) {
+		int n = am;
+		for (IFluidSrc src : fluidSrc) {
+			if (src.getPriority() >= pr && src.isValid()) {
+				n -= src.extractFluid(fluid, n);
+				if (n <= 0 || src.blockFluid()) break;
+			}
+		}
+		return am - n;
+	}
+
+	/**
+	 * Extract a matching fluid stack from valid sources
+	 * @param acceptor filter function that returns the maximum accepted amount for a given fluid stack
+	 * @param pr node priority to start with
+	 * @return the fluid stack that was extracted 
+	 */
+	public FluidStack extractFluid(ToIntFunction<FluidStack> acceptor, byte pr) {
+		FluidStack stack = null;
+		int n = Integer.MAX_VALUE;
+		for (IFluidSrc src : fluidSrc) {
+			if (src.getPriority() >= pr && src.isValid()) {
+				if (stack != null) n -= src.extractFluid(stack, n);
+				else if ((stack = src.findFluid(acceptor)) != null) {
+					n = stack.amount;
+					n -= src.extractFluid(stack, n);
+				}
+				if (src.blockFluid() || n <= 0) break;
+			}
+		}
+		if (stack == null) return null;
+		stack.amount -= n;
+		return stack;
 	}
 
 	public static interface IObjLink {
@@ -210,13 +305,13 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 
 	public static interface IItemSrc extends IObjLink, IPrioritySorted {
 		public int extractItem(ItemStack item, int max);
-		public boolean extractItem(ToIntFunction<ItemStack> acceptor);
+		public ItemStack findItem(ToIntFunction<ItemStack> acceptor);
 		public boolean blockItem();
 	}
 
 	public static interface IFluidSrc extends IObjLink, IPrioritySorted {
 		public int extractFluid(FluidStack fluid, int max);
-		public boolean extractFluid(ToIntFunction<FluidStack> acceptor);
+		public FluidStack findFluid(ToIntFunction<FluidStack> acceptor);
 		public boolean blockFluid();
 	}
 
