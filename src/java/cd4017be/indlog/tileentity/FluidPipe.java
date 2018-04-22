@@ -29,6 +29,9 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	public static int CAP;
 	public static int TICKS;
 
+	protected final IFluidHandler access = new LinkedTank(CAP, this::getFluid, this::setFluid);
+	protected final IFluidHandler accessF = new Tank(CAP, this::getFluid, this::setFluid);
+
 	public FluidPipe() {}
 	public FluidPipe(IBlockState state) {super(state);}
 
@@ -39,7 +42,7 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 	@Override
 	protected int resetTimer() {return TICKS;}
 	@Override
-	protected IFluidHandler createInv() {return new Tank(CAP, this::getFluid, this::setFluid);}
+	protected IFluidHandler getInv(boolean filtered) {return filtered ? accessF : access;}
 
 	private FluidStack getFluid() {
 		return content;
@@ -177,20 +180,23 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 
 		@Override
 		public int fill(FluidStack res, boolean doFill) {
-			if (type == 1 || (type == 2 && !(PipeFilterFluid.isNullEq(filter) || filter.matches(res)))) return 0;
-			return super.fill(res, doFill);
+			if ((type & 1) == 0 && (PipeFilterFluid.isNullEq(filter) || filter.matches(res)))
+				return super.fill(res, doFill);
+			return 0;
 		}
 
 		@Override
 		public FluidStack drain(FluidStack res, boolean doDrain) {
-			if (type == 2 || (type == 1 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
-			return super.drain(res, doDrain);
+			if (content != null && (type & 1) != 0 && (PipeFilterFluid.isNullEq(filter) || filter.matches(content)))
+				return super.drain(res, doDrain);
+			return null;
 		}
 
 		@Override
 		public FluidStack drain(int m, boolean doDrain) {
-			if (type == 2 || (type == 1 && content != null && !(PipeFilterFluid.isNullEq(filter) || filter.matches(content)))) return null;
-			return super.drain(m, doDrain);
+			if (content != null && (type & 1) != 0 && (PipeFilterFluid.isNullEq(filter) || filter.matches(content)))
+				return super.drain(m, doDrain);
+			return null;
 		}
 
 	}
