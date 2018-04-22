@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.Constants.NBT;
 
 /**
  *
@@ -43,7 +44,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected T target;
 	protected F filter;
 	protected ArrayList<TileAccess> invs = null;
-	protected byte type, dest;
+	protected byte type, dest, orDst;
+	protected int redstone;
 	/** bits[0-13 (6+1)*2]: (side + total) * dir{0:none, 1:out, 2:in, 3:lock/both}, bit[14]: update, bit[15]: blocked */
 	protected short flow;
 	private byte time;
@@ -66,7 +68,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			switch(type) {
 			case 1:
 				if ((flow & 0x8000) != 0) break;
-				if (content != null && (filter == null || filter.active(world.isBlockPowered(pos)))) {
+				if (content != null && (filter == null || filter.active(redstone > 0))) {
 					I acc;
 					for (TileAccess inv : invs)
 						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
@@ -74,7 +76,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				}
 			case 3:
 				if ((flow & 0x3000) == 0x3000 && content != null && target != null && target.content == null && (filter == null || filter.transfer(content))) {
-					if (target.tileEntityInvalid) target = null;
+					if (target.unloaded) target = null;
 					else {
 						target.content = content;
 						content = null;
@@ -84,7 +86,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				}
 			break;
 			case 2:
-				if ((flow & 0x8000) == 0 && (filter == null || filter.active(world.isBlockPowered(pos)))) {
+				if ((flow & 0x8000) == 0 && (filter == null || filter.active(redstone > 0))) {
 					I acc;
 					for (TileAccess inv : invs)
 						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
@@ -92,7 +94,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				}
 			default:
 				if ((flow & 0x3000) == 0x3000 && content != null && target != null && target.content == null) {
-					if (target.tileEntityInvalid) target = null;
+					if (target.unloaded) target = null;
 					else {
 						target.content = content;
 						content = null;
@@ -120,11 +122,11 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		updateCon = false;
 		if (invs != null) invs.clear();
 		else if (type > 0 && type < 3) invs = new ArrayList<TileAccess>(5);
+		TileEntity te;
 		if (target != null && target.invalid()) {
 			target = null;
 			dest = -1;
 		}
-		TileEntity te;
 		if (onChunkBorder && unloadedNeighbor()) {
 			//only refresh cached tiles
 			for (EnumFacing s : EnumFacing.values()) {
@@ -140,12 +142,19 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			return;
 		}
 		
+		redstone = world.isBlockIndirectlyGettingPowered(pos);
 		EnumFacing dir;
 		ArrayList<T> updateList = new ArrayList<T>();
 		/** -1: fine, 0: best match, 1: any match, 2: no match */
 		int newDest = target == null || target.getFlowBit(dest^1) != 2 || (target.getFlowBit(6) & 1) == 0 ? 2 : -1;
+		int possDests = 0;
 		int lHasIO = getFlowBit(6), nHasIO = type > 2 ? type - 2 : 0, lDirIO, nDirIO;
 		short lFlow = flow;
+		if (dest != orDst) {
+			setFlowBit(dest, 0);
+			setFlowBit(orDst, 1);
+			target = null;
+		}
 		for (int i = 0; i < 6; i++) {
 			lDirIO = getFlowBit(i);
 			if (lDirIO == 3) continue;
@@ -154,9 +163,10 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			if (te == null) setFlowBit(i, 0);
 			else if (pipeClass().isInstance(te)) {
 				T pipe = pipeClass().cast(te);
-				if (newDest < 0 && lDirIO == 1 && dest == i) {
+				if (newDest < 0 && orDst == i) {
 					nHasIO |= 1;
 					updateList.add(pipe);
+					possDests |= 1 << i;
 					continue;
 				}
 				int pDirIO = pipe.getFlowBit(i ^ 1);
@@ -169,15 +179,16 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 					if (nDirIO == 0) {
 						if (pDirIO != 1 && pHasIO == 1 || pDirIO == 2 && pHasIO == 3 && newDest == 2 && type == 1) nDirIO = 1;
 						else if (pDirIO != 2 && pHasIO == 2) nDirIO = 2;
+						else if (pDirIO == 2 && pHasIO == 3) possDests |= 1 << i;
 					}
 					if (nDirIO == 1) {
 						target = pipe;
-						if (dest >= 0 && getFlowBit(dest) == 1) setFlowBit(dest, 0);
-						dest = (byte)i;
+						if (orDst >= 0 && getFlowBit(orDst) == 1) setFlowBit(orDst, 0);
+						orDst = (byte)i;
 						newDest = pDirIO == 2 ? 0 : 1;
-					} else if (dest == i) {
+					} else if (orDst == i) {
 						target = null;
-						dest = -1;
+						orDst = -1;
 						updateCon = true;
 					}
 					setFlowBit(i, nDirIO);
@@ -195,8 +206,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			} else {
 				byte d = conDir(te, dir.getOpposite());
 				if (d == 1 && newDest >= 0) {
-					if (dest >= 0 && getFlowBit(dest) == 1) setFlowBit(dest, 0);
-					dest = -1;
+					if (orDst >= 0 && getFlowBit(orDst) == 1) setFlowBit(orDst, 0);
+					orDst = -1;
 					target = null;
 					newDest = -1;
 				} else if (d == 3) d = 0;
@@ -205,6 +216,24 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			}
 		}
 		setFlowBit(6, nHasIO);
+		dest = orDst;
+		if (dest >= 0) {
+			if (redstone > 0) {
+				possDests &= ~(1 << orDst);
+				int n = Integer.bitCount(possDests);
+				if (n > 0) {
+					n = (redstone - 1) % n;
+					for (int i = 0; i < 6; i++, possDests >>= 1)
+						if ((possDests & 1) != 0 && --n < 0) {
+							setFlowBit(orDst, 0);
+							setFlowBit(dest = (byte)i, 1);
+							target = null;
+							break;
+						}
+				}
+			}
+			if (target == null) target = pipeClass().cast(world.getTileEntity(pos.offset(EnumFacing.VALUES[dest])));
+		}
 		flow &= 0xbfff;
 		if (flow != lFlow) {
 			this.markUpdate();
@@ -263,8 +292,8 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		ICapabilityProvider te = getTileOnSide(EnumFacing.VALUES[s]);
 		if (pipeClass().isInstance(te)) {
 			T pipe = pipeClass().cast(te);
-			if (unlock || pipe.type == 1 || pipe.type == 2) pipe.setFlowBit(s^1, 0);
-			else {
+			if (unlock) pipe.setFlowBit(s^1, 0);
+			else if (pipe.type != 1 && pipe.type != 2) {
 				pipe.setFlowBit(s^1, 3);
 				pipe.flow |= 0x4000;
 			}
@@ -295,7 +324,10 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setByte("type", type);
+		nbt.setByte("out", orDst);
+		nbt.setByte("outA", dest);
 		nbt.setShort("flow", flow);
+		nbt.setInteger("rs", redstone);
 		cover.writeNBT(nbt, "cover", false);
 		return super.writeToNBT(nbt);
 	}
@@ -304,7 +336,10 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		type = nbt.getByte("type");
+		orDst = nbt.getByte("out");
+		dest = nbt.hasKey("outA", NBT.TAG_BYTE) ? nbt.getByte("outA") : -1;
 		flow = nbt.getShort("flow");
+		redstone = nbt.getInteger("rs");
 		cover.readNBT(nbt, "cover", null);
 		updateCon = true;
 	}
