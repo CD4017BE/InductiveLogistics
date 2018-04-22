@@ -39,7 +39,6 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 
 	public static boolean SAVE_PERFORMANCE;
 
-	protected final I inventory = createInv();
 	public O content, last;
 	protected T target;
 	protected F filter;
@@ -64,42 +63,41 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		if (world.isRemote) return;
 		if (world.getTotalWorldTime() % resetTimer() == time) {
 			if (updateCon) updateConnections();
-			if ((flow & 0x3000) == 0x3000) {
-				switch(type) {
-				case 1:
-					if ((flow & 0x8000) != 0) break;
-					if (content != null && (filter == null || filter.active(world.isBlockPowered(pos)))) {
-						I acc;
-						for (TileAccess inv : invs)
-							if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
-							else if (transferOut(acc)) break;
+			switch(type) {
+			case 1:
+				if ((flow & 0x8000) != 0) break;
+				if (content != null && (filter == null || filter.active(world.isBlockPowered(pos)))) {
+					I acc;
+					for (TileAccess inv : invs)
+						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
+						else if (transferOut(acc)) break;
+				}
+			case 3:
+				if ((flow & 0x3000) == 0x3000 && content != null && target != null && target.content == null && (filter == null || filter.transfer(content))) {
+					if (target.tileEntityInvalid) target = null;
+					else {
+						target.content = content;
+						content = null;
+						markDirty();
+						if (onChunkBorder) target.markDirty();
 					}
-					if (content != null && target != null && target.content == null && (filter == null || filter.transfer(content))) {
-						if (target.tileEntityInvalid) target = null;
-						else {
-							target.content = content;
-							content = null;
-							markDirty();
-							if (onChunkBorder) target.markDirty();
-						}
-					}
-					break;
-				case 2:
-					if ((flow & 0x8000) == 0 && (filter == null || filter.active(world.isBlockPowered(pos)))) {
-						I acc;
-						for (TileAccess inv : invs)
-							if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
-							else if (transferIn(acc)) break;
-					}
-				default:
-					if (content != null && target != null && target.content == null) {
-						if (target.tileEntityInvalid) target = null;
-						else {
-							target.content = content;
-							content = null;
-							markDirty();
-							if (onChunkBorder) target.markDirty();
-						}
+				}
+			break;
+			case 2:
+				if ((flow & 0x8000) == 0 && (filter == null || filter.active(world.isBlockPowered(pos)))) {
+					I acc;
+					for (TileAccess inv : invs)
+						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;
+						else if (transferIn(acc)) break;
+				}
+			default:
+				if ((flow & 0x3000) == 0x3000 && content != null && target != null && target.content == null) {
+					if (target.tileEntityInvalid) target = null;
+					else {
+						target.content = content;
+						content = null;
+						markDirty();
+						if (onChunkBorder) target.markDirty();
 					}
 				}
 			}
@@ -121,7 +119,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected void updateConnections() {
 		updateCon = false;
 		if (invs != null) invs.clear();
-		else if (type != 0) invs = new ArrayList<TileAccess>(5);
+		else if (type > 0 && type < 3) invs = new ArrayList<TileAccess>(5);
 		if (target != null && target.invalid()) {
 			target = null;
 			dest = -1;
@@ -146,7 +144,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		ArrayList<T> updateList = new ArrayList<T>();
 		/** -1: fine, 0: best match, 1: any match, 2: no match */
 		int newDest = target == null || target.getFlowBit(dest^1) != 2 || (target.getFlowBit(6) & 1) == 0 ? 2 : -1;
-		int lHasIO = getFlowBit(6), nHasIO = 0, lDirIO, nDirIO;
+		int lHasIO = getFlowBit(6), nHasIO = type > 2 ? type - 2 : 0, lDirIO, nDirIO;
 		short lFlow = flow;
 		for (int i = 0; i < 6; i++) {
 			lDirIO = getFlowBit(i);
@@ -161,10 +159,9 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 					updateList.add(pipe);
 					continue;
 				}
-				int pHasIO = pipe.getFlowBit(6);
 				int pDirIO = pipe.getFlowBit(i ^ 1);
-				if (pDirIO == 3) setFlowBit(i, 3);
-				else {
+				if (pDirIO != 3) {
+					int pHasIO = pipe.getFlowBit(6);
 					nDirIO = (~lHasIO | lDirIO) & ~pDirIO & pHasIO;
 					if (newDest <= 0 || !(newDest > 1 || pDirIO == 2 || (pHasIO & 2) == 0)) nDirIO &= 2;
 					else nDirIO &= 3;
@@ -186,8 +183,12 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 					setFlowBit(i, nDirIO);
 					nHasIO |= nDirIO;
 					updateList.add(pipe);
-				}
-			} else if (type != 0 && te.hasCapability(capability(), dir.getOpposite())) {
+				} else if (type > 0 && type < 3) {
+					setFlowBit(i, type);
+					nHasIO |= type;
+					invs.add(new TileAccess(te, dir.getOpposite()));
+				} else setFlowBit(i, 3);
+			} else if (type > 0 && type < 3 && te.hasCapability(capability(), dir.getOpposite())) {
 				setFlowBit(i, type);
 				nHasIO |= type;
 				invs.add(new TileAccess(te, dir.getOpposite()));
@@ -262,8 +263,11 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		ICapabilityProvider te = getTileOnSide(EnumFacing.VALUES[s]);
 		if (pipeClass().isInstance(te)) {
 			T pipe = pipeClass().cast(te);
-			pipe.setFlowBit(s^1, lock);
-			if (lock != 0) pipe.flow |= 0x4000;
+			if (unlock || pipe.type == 1 || pipe.type == 2) pipe.setFlowBit(s^1, 0);
+			else {
+				pipe.setFlowBit(s^1, 3);
+				pipe.flow |= 0x4000;
+			}
 			pipe.updateCon = true;
 			pipe.markUpdate();
 			if (onChunkBorder) pipe.markDirty();
@@ -326,6 +330,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		return new SPacketUpdateTileEntity(getPos(), -1, nbt);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <M> M getModuleState(int m) {
 		if (m == 6) return cover.module();
@@ -333,11 +338,12 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		if (b == 3) return cast(-1);
 		EnumFacing f = EnumFacing.VALUES[m];
 		TileEntity p = Utils.neighborTile(this, f);
+		boolean isPipe = pipeClass().isInstance(p) && ((T)p).getFlowBit(m^1) != 3;
 		if (b == 0) {
-			if (!pipeClass().isInstance(p)) b = -1;
+			if (!isPipe) b = -1;
 		} else if ((flow & 0x8000) != 0) {
-			if (b == type && !(b == 2 && pipeClass().isInstance(p))) b += 4;
-		} else if (filter != null && b == type && !(pipeClass().isInstance(p) && (b == 2 || !filter.blocking()))) b += 2;
+			if (b == type && !(b == 2 && isPipe)) b += 4;
+		} else if (filter != null && b == type && !(isPipe && (b == 2 || !filter.blocking()))) b += 2;
 		return cast(b);
 	}
 
@@ -371,7 +377,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	@SuppressWarnings("unchecked")
 	@Override
 	public <C> C getCapability(Capability<C> cap, EnumFacing facing) {
-		return cap == capability() ? (C) inventory : null;
+		return cap == capability() ? (C) getInv(type != 0 && facing != null && getFlowBit(facing.ordinal()) != 3) : null;
 	}
 
 	protected abstract boolean transferOut(I acc);
@@ -380,7 +386,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected abstract void getUpdatePacket(NBTTagCompound nbt);
 	protected abstract byte conDir(TileEntity te, EnumFacing side);
 	protected abstract int resetTimer();
-	protected abstract I createInv();
+	protected abstract I getInv(boolean filtered);
 	protected abstract Class<T> pipeClass();
 	protected abstract Capability<I> capability();
 

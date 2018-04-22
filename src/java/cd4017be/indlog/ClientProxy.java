@@ -51,8 +51,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderers() {
 		super.registerRenderers();
-		BlockItemRegistry.registerRenderBS(ITEM_PIPE, 0, 2);
-		BlockItemRegistry.registerRenderBS(FLUID_PIPE, 0, 2);
+		BlockItemRegistry.registerRenderBS(ITEM_PIPE, 0, 4);
+		BlockItemRegistry.registerRenderBS(FLUID_PIPE, 0, 4);
 		BlockItemRegistry.registerRender(WARP_PIPE);
 		BlockItemRegistry.registerRenderBS(TANK, 0, 15);
 		BlockItemRegistry.registerRenderBS(BUFFER, 0, 15);

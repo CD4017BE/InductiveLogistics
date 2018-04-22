@@ -82,8 +82,8 @@ public class Objects {
 	public static void registerBlocks(RegistryEvent.Register<Block> ev) {
 		TooltipUtil.CURRENT_DOMAIN = Main.ID;
 		ev.getRegistry().registerAll(
-			BlockCoveredPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 3).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
-			BlockCoveredPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 3).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
+			BlockCoveredPipe.create("item_pipe", Material.WOOD, SoundType.WOOD, ItemPipe.class, 5).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
+			BlockCoveredPipe.create("fluid_pipe", Material.GLASS, SoundType.GLASS, FluidPipe.class, 5).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(0.5F),
 			BlockCoveredPipe.create("warp_pipe", Material.IRON, SoundType.METAL, WarpPipe.class, 1).setSize(0.25).setCreativeTab(tabIndLog).setLightOpacity(0).setHardness(1.0F).setResistance(20F),
 			VariantBlock.create("tank", Material.GLASS, SoundType.GLASS, 2, 16, Tank.class).setCreativeTab(tabIndLog).setLightOpacity(0),
 			VariantBlock.create("buffer", Material.WOOD, SoundType.WOOD, 0, 16, Buffer.class).setCreativeTab(tabIndLog),
