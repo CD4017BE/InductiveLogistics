@@ -343,7 +343,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			if (!isPipe) b = -1;
 		} else if ((flow & 0x8000) != 0) {
 			if (b == type && !(b == 2 && isPipe)) b += 4;
-		} else if (filter != null && b == type && !(isPipe && (b == 2 || !filter.blocking()))) b += 2;
+		} else if (filter != null && (b == type || b == type - 2) && !(isPipe && (b == 2 || !filter.blocking()))) b += 2;
 		return cast(b);
 	}
 
