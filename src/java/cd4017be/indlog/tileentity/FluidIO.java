@@ -39,7 +39,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 	public AdvancedTank tank = new AdvancedTank(this, CAP, this instanceof FluidIntake);
 	/**bits[0-7]: x, bits[8-15]: y, bits[16-23]: z, bits[24-26]: ld0, bits[27-29]: ld1, bit[30]: can back */
 	protected int[] blocks = new int[MAX_SIZE * SEARCH_MULT];
-	protected int dist = -1;
+	protected int dist = -1, lastStepDown = 0;
 	protected boolean goUp;
 	public boolean blockNotify;
 	public int range, debugI;
@@ -56,9 +56,11 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		boolean canBack = (target & 0x40000000) != 0;
 		EnumFacing dir = findNextDir(dx, dy, dz, ld0, ld1, canBack);
 		if (dir != null) {
+			dist++;
 			int s = dir.ordinal();
 			if (s < 2) {
 				target = 0;
+				lastStepDown = dist;
 			} else if (s != ld0) {
 				target = s << 24 | ld0 << 27;
 				if (dist == 0) target |= 0x40000000;
@@ -70,7 +72,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 						target |= 0x40000000;
 				}
 			}
-			blocks[++dist] = (dx + dir.getFrontOffsetX() & 0xff) | (dy + dir.getFrontOffsetY() & 0xff) << 8 | (dz + dir.getFrontOffsetZ() & 0xff) << 16 | target;
+			blocks[dist] = (dx + dir.getFrontOffsetX() & 0xff) | (dy + dir.getFrontOffsetY() & 0xff) << 8 | (dz + dir.getFrontOffsetZ() & 0xff) << 16 | target;
 		} else moveBack(dx, dy, dz);
 	}
 
@@ -98,12 +100,19 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		int l = range;
 		if (x > l || -x > l || y > l || -y > l || z > l || -z > l || !canUse(pos.add(x, y, z))) return false;
 		int p = (x & 0xff) | (y & 0xff) << 8 | (z & 0xff) << 16;
-		for (int i = dist - 1; i >= 0; i -= 2) {
-			int b = blocks[i] ^ p;
-			if ((b & 0xffffff) == 0) return false;
-			if ((b & 0x00ff00) != 0) return true;
+		for (int i = dist - 1; i >= lastStepDown; i -= 2) {
+			if ((blocks[i] & 0xffffff) == p) return false;
 		}
 		return true;
+	}
+
+	protected void findPrevStepDown() {
+		for (int i = dist; i > 0; i--)
+			if ((blocks[i] & 0x07000000) < 2) {
+				lastStepDown = i;
+				return;
+			}
+		lastStepDown = 0;
 	}
 
 	protected abstract boolean canUse(BlockPos pos);
@@ -163,6 +172,7 @@ public abstract class FluidIO extends BaseTileEntity implements ITickable, IGuiD
 		if (!PermissionUtil.handler.canEdit(world, pos.add(-l, -l, -l), pos.add(l, l, l), lastUser))
 			range = 0;
 		dist = -1;
+		lastStepDown = 0;
 	}
 
 	@Override

@@ -17,6 +17,8 @@ public class ItemItemPipe extends BaseItemBlock {
 		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 0), "itemPipeT");
 		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 1), "itemPipeI");
 		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 2), "itemPipeE");
+		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 3), "itemPipeD");
+		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 4), "itemPipeS");
 	}
 
 	@Override

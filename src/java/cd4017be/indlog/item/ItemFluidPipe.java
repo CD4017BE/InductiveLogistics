@@ -16,8 +16,10 @@ public class ItemFluidPipe extends BaseItemBlock {
 		super(id);
 		this.setHasSubtypes(true);
 		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 0), "fluidPipeT");
-		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 2), "fluidPipeE");
 		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 1), "fluidPipeI");
+		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 2), "fluidPipeE");
+		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 3), "fluidPipeD");
+		BlockItemRegistry.registerItemStack(new ItemStack(this, 1, 4), "fluidPipeS");
 	}
 
 	@Override

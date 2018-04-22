@@ -1,5 +1,6 @@
 package cd4017be.indlog.tileentity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,16 +11,16 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 
 import static cd4017be.lib.property.PropertyByte.cast;
 
 import java.util.List;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.BasicWarpPipe;
+import cd4017be.indlog.multiblock.WarpPipeNode;
 import cd4017be.indlog.multiblock.ConComp;
-import cd4017be.indlog.multiblock.WarpPipePhysics;
+import cd4017be.indlog.multiblock.WarpPipeNetwork;
 import cd4017be.indlog.util.IFluidPipeCon;
 import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
@@ -27,22 +28,25 @@ import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.templates.Cover;
-import cd4017be.lib.tileentity.MultiblockTile;
+import cd4017be.lib.tileentity.PassiveMultiblockTile;
 import cd4017be.lib.util.Utils;
 
-public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, ITickable, IModularTile, IItemPipeCon, IFluidPipeCon {
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
+public class WarpPipe extends PassiveMultiblockTile<WarpPipeNode, WarpPipeNetwork> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, IModularTile, IItemPipeCon, IFluidPipeCon {
 
 	private Cover cover = new Cover();
 
 	public WarpPipe() {
-		comp = new BasicWarpPipe(this);
+		comp = new WarpPipeNode(this);
 	}
 
 	@Override
-	public void update() {
-		if (world.isRemote) return;
-		super.update();
-		comp.redstone = world.isBlockPowered(pos);
+	public void process() {
+		super.process();
 	}
 
 	@Override
@@ -53,9 +57,8 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		byte s = (byte)dir.getIndex();
 		byte t = comp.con[s];
 		if (t >= 2) {
-			long uid = WarpPipePhysics.SidedPosUID(comp.getUID(), s);
-			ConComp con = comp.network.connectors.get(uid);
-			if (con != null && con.onClicked(player, hand, item, uid)) {
+			ConComp con = comp.cons[s];
+			if (con != null && con.onClicked(player, hand, item)) {
 				markUpdate();
 				markDirty();
 				return true;
@@ -100,7 +103,8 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		comp = BasicWarpPipe.readFromNBT(this, nbt);
+		if (comp.network != null) comp.network.remove(comp);
+		comp = WarpPipeNode.readFromNBT(this, nbt);
 		cover.readNBT(nbt, "cover", null);
 	}
 
@@ -132,7 +136,7 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 		if (m == 6) return cover.module();
 		byte t = comp.con[m];
 		if (t == 1) return cast(-1);
-		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 4 + (comp.isBlocked >> m & 1) * 8);
+		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 10 + (comp.isBlocked >> m & 1) * 20);
 		TileEntity te = Utils.neighborTile(this, EnumFacing.VALUES[m]);
 		return cast(te != null && te.hasCapability(Objects.WARP_PIPE_CAP, EnumFacing.VALUES[m^1]) ? 0 : -1);
 	}
@@ -167,11 +171,17 @@ public class WarpPipe extends MultiblockTile<BasicWarpPipe, WarpPipePhysics> imp
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
 		List<ItemStack> list = makeDefaultDrops(null);
 		for (int i = 0; i < 6; i++) {
-			ConComp con = comp.network.getConnector(comp, (byte)i);
+			ConComp con = comp.cons[i];
 			if (con != null) con.dropContent(list);
 		}
 		if (cover.stack != null) list.add(cover.stack);
 		return list;
+	}
+
+	@Override
+	public void neighborBlockChange(Block b, BlockPos src) {
+		comp.redstone = world.isBlockPowered(pos);
+		super.neighborBlockChange(b, src);
 	}
 
 }
