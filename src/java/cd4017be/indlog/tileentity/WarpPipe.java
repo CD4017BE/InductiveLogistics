@@ -136,7 +136,7 @@ public class WarpPipe extends PassiveMultiblockTile<BasicWarpPipe, WarpPipePhysi
 		if (m == 6) return cover.module();
 		byte t = comp.con[m];
 		if (t == 1) return cast(-1);
-		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 4 + (comp.isBlocked >> m & 1) * 8);
+		else if (t > 1) return cast(t - 1 + (comp.hasFilters >> m & 1) * 10 + (comp.isBlocked >> m & 1) * 20);
 		TileEntity te = Utils.neighborTile(this, EnumFacing.VALUES[m]);
 		return cast(te != null && te.hasCapability(Objects.WARP_PIPE_CAP, EnumFacing.VALUES[m^1]) ? 0 : -1);
 	}

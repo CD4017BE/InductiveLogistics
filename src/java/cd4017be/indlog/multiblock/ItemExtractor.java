@@ -44,7 +44,7 @@ public class ItemExtractor extends ItemComp implements ITickable {
 
 	@Override
 	protected ItemStack moduleItem() {
-		return new ItemStack(Objects.ITEM_PIPE, 1, 2);
+		return new ItemStack(Objects.item_pipe, 1, 2);
 	}
 
 }

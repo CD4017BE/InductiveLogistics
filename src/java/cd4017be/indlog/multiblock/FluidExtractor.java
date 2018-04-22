@@ -35,7 +35,7 @@ public class FluidExtractor extends FluidComp implements ITickable {
 
 	@Override
 	protected ItemStack moduleItem() {
-		return new ItemStack(Objects.FLUID_PIPE, 1, 2);
+		return new ItemStack(Objects.fluid_pipe, 1, 2);
 	}
 
 }

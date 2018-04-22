@@ -17,7 +17,7 @@ public class ItemDestination extends ItemComp implements IItemDest {
 
 	@Override
 	protected ItemStack moduleItem() {
-		return new ItemStack(Objects.ITEM_PIPE, 1, 1);
+		return new ItemStack(Objects.item_pipe, 1, 3);
 	}
 
 }

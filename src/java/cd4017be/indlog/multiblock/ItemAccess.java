@@ -1,5 +1,6 @@
 package cd4017be.indlog.multiblock;
 
+import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IItemDest;
 import net.minecraft.item.ItemStack;
 
@@ -16,8 +17,7 @@ public class ItemAccess extends ItemSource implements IItemDest {
 
 	@Override
 	protected ItemStack moduleItem() {
-		// TODO Auto-generated method stub
-		return super.moduleItem();
+		return new ItemStack(Objects.item_pipe, 1, 0);
 	}
 
 }

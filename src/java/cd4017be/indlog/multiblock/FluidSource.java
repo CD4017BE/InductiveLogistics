@@ -2,6 +2,7 @@ package cd4017be.indlog.multiblock;
 
 import java.util.function.ToIntFunction;
 
+import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IFluidSrc;
 import cd4017be.indlog.util.PipeFilterFluid;
 import net.minecraft.item.ItemStack;
@@ -60,8 +61,7 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 
 	@Override
 	protected ItemStack moduleItem() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ItemStack(Objects.fluid_pipe, 1, 4);
 	}
 
 }

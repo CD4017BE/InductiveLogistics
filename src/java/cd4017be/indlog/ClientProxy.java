@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
 		SpecialModelLoader.setMod(Main.ID);
 		SpecialModelLoader.registerBlockModel(ITEM_PIPE, new MultipartModel(ITEM_PIPE).setPipeVariants(7));
 		SpecialModelLoader.registerBlockModel(FLUID_PIPE, new MultipartModel(FLUID_PIPE).setPipeVariants(7));
-		SpecialModelLoader.registerBlockModel(WARP_PIPE, new MultipartModel(WARP_PIPE).setPipeVariants(13));
+		SpecialModelLoader.registerBlockModel(WARP_PIPE, new MultipartModel(WARP_PIPE).setPipeVariants(31));
 		
 		Objects.ITEM_PIPE.setBlockLayer(BlockRenderLayer.TRANSLUCENT);
 		Objects.FLUID_PIPE.setBlockLayer(BlockRenderLayer.TRANSLUCENT);

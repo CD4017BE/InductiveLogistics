@@ -17,7 +17,7 @@ public class FluidDestination extends FluidComp implements IFluidDest {
 
 	@Override
 	protected ItemStack moduleItem() {
-		return new ItemStack(Objects.FLUID_PIPE, 1, 1);
+		return new ItemStack(Objects.fluid_pipe, 1, 3);
 	}
 
 }

@@ -2,6 +2,7 @@ package cd4017be.indlog.multiblock;
 
 import java.util.function.ToIntFunction;
 
+import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IItemSrc;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.util.ItemFluidUtil;
@@ -56,8 +57,7 @@ public class ItemSource extends ItemComp implements IItemSrc {
 
 	@Override
 	protected ItemStack moduleItem() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ItemStack(Objects.item_pipe, 1, 4);
 	}
 
 }

@@ -1,5 +1,6 @@
 package cd4017be.indlog.multiblock;
 
+import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.PipeFilterFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -62,8 +63,7 @@ public class FluidInjector extends FluidComp implements ITickable {
 
 	@Override
 	protected ItemStack moduleItem() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ItemStack(Objects.fluid_pipe, 1, 1);
 	}
 
 }

@@ -1,5 +1,6 @@
 package cd4017be.indlog.multiblock;
 
+import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipePhysics.IFluidDest;
 import net.minecraft.item.ItemStack;
 
@@ -16,8 +17,7 @@ public class FluidAccess extends FluidSource implements IFluidDest {
 
 	@Override
 	protected ItemStack moduleItem() {
-		// TODO Auto-generated method stub
-		return super.moduleItem();
+		return new ItemStack(Objects.fluid_pipe, 1, 0);
 	}
 
 }
