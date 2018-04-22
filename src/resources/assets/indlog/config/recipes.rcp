@@ -1,12 +1,11 @@
-VERSION = 32;
+VERSION = 33;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
 !pipe transfer interval in ticks (higher value = slower speed & possibly better performance)
 fluid_pipe_tick = 4;
 item_pipe_tick = 4;
-fluid_warp_tick = 4;
-item_warp_tick = 4;
+warp_pipe_tick = 5;
 portable_craft_tick = 20;
 remote_inv_tick = 20;
 auto_craft_tick = 10;
