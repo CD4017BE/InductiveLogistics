@@ -3,9 +3,9 @@
   "modid": "indlog",
   "name": "Inductive Logistics",
   "description": "Advanced transport, sorting & storage for items & fluids",
-  "version": "1.1.3",
-  "acceptableRemoteVersions": "[1.1.0,1.2.0)",
-  "acceptableSaveVersions": "[0.2.0,1.2.0)",
+  "version": "1.2.0",
+  "acceptableRemoteVersions": "[1.2.0,1.3.0)",
+  "acceptableSaveVersions": "[0.2.0,1.3.0)",
   "acceptedMinecraftVersions": "[1.12,1.13)",
   "url": "",
   "updateUrl": "",
@@ -14,7 +14,7 @@
   "logoFile": "",
   "screenshots": [],
   "useDependencyInformation": true,
-  "requiredMods": ["cd4017be_lib@[6.2.0, 6.3.0)"],
-  "dependencies": ["cd4017be_lib@[6.2.0, 6.3.0)"]
+  "requiredMods": ["cd4017be_lib@[6.2.3, 6.3.0)"],
+  "dependencies": ["cd4017be_lib@[6.2.3, 6.3.0)"]
 }
 ]

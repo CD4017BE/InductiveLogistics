@@ -1,3 +1,17 @@
+v1.2.0
+Changes:
+- some optimization in Fluid Intake/Outlet algorithm
+- added Item/Fluid Source & Destination Pipes
+- Item/Fluid extraction/injection Pipes now threat not connected neighboring pipes like normal inventories/tanks
+- now flow direction in pipe path branches can be controlled by redstone signal
+- fixed Advanced Universal Pipes loosing Connectors and Filters on unload
+- turned Advanced Universal Pipes into non ITickable TileEntities for performance improvement
+- added retriever feature to Advanced Universal Pipes
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.2.3
+
 v1.1.3
 Changes:
 - some compatibility fixed for serious changes in Lib
