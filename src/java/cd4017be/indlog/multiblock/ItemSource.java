@@ -48,7 +48,13 @@ public class ItemSource extends ItemComp implements IItemSrc {
 		if (acc == null) return null;
 		for (int i = 0; i < acc.getSlots(); i++) {
 			ItemStack stack = acc.getStackInSlot(i);
-			if (stack.getCount() <= 0 || !PipeFilterItem.isNullEq(filter) && filter.getExtract(stack, acc) == ItemStack.EMPTY) continue;
+			if (stack.getCount() <= 0) continue;
+			if (!PipeFilterItem.isNullEq(filter)) {
+				filter.mode ^= 1;
+				stack = filter.getExtract(stack, acc);
+				filter.mode ^= 1;
+				if (stack == ItemStack.EMPTY) continue;
+			}
 			int n = acceptor.applyAsInt(stack);
 			if (n > 0) return ItemHandlerHelper.copyStackWithSize(stack, n);
 		}

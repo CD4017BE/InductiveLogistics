@@ -35,9 +35,7 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 		if (acc == null) return 0;
 		fluid = new FluidStack(fluid, max);
 		if (!PipeFilterFluid.isNullEq(filter)) {
-			filter.mode ^= 1;
 			fluid = filter.getExtract(fluid, acc);
-			filter.mode ^= 1;
 			if (fluid == null) return 0;
 		}
 		fluid = acc.drain(fluid, true);
@@ -52,7 +50,10 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 		FluidStack stack;
 		for (IFluidTankProperties inf : acc.getTankProperties())
 			if((stack = inf.getContents()) != null && inf.canDrainFluidType(stack)) {
-				if (!PipeFilterFluid.isNullEq(filter) && filter.getExtract(stack, acc) == null) continue;
+				if (!PipeFilterFluid.isNullEq(filter)) {
+					stack = filter.getExtract(stack, acc);
+					if (stack == null) continue;
+				}
 				int n = acceptor.applyAsInt(stack);
 				if (n > 0) return new FluidStack(stack, n);
 			}
