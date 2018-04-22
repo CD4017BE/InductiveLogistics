@@ -53,6 +53,8 @@ public class FluidOutlet extends FluidIO {
 	@Override
 	protected void moveBack(int x, int y, int z) {
 		dist--;
+		if (dist < lastStepDown)
+			findPrevStepDown();
 		BlockPos pos = this.pos.add(x, y, z);
 		if (canUse(pos)) {
 			IBlockState state = world.getBlockState(pos);

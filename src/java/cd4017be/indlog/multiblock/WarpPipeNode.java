@@ -5,31 +5,38 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.capabilities.Capability;
 import cd4017be.api.IAbstractTile;
 import cd4017be.indlog.Objects;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
 import cd4017be.lib.templates.MultiblockComp;
-import cd4017be.lib.templates.SharedNetwork;
 
-public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics> {
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
+public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> {
 
 	public final byte[] con = new byte[6];
 	public byte hasFilters = 0, isBlocked = 0;
 	public boolean redstone = false;
+	public ConComp[] cons = new ConComp[6];
 
-	public BasicWarpPipe(IAbstractTile pipe) {
+	public WarpPipeNode(IAbstractTile pipe) {
 		super(pipe);
 	}
 
 	@Override
 	public void setUID(long uid) {
 		super.setUID(uid);
-		if (network == null) new WarpPipePhysics(this);
-		else {
-			ConComp comp;
-			for (int i = 0; i < 6; i++)
-				if (con[i] >= 2) {
-					comp = network.connectors.remove(SharedNetwork.SidedPosUID(0, i));
-					if (comp != null) network.connectors.put(SharedNetwork.SidedPosUID(uid, i), comp);
-				}
-		}
+		if (network == null) new WarpPipeNetwork(this);
+		if (!tile.isClient()) network.enable();
+	}
+
+	@Override
+	public void updateCons() {
+		super.updateCons();
+		for (ConComp con : cons)
+			if (con instanceof IObjLink)
+				((IObjLink)con).updateLink();
 	}
 
 	@Override
@@ -45,19 +52,20 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 			network.onDisconnect(this, side);
 		} else if (c && c0 == 1) {
 			con[side] = 0;
-			updateCon = true;
+			markDirty();
 		}
 	}
 
-	public static BasicWarpPipe readFromNBT(IAbstractTile tile, NBTTagCompound nbt) {
-		BasicWarpPipe pipe = new BasicWarpPipe(tile);
-		WarpPipePhysics physics = new WarpPipePhysics(pipe);
+	public static WarpPipeNode readFromNBT(IAbstractTile tile, NBTTagCompound nbt) {
+		WarpPipeNode pipe = new WarpPipeNode(tile);
 		NBTTagList list = nbt.getTagList("connectors", 10);
 		for (int i = 0; i < list.tagCount(); i++) {
 			ConComp con = ConComp.readFromNBT(pipe, list.getCompoundTagAt(i));
-			if (con != null) physics.addConnector(pipe, con);
+			if (con != null) pipe.cons[con.side] = con;
 		}
 		pipe.isBlocked = nbt.getByte("block");
+		pipe.redstone = nbt.getBoolean("rs");
+		new WarpPipeNetwork(pipe);
 		return pipe;
 	}
 
@@ -68,16 +76,16 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 		for (byte i = 0; i < con.length; i++)
 			if (con[i] > 0) {
 				tag = ConComp.writeToNBT(con[i], i);
-				comp = network.getConnector(this, i);
-				if (comp != null) comp.save(tag);
+				if ((comp = cons[i]) != null) comp.save(tag);
 				list.appendTag(tag);
 			}
 		if (!list.hasNoTags()) nbt.setTag("connectors", list);
 		nbt.setByte("block", isBlocked);
+		nbt.setBoolean("rs", redstone);
 	}
 
 	@Override
-	public Capability<BasicWarpPipe> getCap() {
+	public Capability<WarpPipeNode> getCap() {
 		return Objects.WARP_PIPE_CAP;
 	}
 

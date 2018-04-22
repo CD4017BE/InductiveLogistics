@@ -33,7 +33,7 @@ public class FluidIntake extends FluidIO {
 				if (fluid != null && (tank.fluid == null || fluid.isFluidEqual(tank.fluid))) {
 					fluidId = fluid.getFluid();
 					goUp = fluidId.getDensity() > 0;
-					dist = 0;
+					lastStepDown = dist = 0;
 					blocks[dist] = (dir.getFrontOffsetX() & 0xff) | (dir.getFrontOffsetY() & 0xff) << 8 | (dir.getFrontOffsetZ() & 0xff) << 16 | dir.ordinal() << 24;
 				} else return;
 			}
@@ -51,6 +51,8 @@ public class FluidIntake extends FluidIO {
 	@Override
 	protected void moveBack(int x, int y, int z) {
 		dist--;
+		if (dist < lastStepDown)
+			findPrevStepDown();
 		BlockPos pos = this.pos.add(x, y, z);
 		if (pos.getY() < 0 || pos.getY() >= 256 || !world.isBlockLoaded(pos)) return;
 		FluidStack fluid = Utils.getFluid(world, pos, blockNotify);

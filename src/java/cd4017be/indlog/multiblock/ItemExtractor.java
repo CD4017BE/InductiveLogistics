@@ -1,33 +1,29 @@
 package cd4017be.indlog.multiblock;
 
-import java.util.List;
-
 import cd4017be.indlog.Objects;
-import cd4017be.lib.util.ItemFluidUtil;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author CD4017BE
+ *
+ */
 public class ItemExtractor extends ItemComp implements ITickable {
 
-	public static byte TICKS;
-
-	private byte timer = 0;
 	private int slotIdx;
 
-	public ItemExtractor(BasicWarpPipe pipe, byte side) {
+	public ItemExtractor(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 		slotIdx = 0;
 	}
 
 	@Override
 	public void update() {
-		if ((++timer & 0xff) < TICKS || !isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return;
-		timer = 0;
+		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[this.side^1]);
 		if (acc == null) return;
 		int s, target = -1, m = acc.getSlots();
@@ -47,20 +43,8 @@ public class ItemExtractor extends ItemComp implements ITickable {
 	}
 
 	@Override
-	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item, long uid) {
-		if (super.onClicked(player, hand, item, uid)) return true;
-		if (player.isSneaking() && player.getHeldItemMainhand().isEmpty()) {
-			if (!player.isCreative()) ItemFluidUtil.dropStack(new ItemStack(Objects.ITEM_PIPE, 1, 2), player);
-			pipe.network.remConnector(pipe, side);
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void dropContent(List<ItemStack> list) {
-		list.add(new ItemStack(Objects.ITEM_PIPE, 1, 2));
-		super.dropContent(list);
+	protected ItemStack moduleItem() {
+		return new ItemStack(Objects.item_pipe, 1, 2);
 	}
 
 }

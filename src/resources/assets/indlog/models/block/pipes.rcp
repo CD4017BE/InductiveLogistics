@@ -1,21 +1,25 @@
 {
 	dependencies = ["pipe"];
 	textures = [
-		"indlog:block/fluid_tr",
-		"indlog:block/fluid_in",
-		"indlog:block/fluid_ex",
-		"indlog:block/fluid_filter",
-		"indlog:block/item_tr",
-		"indlog:block/item_in",
-		"indlog:block/item_ex",
-		"indlog:block/item_filter",
-		"indlog:block/warp",
-		"indlog:block/blocked_pipe",
-		"indlog:block/invcon_b",
-		"indlog:block/invcon_c",
-		"indlog:block/invcon_l"
+		"indlog:block/fluid_tr",	!0
+		"indlog:block/fluid_in",	!1
+		"indlog:block/fluid_ex",	!2
+		"indlog:block/fluid_filter",!3
+		"indlog:block/item_tr",		!4
+		"indlog:block/item_in",		!5
+		"indlog:block/item_ex",		!6
+		"indlog:block/item_filter",	!7
+		"indlog:block/warp",		!8
+		"indlog:block/blocked_pipe",!9
+		"indlog:block/invcon_b",	!10
+		"indlog:block/invcon_c",	!11
+		"indlog:block/invcon_l",	!12
+		"indlog:block/fluid_ds",	!13
+		"indlog:block/fluid_sc",	!14
+		"indlog:block/item_ds",		!15
+		"indlog:block/item_sc"		!16
 	];
-	sizes = [4,4,4,0,4,4,4,0,4,0,6,6,6]#;
+	sizes = [4,4,4,0,4,4,4,0,4,0,6,6,6,4,4,4,4]#;
 }
 
 core(t) {
@@ -33,7 +37,7 @@ conf(t) {
 		texIdx(t);
 		pipe.con(4);
 	pop();
-	if (t >= 4) {texIdx(7);} else {texIdx(3);}
+	if ((t >= 4 & t < 8) | t >= 15) {texIdx(7);} else {texIdx(3);}
 	pipe.filter(8,2);
 }
 

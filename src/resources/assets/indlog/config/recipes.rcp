@@ -1,12 +1,11 @@
-VERSION = 31;
+VERSION = 33;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
 !pipe transfer interval in ticks (higher value = slower speed & possibly better performance)
 fluid_pipe_tick = 4;
 item_pipe_tick = 4;
-fluid_warp_tick = 4;
-item_warp_tick = 4;
+warp_pipe_tick = 5;
 portable_craft_tick = 20;
 remote_inv_tick = 20;
 auto_craft_tick = 10;
@@ -42,9 +41,17 @@ INIT() {
 	add("shaped", it("fluidPipeT", 8), "000/1 1/000", "blockGlass", it("minecraft:iron_bars"));
 	add("shaped", it("fluidPipeI", 4), " 0 /010/ 0 ", it("fluidPipeT"), it("minecraft:piston"));
 	add("shaped", it("fluidPipeE", 4), " 0 /010/ 0 ", it("fluidPipeT"), it("minecraft:sticky_piston"));
+	add("shaped", it("fluidPipeD", 4), " 0 /010/ 0 ", it("fluidPipeT"), "dyeGreen");
+	add("shaped", it("fluidPipeS", 4), " 0 /010/ 0 ", it("fluidPipeT"), "dyeRed");
+	add("shapeless", it("fluidPipeT", 1), it("fluidPipeD"));
+	add("shapeless", it("fluidPipeT", 1), it("fluidPipeS"));
 	add("shaped", it("itemPipeT", 8), "000/1 1/000", "slabWood", it("minecraft:iron_bars"));
 	add("shaped", it("itemPipeI", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:piston"));
 	add("shaped", it("itemPipeE", 4), " 0 /010/ 0 ", it("itemPipeT"), it("minecraft:sticky_piston"));
+	add("shaped", it("itemPipeD", 4), " 0 /010/ 0 ", it("itemPipeT"), "dyeGreen");
+	add("shaped", it("itemPipeS", 4), " 0 /010/ 0 ", it("itemPipeT"), "dyeRed");
+	add("shapeless", it("itemPipeT", 1), it("itemPipeD"));
+	add("shapeless", it("itemPipeT", 1), it("itemPipeS"));
 	add("shaped", it("tile.warp_pipe", 16), "000/232/111", it("fluidPipeT"), it("itemPipeT"), "enderpearl", "gemDiamond");
 	add("shaped", it("tile.auto_craft", 1), "010/131/020", "ingotIron", "dustRedstone", it("minecraft:piston"), it("minecraft:crafting_table"));
 	add("shaped", it("tile.inv_connector", 12), "000/121/000", "gemQuartz", "blockGlass", it("minecraft:ender_eye"));
