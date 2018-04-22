@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
 import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.util.ItemFluidUtil;
 
@@ -28,7 +28,7 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 	public ICapabilityProvider link;
 	public PipeFilterFluid filter;
 
-	public FluidComp(BasicWarpPipe pipe, byte side) {
+	public FluidComp(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 

@@ -17,7 +17,7 @@ public class ItemInjector extends ItemComp implements ITickable {
 
 	private int slotIdx;
 
-	public ItemInjector(BasicWarpPipe pipe, byte side) {
+	public ItemInjector(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 		slotIdx = 0;
 	}

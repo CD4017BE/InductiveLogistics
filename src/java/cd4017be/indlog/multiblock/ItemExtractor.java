@@ -16,7 +16,7 @@ public class ItemExtractor extends ItemComp implements ITickable {
 
 	private int slotIdx;
 
-	public ItemExtractor(BasicWarpPipe pipe, byte side) {
+	public ItemExtractor(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 		slotIdx = 0;
 	}

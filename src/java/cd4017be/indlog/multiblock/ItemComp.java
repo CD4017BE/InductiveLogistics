@@ -14,7 +14,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.util.ItemFluidUtil;
 
@@ -28,7 +28,7 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 	public ICapabilityProvider link;
 	public PipeFilterItem filter;
 
-	public ItemComp(BasicWarpPipe pipe, byte side) {
+	public ItemComp(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 

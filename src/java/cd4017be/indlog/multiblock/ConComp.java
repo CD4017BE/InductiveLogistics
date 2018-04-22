@@ -18,9 +18,9 @@ import net.minecraft.util.EnumHand;
 public abstract class ConComp {
 
 	public final byte side;
-	public final BasicWarpPipe pipe;
+	public final WarpPipeNode pipe;
 
-	public ConComp(BasicWarpPipe pipe, byte side) {
+	public ConComp(WarpPipeNode pipe, byte side) {
 		this.side = side;
 		this.pipe = pipe;
 	}
@@ -34,7 +34,7 @@ public abstract class ConComp {
 	 * @param id 0:N, 1:B, 2:Di, 3:Ei, 4:Df, 5:Ef, 6:Ii, 7:Si, 8:Ai, 9:If, 10:Sf, 11:Af
 	 * @return
 	 */
-	public static ConComp readFromNBT(BasicWarpPipe pipe, NBTTagCompound nbt) {
+	public static ConComp readFromNBT(WarpPipeNode pipe, NBTTagCompound nbt) {
 		byte side = nbt.getByte("s");
 		byte type = nbt.getByte("t");
 		ConComp con;
@@ -74,7 +74,7 @@ public abstract class ConComp {
 		return false;
 	}
 
-	public static boolean createFromItem(ItemStack item, BasicWarpPipe pipe, byte side) {
+	public static boolean createFromItem(ItemStack item, WarpPipeNode pipe, byte side) {
 		if (item.getCount() == 0 || pipe.con[side] >= 2) return false;
 		Item type = item.getItem();
 		ConComp con;

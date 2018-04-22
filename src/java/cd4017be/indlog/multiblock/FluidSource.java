@@ -3,7 +3,7 @@ package cd4017be.indlog.multiblock;
 import java.util.function.ToIntFunction;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IFluidSrc;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IFluidSrc;
 import cd4017be.indlog.util.PipeFilterFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
  */
 public class FluidSource extends FluidComp implements IFluidSrc {
 
-	public FluidSource(BasicWarpPipe pipe, byte side) {
+	public FluidSource(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 

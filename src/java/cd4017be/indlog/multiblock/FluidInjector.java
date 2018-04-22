@@ -18,7 +18,7 @@ public class FluidInjector extends FluidComp implements ITickable {
 
 	private int slotIdx;
 
-	public FluidInjector(BasicWarpPipe pipe, byte side) {
+	public FluidInjector(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 		slotIdx = 0;
 	}

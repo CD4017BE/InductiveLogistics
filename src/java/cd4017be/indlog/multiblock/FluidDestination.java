@@ -2,7 +2,7 @@ package cd4017be.indlog.multiblock;
 
 import net.minecraft.item.ItemStack;
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IFluidDest;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IFluidDest;
 
 /**
  * 
@@ -11,7 +11,7 @@ import cd4017be.indlog.multiblock.WarpPipePhysics.IFluidDest;
  */
 public class FluidDestination extends FluidComp implements IFluidDest {
 
-	public FluidDestination(BasicWarpPipe pipe, byte side) {
+	public FluidDestination(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 

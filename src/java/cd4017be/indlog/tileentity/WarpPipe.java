@@ -18,9 +18,9 @@ import static cd4017be.lib.property.PropertyByte.cast;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.BasicWarpPipe;
+import cd4017be.indlog.multiblock.WarpPipeNode;
 import cd4017be.indlog.multiblock.ConComp;
-import cd4017be.indlog.multiblock.WarpPipePhysics;
+import cd4017be.indlog.multiblock.WarpPipeNetwork;
 import cd4017be.indlog.util.IFluidPipeCon;
 import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
@@ -36,12 +36,12 @@ import cd4017be.lib.util.Utils;
  * @author CD4017BE
  *
  */
-public class WarpPipe extends PassiveMultiblockTile<BasicWarpPipe, WarpPipePhysics> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, IModularTile, IItemPipeCon, IFluidPipeCon {
+public class WarpPipe extends PassiveMultiblockTile<WarpPipeNode, WarpPipeNetwork> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, IModularTile, IItemPipeCon, IFluidPipeCon {
 
 	private Cover cover = new Cover();
 
 	public WarpPipe() {
-		comp = new BasicWarpPipe(this);
+		comp = new WarpPipeNode(this);
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class WarpPipe extends PassiveMultiblockTile<BasicWarpPipe, WarpPipePhysi
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		if (comp.network != null) comp.network.remove(comp);
-		comp = BasicWarpPipe.readFromNBT(this, nbt);
+		comp = WarpPipeNode.readFromNBT(this, nbt);
 		cover.readNBT(nbt, "cover", null);
 	}
 

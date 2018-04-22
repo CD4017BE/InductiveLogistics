@@ -24,7 +24,7 @@ import cd4017be.lib.util.Utils;
  * @author CD4017BE
  *
  */
-public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysics> implements ITickReceiver {
+public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork> implements ITickReceiver {
 
 	public static byte TICKS;
 	private static final byte SID = 1, SIS = 2, SFD = 4, SFS = 8;
@@ -38,14 +38,14 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	public boolean disabled = true;
 	public byte timer;
 
-	public WarpPipePhysics(BasicWarpPipe core) {
+	public WarpPipeNetwork(WarpPipeNode core) {
 		super(core);
 		for (ConComp c : core.cons)
 			if (c != null)
 				addConnector(c);
 	}
 
-	protected WarpPipePhysics(HashMap<Long, BasicWarpPipe> comps) {
+	protected WarpPipeNetwork(HashMap<Long, WarpPipeNode> comps) {
 		super(comps);
 		enable();
 	}
@@ -61,14 +61,14 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 		disabled = true;
 	}
 
-	public void addConnector(BasicWarpPipe pipe, ConComp con) {
+	public void addConnector(WarpPipeNode pipe, ConComp con) {
 		pipe.cons[con.side] = con;
 		this.addConnector(con);
 		if (con instanceof IObjLink) pipe.markDirty();
 		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
 	}
 
-	public ConComp remConnector(BasicWarpPipe pipe, byte side) {
+	public ConComp remConnector(WarpPipeNode pipe, byte side) {
 		pipe.con[side] = 0;
 		ConComp con = pipe.cons[side];
 		remConnector(con);
@@ -106,7 +106,7 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	}
 
 	@Override
-	public void onMerged(WarpPipePhysics network) {
+	public void onMerged(WarpPipeNetwork network) {
 		super.onMerged(network);
 		activeCon.addAll(network.activeCon);
 		if (!network.itemDest.isEmpty()) {
@@ -128,9 +128,9 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	}
 
 	@Override
-	public WarpPipePhysics onSplit(HashMap<Long, BasicWarpPipe> comps) {
-		WarpPipePhysics physics = new WarpPipePhysics(comps);
-		for (Entry<Long, BasicWarpPipe> e : comps.entrySet())
+	public WarpPipeNetwork onSplit(HashMap<Long, WarpPipeNode> comps) {
+		WarpPipeNetwork physics = new WarpPipeNetwork(comps);
+		for (Entry<Long, WarpPipeNode> e : comps.entrySet())
 			for (ConComp c : e.getValue().cons)
 				if (c != null) {
 					remConnector(c);
@@ -140,7 +140,7 @@ public class WarpPipePhysics extends SharedNetwork<BasicWarpPipe, WarpPipePhysic
 	}
 
 	@Override
-	public void remove(BasicWarpPipe comp) {
+	public void remove(WarpPipeNode comp) {
 		super.remove(comp);
 		for (ConComp c : comp.cons)
 			if (c != null)

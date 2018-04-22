@@ -4,7 +4,7 @@ import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.indlog.item.ItemPortableCrafter;
 import cd4017be.indlog.item.ItemRemoteInv;
-import cd4017be.indlog.multiblock.WarpPipePhysics;
+import cd4017be.indlog.multiblock.WarpPipeNetwork;
 import cd4017be.indlog.tileentity.FluidPipe;
 import cd4017be.indlog.tileentity.AutoCrafter;
 import cd4017be.indlog.tileentity.Buffer;
@@ -39,7 +39,7 @@ public class CommonProxy {
 		FluidPipe.CAP = (int)cfg.getNumber("fluid_pipe_cap", 1000);
 		FluidPipe.TICKS = Math.max((int)cfg.getNumber("fluid_pipe_tick", 1), 1);
 		ItemPipe.TICKS = Math.max((int)cfg.getNumber("item_pipe_tick", 1), 1);
-		WarpPipePhysics.TICKS = (byte)cfg.getNumber("warp_pipe_tick", 4);
+		WarpPipeNetwork.TICKS = (byte)cfg.getNumber("warp_pipe_tick", 4);
 		cfg.getVect("tank_caps", Tank.CAP);
 		cfg.getVect("buffer_slots", Buffer.SLOTS);
 		cfg.getVect("buffer_stack", Buffer.STACKS);

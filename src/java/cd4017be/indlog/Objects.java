@@ -3,7 +3,7 @@ package cd4017be.indlog;
 import cd4017be.api.Capabilities.EmptyCallable;
 import cd4017be.api.Capabilities.EmptyStorage;
 import cd4017be.indlog.item.*;
-import cd4017be.indlog.multiblock.BasicWarpPipe;
+import cd4017be.indlog.multiblock.WarpPipeNode;
 import cd4017be.indlog.tileentity.*;
 import cd4017be.lib.block.AdvancedBlock;
 import cd4017be.lib.block.BlockCoveredPipe;
@@ -36,8 +36,8 @@ public class Objects {
 
 	public static TabMaterials tabIndLog = new TabMaterials(Main.ID);
 
-	@CapabilityInject(BasicWarpPipe.class)
-	public static Capability<BasicWarpPipe> WARP_PIPE_CAP;
+	@CapabilityInject(WarpPipeNode.class)
+	public static Capability<WarpPipeNode> WARP_PIPE_CAP;
 
 	//Blocks
 	public static final BlockCoveredPipe ITEM_PIPE = null;
@@ -74,7 +74,7 @@ public class Objects {
 	public static final ItemRemoteInv remote_inv = null;
 
 	static void init() {
-		CapabilityManager.INSTANCE.register(BasicWarpPipe.class, new EmptyStorage<BasicWarpPipe>(), new EmptyCallable<BasicWarpPipe>());
+		CapabilityManager.INSTANCE.register(WarpPipeNode.class, new EmptyStorage<WarpPipeNode>(), new EmptyCallable<WarpPipeNode>());
 		tabIndLog.item = new ItemStack(ITEM_PIPE);
 	}
 

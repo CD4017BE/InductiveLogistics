@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.capabilities.Capability;
 import cd4017be.api.IAbstractTile;
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IObjLink;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
 import cd4017be.lib.templates.MultiblockComp;
 
 /**
@@ -13,21 +13,21 @@ import cd4017be.lib.templates.MultiblockComp;
  * @author CD4017BE
  *
  */
-public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics> {
+public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> {
 
 	public final byte[] con = new byte[6];
 	public byte hasFilters = 0, isBlocked = 0;
 	public boolean redstone = false;
 	public ConComp[] cons = new ConComp[6];
 
-	public BasicWarpPipe(IAbstractTile pipe) {
+	public WarpPipeNode(IAbstractTile pipe) {
 		super(pipe);
 	}
 
 	@Override
 	public void setUID(long uid) {
 		super.setUID(uid);
-		if (network == null) new WarpPipePhysics(this);
+		if (network == null) new WarpPipeNetwork(this);
 		if (!tile.isClient()) network.enable();
 	}
 
@@ -56,8 +56,8 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 		}
 	}
 
-	public static BasicWarpPipe readFromNBT(IAbstractTile tile, NBTTagCompound nbt) {
-		BasicWarpPipe pipe = new BasicWarpPipe(tile);
+	public static WarpPipeNode readFromNBT(IAbstractTile tile, NBTTagCompound nbt) {
+		WarpPipeNode pipe = new WarpPipeNode(tile);
 		NBTTagList list = nbt.getTagList("connectors", 10);
 		for (int i = 0; i < list.tagCount(); i++) {
 			ConComp con = ConComp.readFromNBT(pipe, list.getCompoundTagAt(i));
@@ -65,7 +65,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 		}
 		pipe.isBlocked = nbt.getByte("block");
 		pipe.redstone = nbt.getBoolean("rs");
-		new WarpPipePhysics(pipe);
+		new WarpPipeNetwork(pipe);
 		return pipe;
 	}
 
@@ -85,7 +85,7 @@ public class BasicWarpPipe extends MultiblockComp<BasicWarpPipe, WarpPipePhysics
 	}
 
 	@Override
-	public Capability<BasicWarpPipe> getCap() {
+	public Capability<WarpPipeNode> getCap() {
 		return Objects.WARP_PIPE_CAP;
 	}
 

@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
  */
 public class FluidExtractor extends FluidComp implements ITickable {
 
-	public FluidExtractor(BasicWarpPipe pipe, byte side) {
+	public FluidExtractor(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 

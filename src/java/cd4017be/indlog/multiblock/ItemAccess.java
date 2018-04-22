@@ -1,7 +1,7 @@
 package cd4017be.indlog.multiblock;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IItemDest;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemDest;
 import net.minecraft.item.ItemStack;
 
 
@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemAccess extends ItemSource implements IItemDest {
 
-	public ItemAccess(BasicWarpPipe pipe, byte side) {
+	public ItemAccess(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 

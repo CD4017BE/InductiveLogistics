@@ -3,7 +3,7 @@ package cd4017be.indlog.multiblock;
 import java.util.function.ToIntFunction;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipePhysics.IItemSrc;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemSrc;
 import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class ItemSource extends ItemComp implements IItemSrc {
 
-	public ItemSource(BasicWarpPipe pipe, byte side) {
+	public ItemSource(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
 	}
 
