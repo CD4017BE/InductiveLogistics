@@ -1,3 +1,11 @@
+v0.4.1
+Changes:
+- fixed class cast crash in pipes
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.0.6
+
 v0.4.0
 Changes:
 - some optimization in Fluid Intake/Outlet algorithm
