@@ -12,6 +12,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+/**
+ * 
+ * @author cd4017be
+ */
 @SideOnly(Side.CLIENT)
 public class RenderItemOverride extends RenderItem {
 
@@ -33,24 +37,24 @@ public class RenderItemOverride extends RenderItem {
 	public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int x, int y, String text) {
 		int n = stack.getCount();
 		if (n > stack.getMaxStackSize() || text != null) {
-			String s = text == null ? String.valueOf(n) : text;
+			String s = text != null ? text : n == Integer.MAX_VALUE ? "§90" : String.valueOf(n);
 			int l = fr.getStringWidth(s);
-            if (l > stacksizeWidth) {
-            	float scale = (float)stacksizeWidth / (float)l;
-            	GlStateManager.pushMatrix();
-            	GlStateManager.translate(x + 17, y + 6 + fr.FONT_HEIGHT, 0);
-            	GlStateManager.scale(scale, scale, 1);
-            	GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                GlStateManager.disableBlend();
-                fr.drawStringWithShadow(s, (float)-l, (float)(3 - fr.FONT_HEIGHT), 16777215);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
-                GlStateManager.enableBlend();
-            	GlStateManager.popMatrix();
-            	stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
-            	text = null;
-            }
+			if (l > stacksizeWidth) {
+				float scale = (float)stacksizeWidth / (float)l;
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(x + 17, y + 6 + fr.FONT_HEIGHT, 0);
+				GlStateManager.scale(scale, scale, 1);
+				GlStateManager.disableLighting();
+				GlStateManager.disableDepth();
+				GlStateManager.disableBlend();
+				fr.drawStringWithShadow(s, (float)-l, (float)(3 - fr.FONT_HEIGHT), 16777215);
+				GlStateManager.enableLighting();
+				GlStateManager.enableDepth();
+				GlStateManager.enableBlend();
+				GlStateManager.popMatrix();
+				stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
+				text = null;
+			} else text = s;
 		}
 		super.renderItemOverlayIntoGUI(fr, stack, x, y, text);
 	}

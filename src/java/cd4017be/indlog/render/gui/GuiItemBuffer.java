@@ -13,6 +13,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * 
+ * @author cd4017be
+ */
 public class GuiItemBuffer extends AdvancedGui {
 
 	private final Buffer tile;
@@ -45,6 +49,7 @@ public class GuiItemBuffer extends AdvancedGui {
 		guiComps.add(new Tooltip<Integer>(6, 176, 42 + ofs, 10, 64, "buffer.start"));
 		guiComps.add(new Button(7, 193, 17 + ofs, 12, 12, 0).texture(242, 29).setTooltip("buffer.side#"));
 		guiComps.add(new Button(8, 175, 17 + ofs, 12, 12, 0).texture(230, 17).setTooltip("buffer.reset"));
+		guiComps.add(new Button(9, 211, 17 + ofs, 12, 12, 0).texture(230, 107).setTooltip("buffer.lock#"));//TODO texture coord
 		setEnabled(3, false);
 		setEnabled(6, false);
 	}
@@ -60,6 +65,7 @@ public class GuiItemBuffer extends AdvancedGui {
 		case 6: return tile.getStart();
 		case 7: return (int)tile.selSide;
 		case 8: return tile.selSide >= 0 && tile.sideAccs[tile.selSide] != null ? 0 : -1;
+		case 9: return tile.inventory.locked ? 1 : 0;
 		default: return null;
 		}
 	}
@@ -86,7 +92,7 @@ public class GuiItemBuffer extends AdvancedGui {
 		case 2: {
 			int v = Math.round((1F - (Float)obj) / StepStack + 0.4F);
 			data.writeByte(1);
-			data.writeShort(tile.inventory.stackSize = Math.min(Math.max(v, 1), Buffer.STACKS[tile.type]));
+			data.writeInt(tile.inventory.stackSize = Math.min(Math.max(v, 1), Buffer.STACKS[tile.type]));
 		} break;
 		case 3: {
 			int v = Math.round((1F - (Float)obj) / StepSlot + 0.4F);
@@ -108,6 +114,9 @@ public class GuiItemBuffer extends AdvancedGui {
 		case 8:
 			data.writeByte(2);
 			data.writeByte(tile.selSide);
+			break;
+		case 9:
+			data.writeByte(4);
 			break;
 		}
 		if (send) BlockGuiHandler.sendPacketToServer(data);
