@@ -8,11 +8,15 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.function.ToIntFunction;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.FMLLog;
+import cd4017be.indlog.Main;
 import cd4017be.lib.TickRegistry;
 import cd4017be.lib.TickRegistry.ITickReceiver;
 import cd4017be.lib.templates.SharedNetwork;
@@ -160,9 +164,18 @@ public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork
 		}
 		if (++timer >= TICKS) {
 			timer = 0;
-			for (ITickable con : activeCon) con.update();
+			for (ITickable con : activeCon) 
+				if (((ConComp)con).pipe.invalid()) debug((ConComp)con);
+				else con.update();
 		}
 		return true;
+	}
+
+	private void debug(ConComp c) {
+		ArrayList<WarpPipeNode> err = new ArrayList<WarpPipeNode>();
+		for (WarpPipeNode n : components.values())
+			if (n.network != this) err.add(n);
+		FMLLog.log(Main.ID, Level.ERROR, "INVALID-ConComp on side %d of %s ticked in network:\nComps %d\nErrored pipes: %s", c.side, c.pipe, components.size(), err);
 	}
 
 	/**
