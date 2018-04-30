@@ -1,4 +1,4 @@
-VERSION = 33;
+VERSION = 34;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -26,6 +26,8 @@ drop_interface_slots = 5; !maximum amount of empty "on-demand" slots (allows ins
 
 !Entity Interface settings
 entity_interface_tick = 10; !amount of ticks to wait before rescanning entities
+
+block_placer_range=15; !maximum distance the Item Placer can interact with (Note: there are mods like "Automated Redstone" that can provide redstone signals > 15)
 
 {
 	!capacity of all the fluid tanks (only tanks with capacity > 0 will be listed in creative tab)

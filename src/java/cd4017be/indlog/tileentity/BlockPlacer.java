@@ -1,0 +1,241 @@
+package cd4017be.indlog.tileentity;
+
+import java.util.List;
+import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
+
+import cd4017be.lib.TickRegistry;
+import cd4017be.lib.TickRegistry.IUpdatable;
+import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
+import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
+import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.tileentity.BaseTileEntity;
+import cd4017be.lib.util.Orientation;
+import cd4017be.lib.util.TooltipUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+
+/**
+ * @author CD4017BE
+ *
+ */
+public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, IItemHandler, IUpdatable, ITilePlaceHarvest, IInteractiveTile {
+
+	public static int RANGE = 15;
+
+	public int dx, dy, dz;
+	private GameProfile gp = new GameProfile(new UUID(0, 0), "dummyPlayer");
+	private float yaw, pitch, rX, rY, rZ;
+	private boolean sneaking;
+	private FakePlayer player;
+	private BlockPos target;
+	private ItemStack item = ItemStack.EMPTY;
+
+	@Override
+	public void process() {
+		if (target == null || item.isEmpty() || unloaded) return;
+		if (player == null) initializePlayer();
+		player.setPosition(target.getX() + rX, target.getY() + rY, target.getZ() + rZ);
+		player.setHeldItem(EnumHand.MAIN_HAND, item);
+		IBlockState state = world.getBlockState(target);
+		RayTraceResult res = rayTrace(state);
+		if (item.onItemUse(player, world, target, EnumHand.MAIN_HAND, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord) == EnumActionResult.PASS)
+			state.getBlock().onBlockActivated(world, target, state, player, EnumHand.MAIN_HAND, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord);
+		item = player.getHeldItem(EnumHand.MAIN_HAND);
+		player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+		player.inventory.dropAllItems();
+		target = null;
+	}
+
+	private RayTraceResult rayTrace(IBlockState state) {
+		Vec3d p = player.getPositionEyes(1), p1 = player.getLook(1);
+		RayTraceResult res = state.collisionRayTrace(world, target, p, p.add(p1.scale(16)));
+		if (res != null) return res;
+		double t, t1;
+		EnumFacing side;
+		if (p1.xCoord < 0) {t = -rX / p1.xCoord; side = EnumFacing.EAST;}
+		else {t = (1.0 - rX) / p1.xCoord; side = EnumFacing.WEST;}
+		if (p1.yCoord < 0) {
+			if ((t1 = -rY / p1.yCoord) < t) {t = t1; side = EnumFacing.UP;}
+		} else if ((t1 = (1.0 - rY) / p1.yCoord) < t) {t = t1; side = EnumFacing.DOWN;}
+		if (p1.zCoord < 0) {
+			if ((t1 = -rZ / p1.zCoord) < t) {t = t1; side = EnumFacing.SOUTH;}
+		} else if ((t1 = (1.0 - rZ) / p1.zCoord) < t) {t = t1; side = EnumFacing.NORTH;}
+		return new RayTraceResult(p.add(p1.scale(t)), side);
+	}
+
+	@Override
+	public void neighborBlockChange(Block b, BlockPos src) {
+		if (world.isRemote) return;
+		Orientation o = getOrientation();
+		if (src.getX() != pos.getX())
+			dx = o.front.getFrontOffsetX() + MathHelper.clamp(world.getRedstonePower(pos.offset(EnumFacing.WEST), EnumFacing.WEST) - world.getRedstonePower(pos.offset(EnumFacing.EAST), EnumFacing.EAST), -RANGE, RANGE);
+		if (src.getY() != pos.getY())
+			dy = o.front.getFrontOffsetY() + MathHelper.clamp(world.getRedstonePower(pos.offset(EnumFacing.DOWN), EnumFacing.DOWN) - world.getRedstonePower(pos.offset(EnumFacing.UP), EnumFacing.UP), -RANGE, RANGE);
+		if (src.getZ() != pos.getZ())
+			dz = o.front.getFrontOffsetZ() + MathHelper.clamp(world.getRedstonePower(pos.offset(EnumFacing.NORTH), EnumFacing.NORTH) - world.getRedstonePower(pos.offset(EnumFacing.SOUTH), EnumFacing.SOUTH), -RANGE, RANGE);
+	}
+
+	@Override
+	public void neighborTileChange(TileEntity te, EnumFacing side) {
+	}
+
+	@Override
+	public int getSlots() {
+		return 1;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return item;
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		if (item.getCount() > 0) return stack;
+		if (!simulate) {
+			item = ItemHandlerHelper.copyStackWithSize(stack, 1);
+			target = pos.add(dx, dy, dz);
+			TickRegistry.instance.updates.add(this);
+		}
+		return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
+	}
+
+	@Override
+	public ItemStack extractItem(int slot, int amount, boolean simulate) {
+		if (target != null) return ItemStack.EMPTY;
+		int n = item.getCount();
+		if (amount > n) amount = n;
+		if (amount <= 0) return ItemStack.EMPTY;
+		if (!simulate) {
+			if ((n -= amount) <= 0) {
+				ItemStack stack = item;
+				item = ItemStack.EMPTY;
+				return stack;
+			} else item.setCount(n);
+		}
+		return ItemHandlerHelper.copyStackWithSize(item, amount);
+	}
+
+	@Override
+	public int getSlotLimit(int slot) {
+		return 1;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> cap, EnumFacing facing) {
+		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> cap, EnumFacing facing) {
+		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)this : null;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		gp = new GameProfile(nbt.getUniqueId("FPuuid"), nbt.getString("FPname"));
+		item = new ItemStack(nbt.getCompoundTag("item"));
+		dx = nbt.getInteger("dx");
+		dy = nbt.getInteger("dy");
+		dz = nbt.getInteger("dz");
+		if (nbt.hasKey("target", NBT.TAG_LONG)) target = BlockPos.fromLong(nbt.getLong("target"));
+		else target = null;
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt.setUniqueId("FPuuid", gp.getId());
+		nbt.setString("FPname", gp.getName());
+		nbt.setTag("item", item.writeToNBT(new NBTTagCompound()));
+		nbt.setInteger("dx", dx);
+		nbt.setInteger("dy", dy);
+		nbt.setInteger("dz", dz);
+		if (target != null) nbt.setLong("target", target.toLong());
+		return super.writeToNBT(nbt);
+	}
+
+	private void initializePlayer() {
+		if (!(world instanceof WorldServer)) return;
+		player = new FakePlayer((WorldServer)world, gp);
+		player.rotationYaw = yaw;
+		player.rotationPitch = pitch;
+		player.setSneaking(sneaking);
+	}
+
+	@Override
+	public void onPlaced(EntityLivingBase entity, ItemStack item) {
+		if (entity instanceof EntityPlayer) gp = ((EntityPlayer)entity).getGameProfile();
+		Orientation o = getOrientation();
+		yaw = (float)(o.ordinal() & 3) * 90F;
+		pitch = 90F - 90F * (float)((o.ordinal() >> 2) + 3 & 3);
+		sneaking = false;
+		dx = o.front.getFrontOffsetX();
+		dy = o.front.getFrontOffsetY();
+		dz = o.front.getFrontOffsetZ();
+		rX = -2.0F * dx + 0.5F;
+		rY = -2.0F * dy + 0.5F;
+		rZ = -2.0F * dz + 0.5F;
+	}
+
+	@Override
+	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing s, float X, float Y, float Z) {
+		if (!item.isEmpty()) return false;
+		if (world.isRemote) return true;
+		yaw = player.rotationYaw;
+		pitch = player.rotationPitch;
+		sneaking = player.isSneaking();
+		rX = (float)(player.posX - pos.getX());
+		rY = (float)(player.posY - pos.getY());
+		rZ = (float)(player.posZ - pos.getZ());
+		if (this.player == null) initializePlayer();
+		else {
+			this.player.rotationYaw = yaw;
+			this.player.rotationPitch = pitch;
+			this.player.setSneaking(sneaking);
+		}
+		player.sendMessage(new TextComponentString(TooltipUtil.format("cd4017be.placer.cfg", rX, rY, rZ, yaw, pitch, sneaking)));
+		return true;
+	}
+
+	@Override
+	public void onClicked(EntityPlayer player) {
+	}
+
+	@Override
+	public List<ItemStack> dropItem(IBlockState state, int fortune) {
+		List<ItemStack> list = makeDefaultDrops(null);
+		if (item.getCount() > 0) list.add(item);
+		return list;
+	}
+
+	@Override
+	protected void setupData() {
+		if (!world.isRemote && target != null && item.getCount() > 0)
+			TickRegistry.instance.updates.add(this);
+	}
+
+}
