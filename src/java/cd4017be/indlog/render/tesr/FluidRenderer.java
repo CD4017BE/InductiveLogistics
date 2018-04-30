@@ -11,6 +11,7 @@ import cd4017be.lib.render.SpecialModelLoader;
 import cd4017be.lib.render.model.IntArrayModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.Profile;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -94,7 +95,7 @@ public class FluidRenderer implements IModeledTESR {
 		Fluid fluid = stack.getFluid();
 		IntArrayModel m = getFor(fluid);
 		GlStateManager.disableLighting();
-		GlStateManager.Profile.TRANSPARENT_MODEL.apply();
+		Profile.TRANSPARENT_MODEL.apply();
 		m.setColor(RGBtoBGR(fluid.getColor(stack)));
 		m.setBrightness(te.getWorld().getCombinedLight(te.getPos(), fluid.getLuminosity(stack)));
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -106,6 +107,7 @@ public class FluidRenderer implements IModeledTESR {
 		t.addVertexData(m.vertexData);
 		Tessellator.getInstance().draw();
 		GlStateManager.popMatrix();
+		Profile.TRANSPARENT_MODEL.clean();
 	}
 
 }
