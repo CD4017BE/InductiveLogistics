@@ -181,6 +181,7 @@ gui.cd4017be.remote.invalid=Block hat kein Inventar!
 gui.cd4017be.remote.linked=Blockinventar verbunden
 gui.cd4017be.remote.selfAcc=Um auf dein eigenes Inventar zuzugreifen, ist die anwendung dieses Gerätes nicht erforderlich!
 gui.cd4017be.remote.notFound=§cInventar existiert nicht oder ist ungeladen!
+gui.cd4017be.remote.scroll=Slots: %d-%d / %d
 gui.cd4017be.remote.info=Funktion\nSlot Interaktion@specialSlot
 gui.cd4017be.remote.info0=§7Diese Slots dienen als Schnittstelle, um mit dem angeschlossenen Blockinventar zu interagieren. Welche Art der interaktion möglich ist, hängt daher vom Block ab und auf welcher Seite er verbunden wurde.\n§7Durch Einbauen von §6Itemfilter§7n können bestimmte Items automatisch aus dem angeschlossenen Block in dein Inventar transportiert werden oder umgekehrt. Dabei bezieht sich die Vorratsfunktion des Filters immer auf den Inhalt deines Inventars.\n§7Damit Zugriff möglich ist, muss der angeschlossene Block blos geladen sein, du kanns dich aber beliebig weit weg oder sogar in einer anderen Dimension aufhalten.
 gui.cd4017be.specialSlot=§eKlicke mit Item am Cursor zum hineinlegen:\n§aRechtsklick: 1 Item\n§aLinksklick: ganzen Stapel\n§aShift-RK: statt dem Cursorstapel alle gleichartigen Items aus deinem Inventar\n§aShift-LK: alle gleichartigen Items aus deinem Inventar und den Cursorstapel.\n§eKlicke ohne Item am Cursor zu herausnehmen:\n§aLinksklick: 1 Item\n§aRechtsklick: 8 Items\n§aShift-LK: 1 ganzen Stapel\n§aShift-RK: alles bis Inventar voll

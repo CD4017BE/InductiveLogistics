@@ -181,6 +181,7 @@ gui.cd4017be.remote.invalid=Block has no inventory!
 gui.cd4017be.remote.linked=Block inventory linked
 gui.cd4017be.remote.selfAcc=You don't need this fancy device just to open your own inventory!
 gui.cd4017be.remote.notFound=§cInventory doesn't exist or was unloaded!
+gui.cd4017be.remote.scroll=Slots: %d-%d / %d
 gui.cd4017be.remote.info=Function\nSlot interaction@specialSlot
 gui.cd4017be.remote.info0=§7The slots here act as interface to interact with the linked block's inventory. So what type of interaction is supported actually depends on the block and which face was linked.\n§7Inserting §6Item Pipe Filters§7 will make this tool automatically transfer certain items from the block to your inventory or vice versa. Here the filters stock-keeping function will always refer to the contents of your inventory.\n§7In order for this device to work, the linked block only needs to be loaded but could be arbitrarily far away or even in a different dimension.
 gui.cd4017be.specialSlot=§eClick with stack on cursor to insert:\n§aright-click§7 = 1 item\n§aleft-click§7 = full stack\n§ashift-R-C§7 = all equal items in inventory instead cursor\n§ashift-L-C§7 = all equal items in inventory plus cursor\n§eClick with empty cursor to extract:\n§aleft-click§7 = 1 item\n§aright-click§7 = 8 items\n§ashift-L-C§7 = 1 stack\n§ashift-R-C§7 = all or until inventory full
