@@ -5,8 +5,6 @@ import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
 
-import cd4017be.lib.TickRegistry;
-import cd4017be.lib.TickRegistry.IUpdatable;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
@@ -29,9 +27,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -40,7 +41,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  * @author CD4017BE
  *
  */
-public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, IItemHandler, IUpdatable, ITilePlaceHarvest, IInteractiveTile {
+public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, IItemHandler, ITilePlaceHarvest, IInteractiveTile {
 
 	public static int RANGE = 15;
 
@@ -49,28 +50,37 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 	private float yaw, pitch, rX, rY, rZ;
 	private boolean sneaking;
 	private FakePlayer player;
-	private BlockPos target;
 	private ItemStack item = ItemStack.EMPTY;
 
-	@Override
-	public void process() {
-		if (target == null || item.isEmpty() || unloaded) return;
+	private ItemStack place(BlockPos pos, ItemStack item) {
 		if (player == null) initializePlayer();
-		player.setPosition(target.getX() + rX, target.getY() + rY, target.getZ() + rZ);
-		player.setHeldItem(EnumHand.MAIN_HAND, item);
-		IBlockState state = world.getBlockState(target);
-		RayTraceResult res = rayTrace(state);
-		if (item.onItemUse(player, world, target, EnumHand.MAIN_HAND, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord) == EnumActionResult.PASS)
-			state.getBlock().onBlockActivated(world, target, state, player, EnumHand.MAIN_HAND, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord);
-		item = player.getHeldItem(EnumHand.MAIN_HAND);
-		player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+		final EnumHand hand = EnumHand.MAIN_HAND;
+		player.setPosition(pos.getX() + rX, pos.getY() + rY, pos.getZ() + rZ);
+		player.setHeldItem(hand, item);
+		IBlockState state = world.getBlockState(pos);
+		RayTraceResult res = rayTrace(state, pos);
+		do {
+			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos, res.sideHit, res.hitVec);
+			if (event.isCanceled()) break;
+			if (item.onItemUseFirst(player, world, pos, hand, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord) != EnumActionResult.PASS) break;
+			if ((!sneaking || item.getItem().doesSneakBypassUse(item, world, pos, player) || event.getUseBlock() == Result.ALLOW) && event.getUseBlock() != Result.DENY)
+				if (state.getBlock().onBlockActivated(world, pos, state, player, hand, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord))
+					if (event.getUseItem() != Result.ALLOW) break;
+			if (!item.isEmpty() && event.getUseItem() != Result.DENY) {
+				ItemStack copy = item.copy();
+				item.onItemUse(player, world, pos, hand, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord);
+				if (item.isEmpty()) ForgeEventFactory.onPlayerDestroyItem(player, copy, hand);
+			}
+		} while(false); //break goto
+		item = player.getHeldItem(hand);
+		player.setHeldItem(hand, ItemStack.EMPTY);
 		player.inventory.dropAllItems();
-		target = null;
+		return item;
 	}
 
-	private RayTraceResult rayTrace(IBlockState state) {
+	private RayTraceResult rayTrace(IBlockState state, BlockPos pos) {
 		Vec3d p = player.getPositionEyes(1), p1 = player.getLook(1);
-		RayTraceResult res = state.collisionRayTrace(world, target, p, p.add(p1.scale(16)));
+		RayTraceResult res = state.collisionRayTrace(world, pos, p, p.add(p1.scale(16)));
 		if (res != null) return res;
 		double t, t1;
 		EnumFacing side;
@@ -114,17 +124,12 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (item.getCount() > 0) return stack;
-		if (!simulate) {
-			item = ItemHandlerHelper.copyStackWithSize(stack, 1);
-			target = pos.add(dx, dy, dz);
-			TickRegistry.instance.updates.add(this);
-		}
+		if (!simulate) item = place(pos.add(dx, dy, dz), ItemHandlerHelper.copyStackWithSize(stack, 1));
 		return ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		if (target != null) return ItemStack.EMPTY;
 		int n = item.getCount();
 		if (amount > n) amount = n;
 		if (amount <= 0) return ItemStack.EMPTY;
@@ -162,8 +167,12 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 		dx = nbt.getInteger("dx");
 		dy = nbt.getInteger("dy");
 		dz = nbt.getInteger("dz");
-		if (nbt.hasKey("target", NBT.TAG_LONG)) target = BlockPos.fromLong(nbt.getLong("target"));
-		else target = null;
+		rX = nbt.getFloat("rx");
+		rY = nbt.getFloat("ry");
+		rZ = nbt.getFloat("rz");
+		yaw = nbt.getFloat("yaw");
+		pitch = nbt.getFloat("pitch");
+		sneaking = nbt.getBoolean("sneak");
 	}
 
 	@Override
@@ -174,7 +183,12 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 		nbt.setInteger("dx", dx);
 		nbt.setInteger("dy", dy);
 		nbt.setInteger("dz", dz);
-		if (target != null) nbt.setLong("target", target.toLong());
+		nbt.setFloat("rx", rX);
+		nbt.setFloat("ry", rY);
+		nbt.setFloat("rz", rZ);
+		nbt.setFloat("yaw", yaw);
+		nbt.setFloat("pitch", pitch);
+		nbt.setBoolean("sneak", sneaking);
 		return super.writeToNBT(nbt);
 	}
 
@@ -230,12 +244,6 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 		List<ItemStack> list = makeDefaultDrops(null);
 		if (item.getCount() > 0) list.add(item);
 		return list;
-	}
-
-	@Override
-	protected void setupData() {
-		if (!world.isRemote && target != null && item.getCount() > 0)
-			TickRegistry.instance.updates.add(this);
 	}
 
 }
