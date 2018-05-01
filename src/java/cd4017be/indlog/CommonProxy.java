@@ -46,6 +46,7 @@ public class CommonProxy {
 		cfg.getVect("buffer_stack", Buffer.STACKS);
 		ItemPortableCrafter.INTERVAL = (int)cfg.getNumber("portable_craft_tick", 20);
 		ItemRemoteInv.INTERVAL = (int)cfg.getNumber("remote_inv_tick", 20);
+		ItemRemoteInv.MAX_SLOTS = Math.max(12, (int)cfg.getNumber("remote_max_slots", 96));
 		AutoCrafter.INTERVAL = Math.max((int)cfg.getNumber("auto_craft_tick", 20), 1);
 		FluidIO.CAP = (int)cfg.getNumber("fluid_io_cap", 8000);
 		FluidIO.MAX_SIZE = Math.min((int)cfg.getNumber("fluid_io_range", 127), 127);

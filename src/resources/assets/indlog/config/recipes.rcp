@@ -1,4 +1,4 @@
-VERSION = 35;
+VERSION = 36;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -8,6 +8,7 @@ item_pipe_tick = 4;
 warp_pipe_tick = 5;
 portable_craft_tick = 20;
 remote_inv_tick = 20;
+remote_max_slots = 96; !maximum amount of slots to draw in Portable Inventory Remote Access GUI before using scrollbar (server side setting)
 auto_craft_tick = 10;
 !whether pipe contents should be visible while moving from pipe to pipe (may reduce server network performance),
 !otherwise they are only visible when there is a backlock.
@@ -35,7 +36,7 @@ block_placer_range=15; !maximum distance the Item Placer can interact with (Note
 	tank_caps = [1000, 8000, 64000, 512000, 4096000, 32768000, 262144000, 2097152000]#;
 	!slot count and stacksize limit of all the item buffers
 	buffer_slots = [12, 24, 48, 96,  12,  24,  48,  96,   12,   24,   48,   96,   12,   24,   48,   96]#;
-	buffer_stack = [64, 64, 64, 64, 256, 256, 256, 256, 1024, 1024, 1024, 1024, 4096, 4096, 4096, 4096]#;
+	buffer_stack = [64, 64, 64, 64, 512, 512, 512, 512, 4096, 4096, 4096, 4096, 32768, 32768, 32768, 32768]#;
 }
 
 
