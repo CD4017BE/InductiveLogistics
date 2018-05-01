@@ -88,7 +88,6 @@ public class DropedItemInterface extends BaseTileEntity implements IGuiData, Cli
 		if (!simulate) {
 			item.grow(n < m ? n : m);
 			e.setEntityItemStack(item);
-			if (e.getAge() > 4800) e.setAgeToCreativeDespawnTime();
 		}
 		return (n -= m) > 0 ? ItemHandlerHelper.copyStackWithSize(item, n) : ItemStack.EMPTY;
 	}
