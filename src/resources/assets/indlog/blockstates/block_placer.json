@@ -1,0 +1,11 @@
+{
+	"variants": {
+		"inventory": { "model": "indlog:block_placer" },
+		"orient=n": { "model": "indlog:block_placer" },
+		"orient=e": { "model": "indlog:block_placer" , "y": 90 },
+		"orient=s": { "model": "indlog:block_placer" , "y": 180 },
+		"orient=w": { "model": "indlog:block_placer" , "y": 270 },
+		"orient=bn": { "model": "indlog:block_placer" , "x": 90 },
+		"orient=tn": { "model": "indlog:block_placer" , "x": 270 }
+	}
+}

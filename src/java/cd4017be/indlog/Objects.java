@@ -96,7 +96,7 @@ public class Objects {
 			OrientedBlock.create("fluid_outlet", Material.IRON, SoundType.METAL, 0, FluidOutlet.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
 			OrientedBlock.create("drop_interface", Material.WOOD, SoundType.WOOD, 0, DropedItemInterface.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
 			OrientedBlock.create("entity_interface", Material.WOOD, SoundType.WOOD, 0, EntityInterface.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
-			OrientedBlock.create("block_placer", Material.IRON, SoundType.METAL, 0, BlockPlacer.class, PropertyOrientation.XY_12_ROT).setCreativeTab(tabIndLog)
+			OrientedBlock.create("block_placer", Material.IRON, SoundType.METAL, 0, BlockPlacer.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
 		);
 	}
 

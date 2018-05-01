@@ -1,4 +1,4 @@
-VERSION = 34;
+VERSION = 35;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -64,6 +64,7 @@ INIT() {
 	add("shaped", it("tile.fluid_outlet", 1), " 3 /020/010", mat, it("minecraft:iron_bars"), it("minecraft:piston"), it("tile.tank", 1, 1));
 	add("shaped", it("tile.drop_interface", 1), "000/123/000", "plankWood", it("minecraft:hopper"), it("minecraft:ender_eye"), it("minecraft:dropper"));
 	add("shaped", it("tile.entity_interface", 1), "010/020", "ingotIron", it("minecraft:lead"), it("tile.inv_connector"));
+	add("shaped", it("tile.block_placer", 1), "010/232/010", "ingotIron", it("minecraft:ender_eye"), it("minecraft:piston"), it("minecraft:dispenser"));
 	add("shaped", it("item.portable_craft", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("tile.auto_craft"), "string", "slabWood");
 	add("shaped", it("item.remote_inv", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("minecraft:ender_chest"), "string", "gemDiamond");
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
