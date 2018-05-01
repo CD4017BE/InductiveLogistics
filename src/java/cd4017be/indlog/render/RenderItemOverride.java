@@ -37,7 +37,7 @@ public class RenderItemOverride extends RenderItem {
 	public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int x, int y, String text) {
 		int n = stack.getCount();
 		if (n > stack.getMaxStackSize() || text != null) {
-			String s = text != null ? text : n == Integer.MAX_VALUE ? "§90" : String.valueOf(n);
+			String s = text != null ? text : n == Integer.MAX_VALUE ? "\u00a790" : String.valueOf(n);
 			int l = fr.getStringWidth(s);
 			if (l > stacksizeWidth) {
 				float scale = (float)stacksizeWidth / (float)l;
