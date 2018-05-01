@@ -1,0 +1,11 @@
+{
+	"parent": "indlog:block/base",
+	"textures": {
+		"top": "indlog:block/block_placer0",
+		"bot": "indlog:block/block_placer0",
+		"front": "indlog:block/block_placer1",
+		"back": "indlog:block/block_placer0",
+		"left": "indlog:block/block_placer0",
+		"right": "indlog:block/block_placer0"
+	}
+}
