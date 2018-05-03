@@ -4,43 +4,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.function.ToIntFunction;
 
-import org.apache.logging.log4j.Level;
-
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLLog;
-import cd4017be.indlog.Main;
 import cd4017be.lib.TickRegistry;
-import cd4017be.lib.TickRegistry.ITickReceiver;
 import cd4017be.lib.templates.SharedNetwork;
-import cd4017be.lib.tileentity.BaseTileEntity;
-import cd4017be.lib.util.Utils;
 
 /**
  * 
  * @author CD4017BE
  *
  */
-public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork> implements ITickReceiver {
+public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork> {
 
-	public static byte TICKS;
 	private static final byte SID = 1, SIS = 2, SFD = 4, SFS = 8;
 
-	public HashSet<ITickable> activeCon = new HashSet<ITickable>();
 	public ArrayList<IItemDest> itemDest = new ArrayList<IItemDest>();
 	public ArrayList<IFluidDest> fluidDest = new ArrayList<IFluidDest>();
 	public ArrayList<IItemSrc> itemSrc = new ArrayList<IItemSrc>();
 	public ArrayList<IFluidSrc> fluidSrc = new ArrayList<IFluidSrc>();
 	private byte sort = 0;
-	public boolean disabled = true;
-	public byte timer;
 
 	public WarpPipeNetwork(WarpPipeNode core) {
 		super(core);
@@ -51,48 +36,16 @@ public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork
 
 	protected WarpPipeNetwork(HashMap<Long, WarpPipeNode> comps) {
 		super(comps);
-		enable();
-	}
-
-	public void enable() {
-		if (disabled) {
-			disabled = false;
-			TickRegistry.instance.add(this);
-		}
-	}
-
-	public void disable() {
-		disabled = true;
-	}
-
-	public void addConnector(WarpPipeNode pipe, ConComp con) {
-		pipe.cons[con.side] = con;
-		this.addConnector(con);
-		if (con instanceof IObjLink) pipe.markDirty();
-		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
-	}
-
-	public ConComp remConnector(WarpPipeNode pipe, byte side) {
-		pipe.con[side] = 0;
-		ConComp con = pipe.cons[side];
-		remConnector(con);
-		pipe.cons[side] = null;
-		pipe.markDirty();
-		pipe.hasFilters &= ~(1 << side);
-		((BaseTileEntity)pipe.tile).markUpdate();
-		if (!pipe.tile.invalid()) Utils.notifyNeighborTile((TileEntity)pipe.tile, EnumFacing.VALUES[con.side]);
-		return con;
 	}
 
 	public void reorder(ConComp con) {
-		if (con instanceof IItemDest) sort |= SID;
-		if (con instanceof IFluidDest) sort |= SFD;
-		if (con instanceof IItemSrc) sort |= SIS;
-		if (con instanceof IFluidSrc) sort |= SFS;
+		if (con instanceof IItemDest) resort(SID);
+		if (con instanceof IFluidDest) resort(SFD);
+		if (con instanceof IItemSrc) resort(SIS);
+		if (con instanceof IFluidSrc) resort(SFS);
 	}
 
-	private void addConnector(ConComp con) {
-		if (con instanceof ITickable) activeCon.add((ITickable)con);
+	protected void addConnector(ConComp con) {
 		if (con instanceof IItemDest) itemDest.add((IItemDest)con);
 		if (con instanceof IFluidDest) fluidDest.add((IFluidDest)con);
 		if (con instanceof IItemSrc) itemSrc.add((IItemSrc)con);
@@ -101,8 +54,7 @@ public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
-	private void remConnector(ConComp con) {
-		if (con instanceof ITickable) activeCon.remove(con);
+	protected void remConnector(ConComp con) {
 		if (con instanceof IItemDest) itemDest.remove(con);
 		if (con instanceof IFluidDest) fluidDest.remove(con);
 		if (con instanceof IItemSrc) itemSrc.remove(con);
@@ -112,22 +64,21 @@ public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork
 	@Override
 	public void onMerged(WarpPipeNetwork network) {
 		super.onMerged(network);
-		activeCon.addAll(network.activeCon);
 		if (!network.itemDest.isEmpty()) {
 			itemDest.addAll(network.itemDest);
-			sort |= SID;
+			resort(SID);
 		}
 		if (!network.fluidDest.isEmpty()) {
 			fluidDest.addAll(network.fluidDest);
-			sort |= SFD;
+			resort(SFD);
 		}
 		if (!network.itemSrc.isEmpty()) {
 			itemSrc.addAll(network.itemSrc);
-			sort |= SIS;
+			resort(SIS);
 		}
 		if (!network.fluidSrc.isEmpty()) {
 			fluidSrc.addAll(network.fluidSrc);
-			sort |= SFS;
+			resort(SFS);
 		}
 	}
 
@@ -145,16 +96,18 @@ public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork
 
 	@Override
 	public void remove(WarpPipeNode comp) {
+		comp.onRemoved();
 		super.remove(comp);
-		for (ConComp c : comp.cons)
-			if (c != null)
-				remConnector(c);
+	}
+
+	protected void resort(byte sort) {
+		if (this.sort == 0 && !update) TickRegistry.instance.updates.add(this);
+		this.sort |= sort;
 	}
 
 	@Override
-	public boolean tick() {
-		disabled |= components.isEmpty();
-		if (disabled) return false;
+	public void process() {
+		super.process();
 		if (sort != 0) {
 			if ((sort & SID) != 0) Collections.sort(itemDest, destSort);
 			if ((sort & SFD) != 0) Collections.sort(fluidDest, destSort);
@@ -162,20 +115,6 @@ public class WarpPipeNetwork extends SharedNetwork<WarpPipeNode, WarpPipeNetwork
 			if ((sort & SFS) != 0) Collections.sort(fluidSrc, srcSort);
 			sort = 0;
 		}
-		if (++timer >= TICKS) {
-			timer = 0;
-			for (ITickable con : activeCon) 
-				if (((ConComp)con).pipe.invalid()) debug((ConComp)con);
-				else con.update();
-		}
-		return true;
-	}
-
-	private void debug(ConComp c) {
-		ArrayList<WarpPipeNode> err = new ArrayList<WarpPipeNode>();
-		for (WarpPipeNode n : components.values())
-			if (n.network != this) err.add(n);
-		FMLLog.log(Main.ID, Level.ERROR, "INVALID-ConComp on side %d of %s ticked in network:\nComps %d\nErrored pipes: %s", c.side, c.pipe, components.size(), err);
 	}
 
 	/**

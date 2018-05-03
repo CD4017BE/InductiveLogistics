@@ -2,9 +2,9 @@ package cd4017be.indlog.multiblock;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.PipeFilterItem;
+import cd4017be.lib.TickRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -13,8 +13,11 @@ import net.minecraftforge.items.IItemHandler;
  * @author CD4017BE
  *
  */
-public class ItemInjector extends ItemComp implements ITickable {
+public class ItemInjector extends ItemComp implements IActiveCon {
 
+	public static int INTERVAL = 4;
+
+	private int timer = Integer.MIN_VALUE;
 	private int slotIdx;
 
 	public ItemInjector(WarpPipeNode pipe, byte side) {
@@ -23,10 +26,29 @@ public class ItemInjector extends ItemComp implements ITickable {
 	}
 
 	@Override
-	public void update() {
-		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return;
+	public void enable() {
+		if (timer < 0 && !pipe.invalid()) {
+			timer = 0;
+			TickRegistry.instance.add(this);
+		}
+	}
+
+	@Override
+	public void disable() {
+		timer = Integer.MIN_VALUE;
+	}
+
+	@Override
+	public boolean tick() {
+		if (++timer < INTERVAL) return timer > 0;
+		if (pipe.invalid()) {
+			disable();
+			return false;
+		} else timer = 0;
+		
+		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return true;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[this.side^1]);
-		if (acc == null) return;
+		if (acc == null) return true;
 		byte pr = filter == null || (filter.mode & 2) == 0 ? Byte.MIN_VALUE : filter.priority;
 		int m = acc.getSlots();
 		for (int i = slotIdx; i < slotIdx + m; i++) {
@@ -44,8 +66,9 @@ public class ItemInjector extends ItemComp implements ITickable {
 				}
 			}
 			slotIdx = s + 1;
-			return;
+			return true;
 		}
+		return true;
 	}
 
 	private int acceptAm(ItemStack item, IItemHandler acc, int s) {
