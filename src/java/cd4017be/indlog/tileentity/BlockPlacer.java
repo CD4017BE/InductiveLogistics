@@ -62,13 +62,13 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 		do {
 			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, pos, res.sideHit, res.hitVec);
 			if (event.isCanceled()) break;
-			if (item.onItemUseFirst(player, world, pos, hand, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord) != EnumActionResult.PASS) break;
+			if (item.onItemUseFirst(player, world, pos, hand, res.sideHit, (float)res.hitVec.x, (float)res.hitVec.y, (float)res.hitVec.z) != EnumActionResult.PASS) break;
 			if ((!sneaking || item.getItem().doesSneakBypassUse(item, world, pos, player) || event.getUseBlock() == Result.ALLOW) && event.getUseBlock() != Result.DENY)
-				if (state.getBlock().onBlockActivated(world, pos, state, player, hand, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord))
+				if (state.getBlock().onBlockActivated(world, pos, state, player, hand, res.sideHit, (float)res.hitVec.x, (float)res.hitVec.y, (float)res.hitVec.z))
 					if (event.getUseItem() != Result.ALLOW) break;
 			if (!item.isEmpty() && event.getUseItem() != Result.DENY) {
 				ItemStack copy = item.copy();
-				item.onItemUse(player, world, pos, hand, res.sideHit, (float)res.hitVec.xCoord, (float)res.hitVec.yCoord, (float)res.hitVec.zCoord);
+				item.onItemUse(player, world, pos, hand, res.sideHit, (float)res.hitVec.x, (float)res.hitVec.y, (float)res.hitVec.z);
 				if (item.isEmpty()) ForgeEventFactory.onPlayerDestroyItem(player, copy, hand);
 			}
 		} while(false); //break goto
@@ -84,14 +84,14 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 		if (res != null) return res;
 		double t, t1;
 		EnumFacing side;
-		if (p1.xCoord < 0) {t = -rX / p1.xCoord; side = EnumFacing.EAST;}
-		else {t = (1.0 - rX) / p1.xCoord; side = EnumFacing.WEST;}
-		if (p1.yCoord < 0) {
-			if ((t1 = -rY / p1.yCoord) < t) {t = t1; side = EnumFacing.UP;}
-		} else if ((t1 = (1.0 - rY) / p1.yCoord) < t) {t = t1; side = EnumFacing.DOWN;}
-		if (p1.zCoord < 0) {
-			if ((t1 = -rZ / p1.zCoord) < t) {t = t1; side = EnumFacing.SOUTH;}
-		} else if ((t1 = (1.0 - rZ) / p1.zCoord) < t) {t = t1; side = EnumFacing.NORTH;}
+		if (p1.x < 0) {t = -rX / p1.x; side = EnumFacing.EAST;}
+		else {t = (1.0 - rX) / p1.x; side = EnumFacing.WEST;}
+		if (p1.y < 0) {
+			if ((t1 = -rY / p1.y) < t) {t = t1; side = EnumFacing.UP;}
+		} else if ((t1 = (1.0 - rY) / p1.y) < t) {t = t1; side = EnumFacing.DOWN;}
+		if (p1.z < 0) {
+			if ((t1 = -rZ / p1.z) < t) {t = t1; side = EnumFacing.SOUTH;}
+		} else if ((t1 = (1.0 - rZ) / p1.z) < t) {t = t1; side = EnumFacing.NORTH;}
 		return new RayTraceResult(p.add(p1.scale(t)), side);
 	}
 
