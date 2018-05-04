@@ -1,3 +1,22 @@
+v1.2.1
+Changes:
+- added Item type locking feature to Item Buffers
+- fixed #19 by properly resetting depth mode after rendering fluids
+- fixed server crash on stacking into dropped items with Dropped Item
+Interface
+- added Item Placer
+- fixed #18 (added slider to Portable Inventory Remote) and fixed
+possible bugs with >255 slots
+- moved WarpPipe ticking to active connector parts to fix some
+mysterious crash
+- changed Tank textures to make them look more like tanks and less like
+glass blocks.
+- fixed class cast crash in pipes
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.2.3
+
 v1.2.0
 Changes:
 - some optimization in Fluid Intake/Outlet algorithm
