@@ -45,11 +45,6 @@ public class WarpPipe extends PassiveMultiblockTile<WarpPipeNode, WarpPipeNetwor
 	}
 
 	@Override
-	public void process() {
-		super.process();
-	}
-
-	@Override
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (world.isRemote) return true;
 		if (cover.interact(this, player, hand, item, dir, X, Y, Z)) return true;

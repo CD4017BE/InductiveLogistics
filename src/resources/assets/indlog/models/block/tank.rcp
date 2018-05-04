@@ -1,6 +1,6 @@
 {
 	Loc tex = "indlog:block/tank";
-	textures = [[tex,"_basic"]$, [tex,"_big"]$, [tex,"_extreme"]$];
+	textures = [[tex,"_basic"]$, [tex,"_big"]$, [tex,"_extreme"]$, [tex,"_basic1"]$, [tex,"_big1"]$, [tex,"_extreme1"]$];
 	colors = [
 		[1,1,1,1]#,
 		[0.7,0.7,0.7,1]#,
@@ -16,7 +16,6 @@ main(t) {
 	if(t >= #colors) {texIdx(1);}
 	else {color(colors:t);}
 	Loc Q = [0,0,0, 16,16,16]#, T = [0,0, 16,16]#;
-	for(F:["u-vB","u+vT","UV-N","UV+S","-VUW","+VUE"]) {
-		add(rect(Q, T, F));
-	}
+	for(F:["UV-N","UV+S","-VUW","+VUE"]) {add(rect(Q, T, F));}
+	for(F:["u-vB","u+vT"]) {add(rect(Q, T, F, 3));}
 }

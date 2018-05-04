@@ -68,7 +68,7 @@ public abstract class ConComp {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
 		if (item.getCount() == 0 && player.isSneaking()) {
 			if (!player.isCreative()) ItemFluidUtil.dropStack(moduleItem(), player);
-			pipe.network.remConnector(pipe, side);
+			pipe.remConnector(side);
 			return true;
 		}
 		return false;
@@ -110,7 +110,7 @@ public abstract class ConComp {
 			pipe.con[side] = 11;
 		} else return false;
 		pipe.setConnect(side, false);
-		pipe.network.addConnector(pipe, con);
+		pipe.addConnector(con);
 		pipe.isBlocked |= 1 << side;
 		return true;
 	}

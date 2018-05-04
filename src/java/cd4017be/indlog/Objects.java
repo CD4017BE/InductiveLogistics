@@ -52,6 +52,7 @@ public class Objects {
 	public static final OrientedBlock FLUID_OUTLET = null;
 	public static final OrientedBlock DROP_INTERFACE = null;
 	public static final OrientedBlock ENTITY_INTERFACE = null;
+	public static final OrientedBlock BLOCK_PLACER = null;
 
 	//ItemBlocks
 	public static final ItemItemPipe item_pipe = null;
@@ -66,6 +67,7 @@ public class Objects {
 	public static final BaseItemBlock fluid_outlet = null;
 	public static final BaseItemBlock drop_interface = null;
 	public static final BaseItemBlock entity_interface = null;
+	public static final BaseItemBlock block_placer = null;
 
 	//Items
 	public static final ItemItemFilter item_filter = null;
@@ -93,7 +95,8 @@ public class Objects {
 			OrientedBlock.create("fluid_intake", Material.IRON, SoundType.METAL, 0, FluidIntake.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
 			OrientedBlock.create("fluid_outlet", Material.IRON, SoundType.METAL, 0, FluidOutlet.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
 			OrientedBlock.create("drop_interface", Material.WOOD, SoundType.WOOD, 0, DropedItemInterface.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
-			OrientedBlock.create("entity_interface", Material.WOOD, SoundType.WOOD, 0, EntityInterface.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
+			OrientedBlock.create("entity_interface", Material.WOOD, SoundType.WOOD, 0, EntityInterface.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog),
+			OrientedBlock.create("block_placer", Material.IRON, SoundType.METAL, 0, BlockPlacer.class, PropertyOrientation.ALL_AXIS).setCreativeTab(tabIndLog)
 		);
 	}
 
@@ -113,6 +116,7 @@ public class Objects {
 			new BaseItemBlock(FLUID_OUTLET),
 			new BaseItemBlock(DROP_INTERFACE),
 			new BaseItemBlock(ENTITY_INTERFACE),
+			new BaseItemBlock(BLOCK_PLACER),
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),

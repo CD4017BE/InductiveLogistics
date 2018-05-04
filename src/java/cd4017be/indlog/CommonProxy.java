@@ -4,9 +4,14 @@ import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
 import cd4017be.indlog.item.ItemPortableCrafter;
 import cd4017be.indlog.item.ItemRemoteInv;
+import cd4017be.indlog.multiblock.FluidExtractor;
+import cd4017be.indlog.multiblock.FluidInjector;
+import cd4017be.indlog.multiblock.ItemExtractor;
+import cd4017be.indlog.multiblock.ItemInjector;
 import cd4017be.indlog.multiblock.WarpPipeNetwork;
 import cd4017be.indlog.tileentity.FluidPipe;
 import cd4017be.indlog.tileentity.AutoCrafter;
+import cd4017be.indlog.tileentity.BlockPlacer;
 import cd4017be.indlog.tileentity.Buffer;
 import cd4017be.indlog.tileentity.DropedItemInterface;
 import cd4017be.indlog.tileentity.EntityInterface;
@@ -39,12 +44,14 @@ public class CommonProxy {
 		FluidPipe.CAP = (int)cfg.getNumber("fluid_pipe_cap", 1000);
 		FluidPipe.TICKS = Math.max((int)cfg.getNumber("fluid_pipe_tick", 1), 1);
 		ItemPipe.TICKS = Math.max((int)cfg.getNumber("item_pipe_tick", 1), 1);
-		WarpPipeNetwork.TICKS = (byte)cfg.getNumber("warp_pipe_tick", 4);
+		FluidExtractor.INTERVAL = FluidInjector.INTERVAL = (byte)cfg.getNumber("fluid_warp_tick", 4);
+		ItemExtractor.INTERVAL = ItemInjector.INTERVAL = (byte)cfg.getNumber("item_warp_tick", 4);
 		cfg.getVect("tank_caps", Tank.CAP);
 		cfg.getVect("buffer_slots", Buffer.SLOTS);
 		cfg.getVect("buffer_stack", Buffer.STACKS);
 		ItemPortableCrafter.INTERVAL = (int)cfg.getNumber("portable_craft_tick", 20);
 		ItemRemoteInv.INTERVAL = (int)cfg.getNumber("remote_inv_tick", 20);
+		ItemRemoteInv.MAX_SLOTS = Math.max(12, (int)cfg.getNumber("remote_max_slots", 96));
 		AutoCrafter.INTERVAL = Math.max((int)cfg.getNumber("auto_craft_tick", 20), 1);
 		FluidIO.CAP = (int)cfg.getNumber("fluid_io_cap", 8000);
 		FluidIO.MAX_SIZE = Math.min((int)cfg.getNumber("fluid_io_range", 127), 127);
@@ -54,6 +61,7 @@ public class CommonProxy {
 		DropedItemInterface.MAX_RANGE = Math.max((int)cfg.getNumber("drop_interface_range", 15), 1);
 		DropedItemInterface.INV_SIZE = (int)cfg.getNumber("drop_interface_slots", 5);
 		EntityInterface.INTERVAL = (int)cfg.getNumber("entity_interface_tick", 10);
+		BlockPlacer.RANGE = (int)cfg.getNumber("block_placer_range", BlockPlacer.RANGE);
 	}
 
 	public void registerRenderers() {
