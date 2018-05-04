@@ -2,6 +2,7 @@ package cd4017be.indlog.item;
 
 import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
+import java.util.Arrays;
 import java.util.List;
 
 import cd4017be.indlog.Objects;
@@ -41,7 +42,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemRemoteInv extends ItemFilteredSubInventory {
 
-	public static int INTERVAL = 20;
+	public static int INTERVAL = 20, MAX_SLOTS = 48;
 
 	public ItemRemoteInv(String id) {
 		super(id);
@@ -109,21 +110,38 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 
 	@Override
 	protected void customPlayerCommand(ItemStack item, EntityPlayer player, byte cmd, PacketBuffer dis) {
-		if (cmd == 2 && player.openContainer != null) {//set all reference ItemStacks to null, so the server thinks they changed and sends the data again.
+		if (cmd == 2 && player.openContainer instanceof TileContainer) {//set all reference ItemStacks to null, so the server thinks they changed and sends the data again.
 			for (Slot s : player.openContainer.inventorySlots)
 				if (s instanceof GlitchSaveSlot)
 					player.openContainer.inventoryItemStacks.set(s.slotNumber, ItemStack.EMPTY);
+			Arrays.fill(((TileContainer)player.openContainer).refInts, 0);
+		} else if (cmd == 3) {
+			NBTTagCompound nbt = item.getTagCompound();
+			if (nbt == null) return;
+			int offset = dis.readInt();
+			if (offset < 0) offset = 0;
+			nbt.setInteger("ofs", offset);
+			if (player.openContainer instanceof TileContainer) {
+				TileContainer cont = (TileContainer)player.openContainer;
+				if (cont.data instanceof GuiData) {
+					GuiData data = (GuiData)cont.data;
+					data.offset = offset;
+				}
+			}
 		}
 	}
 
-	public class GuiData extends ItemGuiData {
+	public class GuiData extends ItemGuiData implements IItemHandler {
 
 		public TileEntity link;
 		public IItemHandler linkedInv;
 		public final int size, ofsY;
+		public int offset, slots;
 
 		public GuiData(int size) {
 			super(ItemRemoteInv.this);
+			if (size > MAX_SLOTS) size = MAX_SLOTS;
+			else if (size < 12 && size != 0) size = 12;
 			this.size = size;
 			this.ofsY = (size - 1) / 12 * 18 - 18;
 		}
@@ -133,6 +151,7 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 			TileContainer cont = (TileContainer)container;
 			this.inv = new InventoryItem(cont.player);
 			ItemStack item = cont.player.inventory.mainInventory.get(cont.player.inventory.currentItem);
+			IItemHandler inventory = null;
 			if (!cont.player.world.isRemote) {
 				NBTTagCompound nbt = item.getTagCompound();
 				link = getLink(nbt);
@@ -143,14 +162,19 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 					cont.player.sendMessage(new TextComponentString(TooltipUtil.translate("gui.cd4017be.remote.selfAcc")));
 					link = null;
 				}
+				if (linkedInv != null) {
+					inventory = this;
+					slots = linkedInv.getSlots(); 
+					offset = Math.max(0, Math.min(nbt.getInteger("ofs"), slots - size));
+				}
 			} else if (size > 0) {
-				linkedInv = new BasicInventory(size);
+				linkedInv = inventory = new BasicInventory(size);
 				//Workaround to fix an inventory sync bug. Sends a request to server that it should send the inventory data again.
 				PacketBuffer dos = BlockGuiHandler.getPacketForItem(cont.player.inventory.currentItem);
 				dos.writeByte(2);
 				BlockGuiHandler.sendPacketToServer(dos);
 			}
-			if (linkedInv == null) linkedInv = new BasicInventory(0); 
+			if (inventory == null) linkedInv = inventory = new BasicInventory(0); 
 			cont.addItemSlot(new SlotItemType(inv, 0, 8, 86 + ofsY, new ItemStack(Objects.item_filter)));
 			cont.addItemSlot(new SlotItemType(inv, 1, 26, 86 + ofsY, new ItemStack(Objects.item_filter)));
 			if (size > 0) {
@@ -158,11 +182,24 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 				int w = size % 12;
 				for (int j = 0; j < h; j++)
 					for (int i = 0; i < 12; i++)
-						cont.addItemSlot(new GlitchSaveSlot(linkedInv, i + 12 * j, 8 + i * 18, 16 + j * 18, false));
+						cont.addItemSlot(new GlitchSaveSlot(inventory, i + 12 * j, 8 + i * 18, 16 + j * 18, false));
 				for (int i = 0; i < w; i++)
-					cont.addItemSlot(new GlitchSaveSlot(linkedInv, i + 12 * h, 8 + i * 18, 16 + h * 18, false));
+					cont.addItemSlot(new GlitchSaveSlot(inventory, i + 12 * h, 8 + i * 18, 16 + h * 18, false));
 			}
 			cont.addPlayerInventory(62, 68 + ofsY, false, true);
+		}
+
+		@Override
+		public int[] getSyncVariables() {
+			return new int[] {slots = linkedInv == null ? 0 : linkedInv.getSlots(), offset};
+		}
+
+		@Override
+		public void setSyncVariable(int i, int v) {
+			switch(i) {
+			case 0: slots = v; break;
+			case 1: offset = v; break;
+			}
 		}
 
 		@Override
@@ -172,7 +209,38 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 			if (size == 0) return true;
 			if (link == null || link != Utils.getTileAt(link.getWorld(), link.getPos())) return false;
 			IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[(item.getTagCompound().getByte("s") & 0xff) % 6]);
-			return acc != null && acc.getSlots() == size;
+			if (acc == null) return false;
+			linkedInv = acc;
+			if (acc.getSlots() - size <= 0) offset = 0;
+			return true;
+		}
+
+		@Override
+		public int getSlots() {
+			return size;
+		}
+
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			slot += offset;
+			return slot < linkedInv.getSlots() ? linkedInv.getStackInSlot(slot) : ItemStack.EMPTY;
+		}
+
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			if ((slot += offset) < linkedInv.getSlots()) return linkedInv.insertItem(slot, stack, simulate);
+			else return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if ((slot += offset) < linkedInv.getSlots()) return linkedInv.extractItem(slot, amount, simulate);
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return (slot += offset) < linkedInv.getSlots() ? linkedInv.getSlotLimit(slot) : 0;
 		}
 
 	}

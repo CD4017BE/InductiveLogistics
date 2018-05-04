@@ -232,7 +232,10 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 						}
 				}
 			}
-			if (target == null) target = pipeClass().cast(world.getTileEntity(pos.offset(EnumFacing.VALUES[dest])));
+			if (target == null) {
+				te = world.getTileEntity(pos.offset(EnumFacing.VALUES[dest]));
+				if (pipeClass().isInstance(te)) target = pipeClass().cast(te);
+			}
 		}
 		flow &= 0xbfff;
 		if (flow != lFlow) {

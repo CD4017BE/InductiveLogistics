@@ -2,9 +2,9 @@ package cd4017be.indlog.multiblock;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.util.PipeFilterFluid;
+import cd4017be.lib.TickRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -14,8 +14,11 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
  * @author CD4017BE
  *
  */
-public class FluidInjector extends FluidComp implements ITickable {
+public class FluidInjector extends FluidComp implements IActiveCon {
 
+	public static int INTERVAL = 4;
+
+	private int timer = Integer.MIN_VALUE;
 	private int slotIdx;
 
 	public FluidInjector(WarpPipeNode pipe, byte side) {
@@ -24,10 +27,29 @@ public class FluidInjector extends FluidComp implements ITickable {
 	}
 
 	@Override
-	public void update() {
-		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return;
+	public void enable() {
+		if (timer < 0 && !pipe.invalid()) {
+			timer = 0;
+			TickRegistry.instance.add(this);
+		}
+	}
+
+	@Override
+	public void disable() {
+		timer = Integer.MIN_VALUE;
+	}
+
+	@Override
+	public boolean tick() {
+		if (++timer < INTERVAL) return timer > 0;
+		if (pipe.invalid()) {
+			disable();
+			return false;
+		} else timer = 0;
+		
+		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return true;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
-		if (acc == null) return;
+		if (acc == null) return true;
 		byte pr = filter == null || (filter.mode & 2) == 0 ? Byte.MIN_VALUE : filter.priority;
 		IFluidTankProperties[] tprs = acc.getTankProperties();
 		int m = tprs.length;
@@ -48,8 +70,9 @@ public class FluidInjector extends FluidComp implements ITickable {
 				}
 			} else continue;
 			slotIdx = (i + 1) % m;
-			return;
+			return true;
 		}
+		return true;
 	}
 
 	private int acceptAm(FluidStack fluid, IFluidHandler acc) {

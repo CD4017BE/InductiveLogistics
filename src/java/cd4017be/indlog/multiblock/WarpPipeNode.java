@@ -2,11 +2,15 @@ package cd4017be.indlog.multiblock;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import cd4017be.api.IAbstractTile;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
 import cd4017be.lib.templates.MultiblockComp;
+import cd4017be.lib.tileentity.BaseTileEntity;
+import cd4017be.lib.util.Utils;
 
 /**
  * 
@@ -28,7 +32,19 @@ public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> 
 	public void setUID(long uid) {
 		super.setUID(uid);
 		if (network == null) new WarpPipeNetwork(this);
-		if (!tile.isClient()) network.enable();
+		if (!tile.isClient())
+			for (ConComp con : cons)
+				if (con instanceof IActiveCon)
+					((IActiveCon)con).enable();
+	}
+
+	public void onRemoved() {
+		for (ConComp c : cons)
+			if (c != null) {
+				network.remConnector(c);
+				if (c instanceof IActiveCon)
+					((IActiveCon)c).disable();
+			}
 	}
 
 	@Override
@@ -37,6 +53,29 @@ public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> 
 		for (ConComp con : cons)
 			if (con instanceof IObjLink)
 				((IObjLink)con).updateLink();
+	}
+
+	public void addConnector(ConComp con) {
+		cons[con.side] = con;
+		network.addConnector(con);
+		if (con instanceof IObjLink) markDirty();
+		if (!tile.invalid()) {
+			Utils.notifyNeighborTile((TileEntity)tile, EnumFacing.VALUES[con.side]);
+			if (!tile.isClient() && con instanceof IActiveCon) ((IActiveCon)con).enable();
+		}
+	}
+
+	public ConComp remConnector(byte side) {
+		con[side] = 0;
+		ConComp con = cons[side];
+		network.remConnector(con);
+		cons[side] = null;
+		markDirty();
+		hasFilters &= ~(1 << side);
+		((BaseTileEntity)tile).markUpdate();
+		if (!tile.invalid()) Utils.notifyNeighborTile((TileEntity)tile, EnumFacing.VALUES[con.side]);
+		if (con instanceof IActiveCon) ((IActiveCon)con).disable();
+		return con;
 	}
 
 	@Override

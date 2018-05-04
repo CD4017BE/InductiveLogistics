@@ -27,6 +27,10 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
+/**
+ * 
+ * @author cd4017be
+ */
 public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiData, ClientPacketReceiver {
 
 	public static final int[] SLOTS = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -65,6 +69,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		nbt.setByte("type", type);
+		nbt.setBoolean("lock", inventory.locked);
 		save(nbt);
 		for (int i = 0; i < sideAccs.length; i++) {
 			GroupAccess acc = sideAccs[i];
@@ -82,6 +87,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 		super.readFromNBT(nbt);
 		type = nbt.getByte("type");
 		inventory.items = new ItemStack[SLOTS[type]];
+		inventory.locked = nbt.getBoolean("lock");
 		load(nbt);
 		for (int i = 0; i < sideAccs.length; i++) {
 			String k = "sacc" + i;
@@ -108,14 +114,14 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 
 	private void load(NBTTagCompound nbt) {
 		inventory.slots = nbt.getByte("slots") & 0xff;
-		inventory.stackSize = nbt.getShort("stack") & 0xffff;
+		inventory.stackSize = nbt.getInteger("stack");
 		Arrays.fill(inventory.items, ItemStack.EMPTY);
 		for (NBTBase t : nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND)) {
 			NBTTagCompound tag = (NBTTagCompound)t;
 			int s = tag.getByte("Slot") & 0xff;
 			if (s < inventory.items.length) {
 				ItemStack stack = new ItemStack(tag);
-				stack.setCount(tag.getShort("Num"));
+				stack.setCount(tag.getInteger("Num"));
 				inventory.items[s] = stack;
 			}
 		}
@@ -123,7 +129,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 
 	private void save(NBTTagCompound nbt) {
 		nbt.setByte("slots", (byte) inventory.slots);
-		nbt.setShort("stack", (short) inventory.stackSize);
+		nbt.setInteger("stack", inventory.stackSize);
 		NBTTagList list = new NBTTagList();
 		for (int s = 0; s < inventory.items.length; s++){
 			ItemStack stack = inventory.items[s];
@@ -132,7 +138,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 				tag.setByte("Slot", (byte)s);
 				stack.writeToNBT(tag);
 				tag.removeTag("Count");
-				tag.setShort("Num", (short)stack.getCount());
+				tag.setInteger("Num", stack.getCount());
 				list.appendTag(tag);
 			}
 		}
@@ -165,7 +171,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	@Override
 	public int[] getSyncVariables() {
 		int[] data = new int[8];
-		data[0] = inventory.slots;
+		data[0] = inventory.slots | (inventory.locked ? 0x10000 : 0);
 		data[1] = inventory.stackSize;
 		for (int i = 0; i < sideAccs.length; i++) {
 			GroupAccess acc = sideAccs[i];
@@ -177,7 +183,10 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	@Override
 	public void setSyncVariable(int i, int v) {
 		switch(i) {
-		case 0: inventory.slots = v; break;
+		case 0:
+			inventory.slots = v & 0xffff;
+			inventory.locked = (v & 0x10000) != 0;
+			break;
 		case 1: inventory.stackSize = v; break;
 		default: if ((i-=2) >= sideAccs.length) return;
 			if (v == 0) sideAccs[i] = null;
@@ -206,7 +215,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 			if (inventory.slots > SLOTS[type]) inventory.slots = SLOTS[type];
 			break;
 		case 1:
-			inventory.stackSize = data.readShort() & 0xffff;
+			inventory.stackSize = data.readInt();
 			if (inventory.stackSize > STACKS[type]) inventory.stackSize = STACKS[type];
 			break;
 		case 2: {
@@ -221,6 +230,9 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 			if (acc == null) sideAccs[s] = acc = inventory.new GroupAccess();
 			acc.setRange(data.readByte() & 0xff, data.readByte() & 0xff);
 		} break;
+		case 4:
+			inventory.locked ^= true;
+			break;
 		}
 		markDirty();
 	}
