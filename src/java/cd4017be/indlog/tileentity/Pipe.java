@@ -5,6 +5,8 @@ import static cd4017be.lib.property.PropertyByte.cast;
 import java.util.ArrayList;
 import java.util.List;
 
+import cd4017be.lib.TickRegistry;
+import cd4017be.lib.TickRegistry.IUpdatable;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
@@ -36,7 +38,7 @@ import net.minecraftforge.common.util.Constants.NBT;
  *
  * @author CD4017BE
  */
-public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O, I>, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable, ITilePlaceHarvest {
+public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O, I>, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable, ITilePlaceHarvest, IUpdatable {
 
 	public static boolean SAVE_PERFORMANCE;
 
@@ -51,7 +53,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	private byte time;
 	protected boolean updateCon = true;
 	protected Cover cover = new Cover();
-	private boolean onChunkBorder;
+	private boolean onChunkBorder, justLoaded;
 
 	public Pipe() {}
 
@@ -104,7 +106,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				}
 			}
 		} else if (SAVE_PERFORMANCE) return;
-		if (content != last) {
+		if (!cover.opaque && content != last) {
 			last = content;
 			markUpdate();
 		}
@@ -127,7 +129,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 			target = null;
 			dest = -1;
 		}
-		if (onChunkBorder && unloadedNeighbor()) {
+		if (justLoaded || (onChunkBorder && unloadedNeighbor())) {
 			//only refresh cached tiles
 			for (EnumFacing s : EnumFacing.values()) {
 				int io = getFlowBit(s.ordinal());
@@ -397,6 +399,11 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	}
 
 	@Override
+	public boolean isOpaque() {
+		return cover.opaque;
+	}
+
+	@Override
 	public void onPlaced(EntityLivingBase entity, ItemStack item) {
 	}
 
@@ -427,5 +434,21 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 	protected abstract I getInv(boolean filtered);
 	protected abstract Class<T> pipeClass();
 	protected abstract Capability<I> capability();
+
+	@Override
+	public void process() {
+		if (justLoaded) {
+			justLoaded = false;
+			if(!unloaded) updateConnections();
+		}
+	}
+
+	@Override
+	protected void setupData() {
+		if (!justLoaded) {
+			justLoaded = true;
+			TickRegistry.instance.updates.add(this);
+		}
+	}
 
 }
