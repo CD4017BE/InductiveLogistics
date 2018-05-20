@@ -203,4 +203,9 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 		return te instanceof ILinkedInventory && ((ILinkedInventory)te).getLinkDir() == d.getOpposite();
 	}
 
+	@Override
+	public boolean isOpaque() {
+		return cover.opaque;
+	}
+
 }

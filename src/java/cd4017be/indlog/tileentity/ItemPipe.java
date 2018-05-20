@@ -165,6 +165,11 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 		return list;
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 0 && !cover.opaque;
+	}
+
 	private class Inventory extends AbstractInventory {
 
 		@Override

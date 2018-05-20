@@ -147,6 +147,11 @@ public class WarpPipe extends PassiveMultiblockTile<WarpPipeNode, WarpPipeNetwor
 	}
 
 	@Override
+	public boolean isOpaque() {
+		return cover.opaque;
+	}
+
+	@Override
 	public byte getFluidConnectDir(EnumFacing s) {
 		byte t = comp.con[s.ordinal()];
 		return (byte)(t == 4 ? 2 : t == 5 ? 1 : 0);
