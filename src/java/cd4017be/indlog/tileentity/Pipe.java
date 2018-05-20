@@ -106,7 +106,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				}
 			}
 		} else if (SAVE_PERFORMANCE) return;
-		if (content != last) {
+		if (!cover.opaque && content != last) {
 			last = content;
 			markUpdate();
 		}
@@ -396,6 +396,11 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 		EnumFacing f = EnumFacing.VALUES[m];
 		TileEntity p = Utils.neighborTile(this, f);
 		return pipeClass().isInstance(p);
+	}
+
+	@Override
+	public boolean isOpaque() {
+		return cover.opaque;
 	}
 
 	@Override

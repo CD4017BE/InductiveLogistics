@@ -172,6 +172,11 @@ public class FluidPipe extends Pipe<FluidPipe, FluidStack, PipeFilterFluid, IFlu
 		return list;
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1 && !cover.opaque;
+	}
+
 	private class Tank extends LinkedTank {
 
 		public Tank(int cap, Supplier<FluidStack> get, Consumer<FluidStack> set) {

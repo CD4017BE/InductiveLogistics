@@ -202,6 +202,11 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 		markDirty();
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+
 	private class Inventory extends AbstractInventory {
 
 		@Override
