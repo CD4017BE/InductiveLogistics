@@ -1,3 +1,13 @@
+v0.5.1
+Changes:
+- pipe model parts and contents hidden under opaque covers is no longer rendered (the server won't even send update packets for them) for performance improvement.
+- fixed #25 Item Placer crash with vanilla blocks that have GUIs.
+- fixed #23 pipe connection issues with immersive multiblocks and potential other TileEntities that take time to initialize after load.
+Dependencies:
+- for MC-1.11.2
+- forge-13.20.0.2315 (or newer)
+- CD4017BE_lib-5.3.4
+
 v0.5.0
 Changes:
 - added Item type locking feature to Item Buffers
