@@ -10,6 +10,7 @@ import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.Orientation;
+import cd4017be.lib.util.SaferFakePlayer;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -194,7 +195,7 @@ public class BlockPlacer extends BaseTileEntity implements INeighborAwareTile, I
 
 	private void initializePlayer() {
 		if (!(world instanceof WorldServer)) return;
-		player = new FakePlayer((WorldServer)world, gp);
+		player = new SaferFakePlayer((WorldServer)world, gp);
 		player.rotationYaw = yaw;
 		player.rotationPitch = pitch;
 		player.setSneaking(sneaking);
