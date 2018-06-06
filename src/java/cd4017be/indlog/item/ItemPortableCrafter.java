@@ -136,7 +136,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 
 	@Override
 	public void onUpdate(ItemStack item, World world, Entity entity, int s, boolean b) {
-		if (entity instanceof EntityPlayer) {
+		if (entity instanceof EntityPlayer && !world.isRemote) {
 			EntityPlayer player = (EntityPlayer)entity;
 			NBTTagCompound nbt = item.getTagCompound();
 			if (nbt == null) item.setTagCompound(nbt = new NBTTagCompound());
@@ -182,7 +182,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 		}
 		
 		int craft(InventoryPlayer inv, int n, boolean auto) {
-			if (recipe == null) return 0;
+			if (recipe == null || result.isEmpty()) return 0;
 			//calculate amount to craft
 			if (auto)
 				for (ItemStack stack : inv.mainInventory)
@@ -194,6 +194,7 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 			for (int j = 0; j < ingreds.length; j++) {
 				ItemStack ingred = ingreds[j];
 				int o = ingred.getCount(), m = 0;
+				if (o <= 0) {result = ItemStack.EMPTY; return 0;}
 				Slot slot = null;
 				ItemStack prev = null;
 				for (int i = 0; i < inv.mainInventory.size(); i++) {
