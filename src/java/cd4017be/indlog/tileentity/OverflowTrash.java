@@ -31,12 +31,13 @@ public class OverflowTrash extends BaseTileEntity implements IItemHandler, IFlui
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing facing) {
 		return (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				&& facing != getOrientation().front && !RECURSION;
+				&& facing != getOrientation().front && (!RECURSION || world.isRemote);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing facing) {
+		if (world.isRemote) return hasCapability(cap, facing) ? (T) this : null;
 		EnumFacing dir = getOrientation().front;
 		if (dir == facing || RECURSION) return null;
 		try {RECURSION = true;
@@ -61,7 +62,7 @@ public class OverflowTrash extends BaseTileEntity implements IItemHandler, IFlui
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (simulate || targetItem == null || RECURSION) return ItemStack.EMPTY;
+		if (simulate || targetItem == null || RECURSION || world.isRemote) return ItemStack.EMPTY;
 		try {RECURSION = true; ItemHandlerHelper.insertItem(targetItem, stack, simulate);} finally {RECURSION = false;}
 		return ItemStack.EMPTY;
 	}
@@ -83,7 +84,7 @@ public class OverflowTrash extends BaseTileEntity implements IItemHandler, IFlui
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if (doFill && targetFluid != null && !RECURSION)
+		if (doFill && targetFluid != null && !RECURSION && !world.isRemote)
 			try {RECURSION = true; targetFluid.fill(resource, doFill); } finally {RECURSION = false;}
 		return resource.amount;
 	}
