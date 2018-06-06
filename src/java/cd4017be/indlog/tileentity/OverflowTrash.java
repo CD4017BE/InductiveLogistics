@@ -31,12 +31,13 @@ public class OverflowTrash extends BaseTileEntity implements IItemHandler, IFlui
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing facing) {
 		return (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				&& facing != getOrientation().front && !RECURSION;
+				&& facing != getOrientation().front && (!RECURSION || world.isRemote);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> cap, EnumFacing facing) {
+		if (world.isRemote) return hasCapability(cap, facing) ? (T) this : null;
 		EnumFacing dir = getOrientation().front;
 		if (dir == facing || RECURSION) return null;
 		try {RECURSION = true;
