@@ -1,3 +1,12 @@
+v1.2.3
+Changes:
+fixed #27 div / 0 crash when Portable Autocrafter tries recipes with empty stacks as result
+fixed #28 server & client thread race condition on 'RECURSION' flag in Overflow Trash
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.2.4
+
 v1.2.2
 Changes:
 - pipe model parts and contents hidden under opaque covers is no longer rendered (the server won't even send update packets for them) for performance improvement.
