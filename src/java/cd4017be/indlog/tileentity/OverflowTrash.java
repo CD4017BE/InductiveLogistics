@@ -62,7 +62,7 @@ public class OverflowTrash extends BaseTileEntity implements IItemHandler, IFlui
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (simulate || targetItem == null || RECURSION) return ItemStack.EMPTY;
+		if (simulate || targetItem == null || RECURSION || world.isRemote) return ItemStack.EMPTY;
 		try {RECURSION = true; ItemHandlerHelper.insertItem(targetItem, stack, simulate);} finally {RECURSION = false;}
 		return ItemStack.EMPTY;
 	}
@@ -84,7 +84,7 @@ public class OverflowTrash extends BaseTileEntity implements IItemHandler, IFlui
 
 	@Override
 	public int fill(FluidStack resource, boolean doFill) {
-		if (doFill && targetFluid != null && !RECURSION)
+		if (doFill && targetFluid != null && !RECURSION && !world.isRemote)
 			try {RECURSION = true; targetFluid.fill(resource, doFill); } finally {RECURSION = false;}
 		return resource.amount;
 	}
