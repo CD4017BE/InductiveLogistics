@@ -67,6 +67,7 @@ public class ClientProxy extends CommonProxy {
 		
 		BlockItemRegistry.registerRender(fluid_filter);
 		BlockItemRegistry.registerRender(item_filter);
+		BlockItemRegistry.registerRender(amount_filter);
 		BlockItemRegistry.registerRender(portable_craft);
 		BlockItemRegistry.registerRender(remote_inv);
 		
