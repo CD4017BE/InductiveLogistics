@@ -2,13 +2,13 @@ package cd4017be.indlog.item;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import cd4017be.indlog.render.gui.GuiItemFilter;
-import cd4017be.indlog.util.PipeFilterItem;
+import cd4017be.indlog.util.filter.ItemFilterProvider;
+import cd4017be.indlog.util.filter.PipeFilterItem;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.util.TooltipUtil;
@@ -37,7 +37,7 @@ import net.minecraft.world.World;
  *
  * @author CD4017BE
  */
-public class ItemItemFilter extends BaseItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
+public class ItemItemFilter extends BaseItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory, ItemFilterProvider {
 
 	public ItemItemFilter(String id) {
 		super(id);
@@ -47,7 +47,7 @@ public class ItemItemFilter extends BaseItem implements IGuiItem, ClientItemPack
 	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
-			PipeFilterItem filter = PipeFilterItem.load(item.getTagCompound());
+			PipeFilterItem filter = getItemFilter(item);
 			String s;
 			if (states.length >= 8) {
 				s = states[(filter.mode & 1) == 0 ? 0 : 1];
@@ -123,6 +123,13 @@ public class ItemItemFilter extends BaseItem implements IGuiItem, ClientItemPack
 			cont.addPlayerInventory(8, 68, false, true);
 		}
 
+	}
+
+	@Override
+	public PipeFilterItem getItemFilter(ItemStack stack) {
+		PipeFilterItem filter = new PipeFilterItem();
+		if (stack != null && stack.hasTagCompound()) filter.deserializeNBT(stack.getTagCompound());
+		return filter;
 	}
 
 }

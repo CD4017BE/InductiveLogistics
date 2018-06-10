@@ -1,9 +1,10 @@
 package cd4017be.indlog.tileentity;
 
 import java.util.List;
-import cd4017be.indlog.Objects;
+
 import cd4017be.indlog.util.IItemPipeCon;
-import cd4017be.indlog.util.PipeFilterItem;
+import cd4017be.indlog.util.filter.DummyFilter;
+import cd4017be.indlog.util.filter.ItemFilterProvider;
 import cd4017be.lib.capability.AbstractInventory;
 import cd4017be.lib.capability.LinkedInventory;
 import cd4017be.lib.util.ItemFluidUtil;
@@ -23,7 +24,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  *
  * @author CD4017BE
  */
-public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHandler> {
+public class ItemPipe extends Pipe<ItemPipe, ItemStack, IItemHandler> {
 
 	public static int TICKS;
 
@@ -58,7 +59,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 
 	@Override
 	protected boolean transferOut(IItemHandler acc) {
-		if (PipeFilterItem.isNullEq(filter)) {
+		if (filter == null || filter.noEffect()) {
 			if ((content = ItemHandlerHelper.insertItemStacked(acc, content, false)).getCount() > 0) return false;
 		} else {
 			int m = filter.insertAmount(content, acc);
@@ -72,7 +73,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 
 	@Override
 	protected boolean transferIn(IItemHandler acc) {
-		if (PipeFilterItem.isNullEq(filter)) {
+		if (filter == null || filter.noEffect()) {
 			if (content == null) setItem(ItemFluidUtil.drain(acc, -1), 0);
 			else {
 				int m = content.getMaxStackSize() - content.getCount();
@@ -98,16 +99,14 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	public boolean onActivated(EntityPlayer player, EnumHand hand, ItemStack item, EnumFacing dir, float X, float Y, float Z) {
 		if (super.onActivated(player, hand, item, dir, X, Y, Z)) return true;
 		if (filter != null && !player.isSneaking() && item.getCount() == 0) {
-			item = new ItemStack(Objects.item_filter);
-			item.setTagCompound(PipeFilterItem.save(filter));
+			player.setHeldItem(hand, filter.getItemStack());
 			filter = null;
 			flow |= 0x8000;
-			player.setHeldItem(hand, item);
 			markUpdate();
 			markDirty();
 			return true;
-		} else if (filter == null && type != 0 && item.getItem() == Objects.item_filter && item.getTagCompound() != null) {
-			filter = PipeFilterItem.load(item.getTagCompound());
+		} else if (filter == null && type != 0 && item.getItem() instanceof ItemFilterProvider
+				&& (filter = ((ItemFilterProvider)item.getItem()).getItemFilter(item)) != null) {
 			flow &= 0x7fff;
 			item.grow(-1);
 			player.setHeldItem(hand, item);
@@ -119,7 +118,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		if (filter != null) nbt.setTag("filter", PipeFilterItem.save(filter));
+		if (filter != null) nbt.setTag("filter", filter.writeNBT());
 		if (content != null) nbt.setTag("item", content.writeToNBT(new NBTTagCompound()));
 		return super.writeToNBT(nbt);
 	}
@@ -127,7 +126,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if (nbt.hasKey("filter")) filter = PipeFilterItem.load(nbt.getCompoundTag("filter"));
+		if (nbt.hasKey("filter")) filter = ItemFilterProvider.load(nbt.getCompoundTag("filter"));
 		else filter = null;
 		if (nbt.hasKey("item")) content = new ItemStack(nbt.getCompoundTag("item"));
 		else content = null;
@@ -140,16 +139,13 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 		byte f = nbt.getByte("filt");
 		if (f == -1 ^ filter != null) return false;
 		if (f == -1) filter = null;
-		else {
-			filter = new PipeFilterItem();
-			filter.mode = f;
-		}
+		else filter = new DummyFilter<ItemStack, IItemHandler>(f);
 		return true;
 	}
 
 	@Override
 	protected void getUpdatePacket(NBTTagCompound nbt) {
-		nbt.setByte("filt", filter == null ? -1 : (byte)(filter.mode & 2));
+		nbt.setByte("filt", (byte) (filter == null ? -1 : filter.blocking() ? 2 : 0));
 		if (last != null) nbt.setTag("it", last.writeToNBT(new NBTTagCompound()));
 	}
 
@@ -157,11 +153,7 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 	public List<ItemStack> dropItem(IBlockState state, int fortune) {
 		List<ItemStack> list = super.dropItem(state, fortune);
 		if (content != null) list.add(content);
-		if (filter != null) {
-			ItemStack item = new ItemStack(Objects.item_filter);
-			item.setTagCompound(PipeFilterItem.save(filter));
-			list.add(item);
-		}
+		if (filter != null) list.add(filter.getItemStack());
 		return list;
 	}
 
@@ -169,14 +161,14 @@ public class ItemPipe extends Pipe<ItemPipe, ItemStack, PipeFilterItem, IItemHan
 
 		@Override
 		public int insertAm(int slot, ItemStack item) {
-			if ((type & 1) == 0 && (PipeFilterItem.isNullEq(filter) || filter.matches(item)))
+			if ((type & 1) == 0 && (filter == null || filter.matches(item)))
 				return Math.min(64, item.getMaxStackSize());
 			return 0;
 		}
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if (content != null && (type & 1) != 0 && (PipeFilterItem.isNullEq(filter) || filter.matches(content)))
+			if (content != null && (type & 1) != 0 && (filter == null || filter.matches(content)))
 				return super.extractItem(slot, amount, simulate);
 			return ItemStack.EMPTY;
 		}

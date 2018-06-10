@@ -13,9 +13,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
-import cd4017be.indlog.util.PipeFilterItem;
+import cd4017be.indlog.util.filter.ItemFilterProvider;
+import cd4017be.indlog.util.filter.PipeFilter;
 import cd4017be.lib.util.ItemFluidUtil;
 
 /**
@@ -26,7 +26,7 @@ import cd4017be.lib.util.ItemFluidUtil;
 public abstract class ItemComp extends ConComp implements IObjLink {
 
 	public ICapabilityProvider link;
-	public PipeFilterItem filter;
+	public PipeFilter<ItemStack, IItemHandler> filter;
 
 	public ItemComp(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
@@ -34,15 +34,15 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 
 	@Override
 	public void load(NBTTagCompound nbt) {
-		if (nbt.hasKey("mode")) {
-			filter = PipeFilterItem.load(nbt);
+		if (nbt.hasKey("id") || nbt.hasKey("mode")) {
+			filter = ItemFilterProvider.load(nbt);
 			pipe.hasFilters |= 1 << side;
 		} else pipe.hasFilters &= ~(1 << side);
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt) {
-		if (filter != null) filter.save(nbt);
+		if (filter != null) nbt.merge(filter.writeNBT());
 	}
 
 	/**
@@ -65,10 +65,8 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
 		if (item.getCount() == 0) {
 			if (filter != null) {
-				item = new ItemStack(Objects.item_filter);
-				item.setTagCompound(PipeFilterItem.save(filter));
+				ItemFluidUtil.dropStack(filter.getItemStack(), player);
 				filter = null;
-				ItemFluidUtil.dropStack(item, player);
 				pipe.network.reorder(this);
 				pipe.hasFilters &= ~(1 << side);
 				pipe.isBlocked |= 1 << side;
@@ -77,8 +75,8 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 				pipe.isBlocked ^= 1 << side;
 				return true;
 			}
-		} else if (filter == null && item.getItem() == Objects.item_filter && item.getTagCompound() != null) {
-			filter = PipeFilterItem.load(item.getTagCompound());
+		} else if (filter == null && item.getItem() instanceof ItemFilterProvider
+				&& (filter = ((ItemFilterProvider)item.getItem()).getItemFilter(item)) != null) {
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			pipe.network.reorder(this);
@@ -91,11 +89,7 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 
 	@Override
 	public void dropContent(List<ItemStack> list) {
-		if (filter != null) {
-			ItemStack item = new ItemStack(Objects.item_filter);
-			item.setTagCompound(PipeFilterItem.save(filter));
-			list.add(item);
-		}
+		if (filter != null) list.add(filter.getItemStack());
 		super.dropContent(list);
 	}
 
@@ -118,7 +112,7 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return item;
 		int n = item.getCount();
-		if (PipeFilterItem.isNullEq(filter)) return ItemHandlerHelper.insertItemStacked(acc, item, false);
+		if (filter == null || filter.noEffect()) return ItemHandlerHelper.insertItemStacked(acc, item, false);
 		n = filter.insertAmount(item, acc);
 		if (n == 0) return item;
 		if (n > item.getCount()) n = item.getCount();
@@ -127,7 +121,7 @@ public abstract class ItemComp extends ConComp implements IObjLink {
 	}
 
 	public byte getPriority() {
-		return filter == null ? 0 : filter.priority;
+		return filter == null ? 0 : filter.priority();
 	}
 
 }

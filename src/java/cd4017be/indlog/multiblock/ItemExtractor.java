@@ -60,7 +60,7 @@ public class ItemExtractor extends ItemComp implements IActiveCon {
 		}
 		m = stack.getCount();
 		if (target < 0 || m == 0) return true;
-		m -= pipe.network.insertItem(stack, filter == null || (filter.mode & 2) == 0 ? Byte.MAX_VALUE : filter.priority).getCount();
+		m -= pipe.network.insertItem(stack, filter == null || !filter.blocking() ? Byte.MAX_VALUE : filter.priority()).getCount();
 		if (m > 0) acc.extractItem(target, m, false);
 		return true;
 	}

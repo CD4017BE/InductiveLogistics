@@ -4,7 +4,6 @@ import java.util.function.ToIntFunction;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IFluidSrc;
-import cd4017be.indlog.util.PipeFilterFluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,7 +33,7 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return 0;
 		fluid = new FluidStack(fluid, max);
-		if (!PipeFilterFluid.isNullEq(filter)) {
+		if (!filter.noEffect()) {
 			fluid = filter.getExtract(fluid, acc);
 			if (fluid == null) return 0;
 		}
@@ -50,7 +49,7 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 		FluidStack stack;
 		for (IFluidTankProperties inf : acc.getTankProperties())
 			if((stack = inf.getContents()) != null && inf.canDrainFluidType(stack)) {
-				if (!PipeFilterFluid.isNullEq(filter)) {
+				if (!filter.noEffect()) {
 					stack = filter.getExtract(stack, acc);
 					if (stack == null) continue;
 				}
