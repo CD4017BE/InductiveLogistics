@@ -1,7 +1,6 @@
 package cd4017be.indlog.multiblock;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.TickRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -48,10 +47,10 @@ public class FluidExtractor extends FluidComp implements IActiveCon {
 		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return true;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return true;
-		FluidStack stack = PipeFilterFluid.isNullEq(filter) ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
+		FluidStack stack = filter.noEffect() ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
 		if (stack == null) return true;
 		int n = stack.amount;
-		FluidStack result = pipe.network.insertFluid(stack.copy(), filter == null || (filter.mode & 2) == 0 ? Byte.MAX_VALUE : filter.priority);
+		FluidStack result = pipe.network.insertFluid(stack.copy(), filter == null || !filter.blocking() ? Byte.MAX_VALUE : filter.priority());
 		if (result != null) stack.amount -= result.amount;
 		if (n > 0) acc.drain(stack, true);
 		return true;

@@ -4,7 +4,7 @@ import java.util.function.ToIntFunction;
 
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemSrc;
-import cd4017be.indlog.util.PipeFilterItem;
+import cd4017be.indlog.util.filter.FilterBase;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -32,10 +32,13 @@ public class ItemSource extends ItemComp implements IItemSrc {
 		if ((filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return 0;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return 0;
-		if (!PipeFilterItem.isNullEq(filter)) {
-			filter.mode ^= 1;
-			max = filter.getExtract(ItemHandlerHelper.copyStackWithSize(item, max), acc).getCount();
-			filter.mode ^= 1;
+		if (!filter.noEffect()) {
+			if (filter instanceof FilterBase) {
+				FilterBase<?,?> f = (FilterBase<?,?>)filter;
+				f.mode ^= 1;
+				max = filter.getExtract(ItemHandlerHelper.copyStackWithSize(item, max), acc).getCount();
+				f.mode ^= 1;
+			} else max = filter.getExtract(ItemHandlerHelper.copyStackWithSize(item, max), acc).getCount();
 			if (max <= 0) return 0;
 		}
 		return ItemFluidUtil.drain(acc, item, max);
@@ -49,10 +52,13 @@ public class ItemSource extends ItemComp implements IItemSrc {
 		for (int i = 0; i < acc.getSlots(); i++) {
 			ItemStack stack = acc.getStackInSlot(i);
 			if (stack.getCount() <= 0) continue;
-			if (!PipeFilterItem.isNullEq(filter)) {
-				filter.mode ^= 1;
-				stack = filter.getExtract(stack, acc);
-				filter.mode ^= 1;
+			if (!filter.noEffect()) {
+				if (filter instanceof FilterBase) {
+					FilterBase<?,?> f = (FilterBase<?,?>)filter;
+					f.mode ^= 1;
+					stack = filter.getExtract(stack, acc);
+					f.mode ^= 1;
+				} else stack = filter.getExtract(stack, acc);
 				if (stack == ItemStack.EMPTY) continue;
 			}
 			int n = acceptor.applyAsInt(stack);

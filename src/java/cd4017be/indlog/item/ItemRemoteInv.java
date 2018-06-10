@@ -2,8 +2,6 @@ package cd4017be.indlog.item;
 
 import java.util.Arrays;
 import java.util.List;
-
-import cd4017be.indlog.Objects;
 import cd4017be.indlog.render.gui.GuiRemoteInventory;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.Gui.DataContainer;
@@ -171,9 +169,9 @@ public class ItemRemoteInv extends ItemFilteredSubInventory {
 				dos.writeByte(2);
 				BlockGuiHandler.sendPacketToServer(dos);
 			}
-			if (inventory == null) linkedInv = inventory = new BasicInventory(0); 
-			cont.addItemSlot(new SlotItemType(inv, 0, 8, 86 + ofsY, new ItemStack(Objects.item_filter)));
-			cont.addItemSlot(new SlotItemType(inv, 1, 26, 86 + ofsY, new ItemStack(Objects.item_filter)));
+			if (inventory == null) linkedInv = inventory = new BasicInventory(0);
+			cont.addItemSlot(new SlotItemType(inv, 0, 8, 86 + ofsY, FILTER_SLOT));
+			cont.addItemSlot(new SlotItemType(inv, 1, 26, 86 + ofsY, FILTER_SLOT));
 			if (size > 0) {
 				int h = size / 12;
 				int w = size % 12;
