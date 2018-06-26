@@ -120,7 +120,7 @@ public class Objects {
 			new BaseItemBlock(BLOCK_PLACER),
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
-			new ItemItemFilter("amount_filter").setCreativeTab(tabIndLog),
+			new ItemAmountFilter("amount_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),
 			new ItemRemoteInv("remote_inv").setCreativeTab(tabIndLog)
 		);

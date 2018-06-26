@@ -66,7 +66,9 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 		if (nbt == null) return ItemStack.EMPTY;
 		Item i = Item.getByNameOrId(nbt.getString("id"));
 		if (i == null) i = Objects.item_filter;
-		return new ItemStack(i, 1, 0, nbt);
+		ItemStack stack = new ItemStack(i);
+		stack.setTagCompound(nbt);
+		return stack;
 	}
 
 	public static NBTTagCompound saveFilter(ItemStack item) {

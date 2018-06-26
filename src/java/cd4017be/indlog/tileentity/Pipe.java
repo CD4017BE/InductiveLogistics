@@ -88,7 +88,7 @@ public abstract class Pipe<T extends Pipe<T, O, I>, O, I> extends BaseTileEntity
 				}
 			break;
 			case 2:
-				if ((flow & 0x8000) == 0 && (filter == null || filter.active(redstone > 0))) {
+				if ((flow & 0x8000) == 0 && (filter == null || filter.active(redstone > 0) && (content == null || !filter.blocking()))) {
 					I acc;
 					for (TileAccess inv : invs)
 						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;

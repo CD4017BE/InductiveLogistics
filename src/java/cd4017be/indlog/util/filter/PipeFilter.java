@@ -51,7 +51,9 @@ public interface PipeFilter<Obj, Inv> extends IFilter<Obj, Inv>, INBTSerializabl
 	 * @return an ItemStack representing this filter
 	 */
 	default ItemStack getItemStack() {
-		return new ItemStack(item(), 1, 0, serializeNBT());
+		ItemStack stack = new ItemStack(item());
+		stack.setTagCompound(serializeNBT());
+		return stack;
 	}
 
 	/**
