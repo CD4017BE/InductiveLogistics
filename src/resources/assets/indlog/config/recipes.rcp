@@ -1,4 +1,4 @@
-VERSION = 36;
+VERSION = 38;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -71,6 +71,7 @@ INIT() {
 	add("shaped", it("item.remote_inv", 1), "021/343", it("itemPipeE"), it("itemPipeI"), it("minecraft:ender_chest"), "string", "gemDiamond");
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shaped", it("item.item_filter"), "012", it("itemPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
+	add("shaped", it("item.amount_filter"), " 3 /012", it("itemPipeT"), it("minecraft:comparator"), it("fluidPipeT"), it("minecraft:stone_pressure_plate"));
 	add("shapedNBT", "#mode,#maxAm,#prior,#Fluids", it("item.fluid_filter", 2), "0/0", it("item.fluid_filter"));
 	add("shapedNBT", "#mode,#ore,#prior,#Items", it("item.item_filter", 2), "0/0", it("item.item_filter"));
 	add("shapeless", it("item.fluid_filter"), it("item.fluid_filter"));

@@ -90,8 +90,8 @@ public abstract class AmountFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 					}
 				if ((mode & 2) == 0 && max > 0)
 					return fallback;
-			} else if (n < amount)
-				return new FluidStack(obj, amount - n);
+			} else if (n >= amount || (mode & 2) == 0)
+				return new FluidStack(obj, amount);
 			return null;
 		}
 
@@ -130,8 +130,8 @@ public abstract class AmountFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 					fallback.setCount(amount);
 					return fallback;
 				}
-			} else if (n < amount)
-				return ItemHandlerHelper.copyStackWithSize(obj, amount - n);
+			} else if (n >= amount || (mode & 2) == 0)
+				return ItemHandlerHelper.copyStackWithSize(obj, amount);
 			return ItemStack.EMPTY;
 		}
 

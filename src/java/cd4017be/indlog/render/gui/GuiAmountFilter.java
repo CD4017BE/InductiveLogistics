@@ -19,18 +19,19 @@ public class GuiAmountFilter extends AdvancedGui {
 	public GuiAmountFilter(DataContainer container) {
 		super(container);
 		this.inv = container.player.inventory;
-		this.MAIN_TEX = new ResourceLocation("indlog", "textures/gui/fluid_filter.png");//TODO use diff tex
+		this.MAIN_TEX = new ResourceLocation("indlog", "textures/gui/fluid_filter.png");
+		this.bgTexY = 144;
 	}
 
 	@Override
 	public void initGui() {
-		this.xSize = 176; //TODO diff dims
-		this.ySize = 132;
+		this.xSize = 97;
+		this.ySize = 40;
 		super.initGui();
 		guiComps.add(new Button(0, 7, 15, 9, 18, 0).texture(176, 0).setTooltip("filter.tryA#"));
-		guiComps.add(new Button(1, 161, 15, 8, 18, 0).texture(194, 0).setTooltip("filter.rs#"));
-		guiComps.add(new TextField(2, 116, 16, 44, 7, 8).setTooltip("filter.amount"));
-		guiComps.add(new TextField(3, 136, 25, 24, 7, 4).setTooltip("filter.priority"));
+		guiComps.add(new Button(1, 82, 15, 8, 18, 0).texture(194, 0).setTooltip("filter.rs#"));
+		guiComps.add(new TextField(2, 17, 16, 64, 7, 10).setTooltip("filter.amount"));
+		guiComps.add(new TextField(3, 57, 25, 24, 7, 4).setTooltip("filter.priority"));
 		guiComps.add(new InfoTab(4, 7, 6, 7, 8, "filter.infoA"));
 	}
 

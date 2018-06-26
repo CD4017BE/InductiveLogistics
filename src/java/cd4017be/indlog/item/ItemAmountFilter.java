@@ -44,10 +44,10 @@ public class ItemAmountFilter extends BaseItem implements IGuiItem, ClientItemPa
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
 			FluidFilter filter = getFluidFilter(item);
-			String s = TooltipUtil.format("gui.cd4017be.filter.am", filter.amount);
-			if (states.length >= 9) {
+			String s = TooltipUtil.format("gui.cd4017be.filter.am", filter.amount) + " ";
+			if (states.length >= 8) {
 				if ((filter.mode & 2) != 0) s += states[5];
-				if ((filter.mode & 64) != 0) s += states[(filter.mode & 128) != 0 ? 7 : 6];
+				if ((filter.mode & 128) != 0) s += states[(filter.mode & 64) != 0 ? 7 : 6];
 			} else s += "<invalid lang entry!>";
 			list.add(s);
 			if (filter.priority != 0) list.add(TooltipUtil.format("gui.cd4017be.priority", filter.priority));
