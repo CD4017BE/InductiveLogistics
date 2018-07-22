@@ -114,7 +114,7 @@ gui.cd4017be.filter.rs0=Always active
 gui.cd4017be.filter.rs2=Active with signal
 gui.cd4017be.filter.rs3=Active without signal
 gui.cd4017be.filter.state=include ,exclude ,dmg ,nbt ,ore ,keep ,rs=ON,rs=OFF
-gui.cd4017be.filter.stock=Stock: %s m³
+gui.cd4017be.filter.stock=Stock: %s B
 gui.cd4017be.priority=Priority: %d
 gui.cd4017be.filter.tryF0=Send further if can't insert
 gui.cd4017be.filter.tryF1=Keep matching fluids here
@@ -124,7 +124,7 @@ gui.cd4017be.filter.try0=Send further if can't insert
 gui.cd4017be.filter.try1=Keep matching items here
 gui.cd4017be.filter.invert0=Allow listed items
 gui.cd4017be.filter.invert1=Restrict listed items
-gui.cd4017be.filter.targetF=Stocked fluid amount [m³]\n0 for unlimited drain/fill
+gui.cd4017be.filter.targetF=Stocked fluid amount [B]\n0 for unlimited drain/fill
 gui.cd4017be.filter.ore0=ignored OreDictionary identities
 gui.cd4017be.filter.ore1=use OreDictionary identities
 gui.cd4017be.filter.nbt0=Ignore NBT-data
