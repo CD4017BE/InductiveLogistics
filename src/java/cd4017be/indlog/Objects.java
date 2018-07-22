@@ -73,6 +73,7 @@ public class Objects {
 	public static final ItemItemFilter item_filter = null;
 	public static final ItemFluidFilter fluid_filter = null;
 	public static final ItemAmountFilter amount_filter = null;
+	public static final ItemNameFilter name_filter = null;
 	public static final ItemPortableCrafter portable_craft = null;
 	public static final ItemRemoteInv remote_inv = null;
 
@@ -121,6 +122,7 @@ public class Objects {
 			new ItemFluidFilter("fluid_filter").setCreativeTab(tabIndLog),
 			new ItemItemFilter("item_filter").setCreativeTab(tabIndLog),
 			new ItemAmountFilter("amount_filter").setCreativeTab(tabIndLog),
+			new ItemNameFilter("name_filter").setCreativeTab(tabIndLog),
 			new ItemPortableCrafter("portable_craft").setCreativeTab(tabIndLog),
 			new ItemRemoteInv("remote_inv").setCreativeTab(tabIndLog)
 		);
