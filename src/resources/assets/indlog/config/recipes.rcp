@@ -1,4 +1,4 @@
-VERSION = 39;
+VERSION = 40;
 
 !internal capacity of fluid pipes
 fluid_pipe_cap = 1000;
@@ -74,14 +74,17 @@ INIT() {
 	add("shaped", it("item.fluid_filter"), "012", it("fluidPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shaped", it("item.item_filter"), "012", it("itemPipeT"), it("minecraft:comparator"), it("minecraft:paper"));
 	add("shaped", it("item.amount_filter"), " 3 /012", it("itemPipeT"), it("minecraft:comparator"), it("fluidPipeT"), it("minecraft:stone_pressure_plate"));
+	add("shaped", it("item.property_filter"), "012", it("itemPipeT"), it("minecraft:comparator"), it("minecraft:ender_eye"));
 	add("shaped", it("item.name_filter"), " 3 /012", it("itemPipeT"), it("minecraft:comparator"), it("fluidPipeT"), it("minecraft:sign"));
 	add("shapedNBT", "#mode,#maxAm,#prior,#Fluids", it("item.fluid_filter", 2), "0/0", it("item.fluid_filter"));
 	add("shapedNBT", "#mode,#ore,#prior,#Items", it("item.item_filter", 2), "0/0", it("item.item_filter"));
 	add("shapedNBT", "#mode,#prior,#amount", it("item.amount_filter", 2), "0/0", it("item.amount_filter"));
+	add("shapedNBT", "#mode,#prior,#ref", it("item.property_filter", 2), "0/0", it("item.property_filter"));
 	add("shapedNBT", "#mode,#prior,#regex", it("item.name_filter", 2), "0/0", it("item.name_filter"));
 	add("shapeless", it("item.fluid_filter"), it("item.fluid_filter"));
 	add("shapeless", it("item.item_filter"), it("item.item_filter"));
 	add("shapeless", it("item.amount_filter"), it("item.amount_filter"));
+	add("shapeless", it("item.property_filter"), it("item.property_filter"));
 	add("shapeless", it("item.name_filter"), it("item.name_filter"));
 	Loc nbt = "#FluidName,#Tag,#Amount";
 	add("shaped", it("tile.tank"), "000/0 0/000", "paneGlass");
