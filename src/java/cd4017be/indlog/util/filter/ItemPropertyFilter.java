@@ -1,5 +1,6 @@
 package cd4017be.indlog.util.filter;
 
+import cd4017be.indlog.Objects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +19,7 @@ import net.minecraftforge.items.IItemHandler;
  */
 public class ItemPropertyFilter extends FilterBase<ItemStack, IItemHandler> {
 
-	float reference;
+	public float reference;
 
 	@Override
 	public boolean matches(ItemStack obj) {
@@ -31,17 +32,18 @@ public class ItemPropertyFilter extends FilterBase<ItemStack, IItemHandler> {
 			break;
 		case 4: {
 			IEnergyStorage acc = obj.getCapability(CapabilityEnergy.ENERGY, null);
-			val = acc.getEnergyStored();
-			if (frac) val /= acc.getMaxEnergyStored();
+			val = acc == null ? 0 : acc.getEnergyStored();
+			if (frac) val /= acc == null ? 0 : acc.getMaxEnergyStored();
 		} break;
 		case 8: {
 			IFluidHandlerItem acc = obj.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			int am = 0, cap = 0;
-			for (IFluidTankProperties prop : acc.getTankProperties()) {
-				FluidStack stack = prop.getContents();
-				if (stack != null) am += stack.amount;
-				cap += prop.getCapacity();
-			}
+			if (acc != null)
+				for (IFluidTankProperties prop : acc.getTankProperties()) {
+					FluidStack stack = prop.getContents();
+					if (stack != null) am += stack.amount;
+					cap += prop.getCapacity();
+				}
 			val = am;
 			if (frac) val /= cap;
 		} break;
@@ -57,8 +59,7 @@ public class ItemPropertyFilter extends FilterBase<ItemStack, IItemHandler> {
 
 	@Override
 	public Item item() {
-		// TODO Auto-generated method stub
-		return null;
+		return Objects.property_filter;
 	}
 
 	@Override
