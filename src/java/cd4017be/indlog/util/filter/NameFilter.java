@@ -2,7 +2,9 @@ package cd4017be.indlog.util.filter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
+import cd4017be.indlog.Objects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,13 +15,13 @@ import net.minecraftforge.items.IItemHandler;
 /**
  * 
  * @author cd4017be
- * @field mode &4 = use id, &8 = full match
+ * @field mode &4 = use id, &8 = full match, &16 = pattern error
  * @param <Obj>
  * @param <Inv>
  */
 public abstract class NameFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 
-	String regex;
+	public String regex;
 	Pattern pattern;
 
 	@Override
@@ -29,8 +31,7 @@ public abstract class NameFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 
 	@Override
 	public Item item() {
-		// TODO Auto-generated method stub
-		return null;
+		return Objects.name_filter;
 	}
 
 	@Override
@@ -47,9 +48,14 @@ public abstract class NameFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		regex = nbt.getString("regex");
-		pattern = Pattern.compile(regex);
 		super.deserializeNBT(nbt);
+		regex = nbt.getString("regex");
+		try {
+			pattern = Pattern.compile(regex);
+		} catch (PatternSyntaxException e) {
+			pattern = Pattern.compile(regex = Pattern.quote(regex));
+			mode |= 16;
+		}
 	}
 
 	public static class ItemFilter extends NameFilter<ItemStack, IItemHandler> {
@@ -57,8 +63,12 @@ public abstract class NameFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 		@Override
 		public boolean matches(ItemStack obj) {
 			String name;
-			if ((mode & 4) == 0) name = obj.getDisplayName();
-			else name = obj.getItem().getRegistryName() + (obj.getHasSubtypes() ? "#" + obj.getMetadata() : "");
+			if ((mode & 4) == 0) {
+				name = obj.getDisplayName();
+				//remove any color and formatting codes
+				for (int i = name.indexOf('\u00A7'); i >= 0; i = name.indexOf('\u00A7', i))
+					name = name.substring(0, i) + (i >= name.length() - 2 ? "" : name.substring(i+2));
+			} else name = obj.getItem().getRegistryName() + (obj.getHasSubtypes() ? "#" + obj.getMetadata() : "");
 			Matcher m = pattern.matcher(name);
 			return ((mode & 8) == 0 ? m.find() : m.matches()) ^ (mode & 1) != 0;
 		}
