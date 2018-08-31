@@ -1,7 +1,9 @@
-package cd4017be.indlog.util;
+package cd4017be.indlog.util.filter;
 
+import cd4017be.indlog.Objects;
 import cd4017be.lib.util.ItemFluidUtil;
 import cd4017be.lib.util.Utils.ItemType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -14,36 +16,11 @@ import net.minecraftforge.oredict.OreDictionary;
  *
  * @author CD4017BE
  */
-public class PipeFilterItem implements PipeFilter<ItemStack, IItemHandler> {
+public class PipeFilterItem extends FilterBase<ItemStack, IItemHandler> {
 
 	public ItemStack[] list = new ItemStack[0];
 	public int[] ores;
-	/** 1=invert; 2=force; 4=meta; 8=nbt; 16=ore; 32=count; 64=invertRS; 128=redstone */
-	public byte mode;
-	public byte priority;
-
-	@Override
-	public boolean active(boolean rs) {
-		return (mode & 128) == 0 || (rs ^ (mode & 64) != 0);
-	}
-
-	public static PipeFilterItem load(NBTTagCompound nbt) {
-		PipeFilterItem upgrade = new PipeFilterItem();
-		upgrade.mode = nbt.getByte("mode");
-		upgrade.priority = nbt.getByte("prior");
-		if (nbt.hasKey(ItemFluidUtil.Tag_ItemList)) {
-			NBTTagList list = nbt.getTagList(ItemFluidUtil.Tag_ItemList, 10);
-			upgrade.list = new ItemStack[list.tagCount()];
-			for (int i = 0; i < list.tagCount(); i++) {
-				upgrade.list[i] = new ItemStack(list.getCompoundTagAt(i));
-			}
-		}
-		if ((upgrade.mode & 16) != 0 &&
-				!nbt.hasKey("ore", Constants.NBT.TAG_INT_ARRAY) ||
-				(upgrade.ores = nbt.getIntArray("ore")).length != upgrade.list.length)
-			upgrade.generateOres();
-		return upgrade;
-	}
+	//mode 1=invert; 2=force; 4=meta; 8=nbt; 16=ore; 32=count; 64=invertRS; 128=redstone
 
 	public void generateOres() {
 		ores = new int[list.length];
@@ -54,33 +31,9 @@ public class PipeFilterItem implements PipeFilter<ItemStack, IItemHandler> {
 		}
 	}
 
-	public void save(NBTTagCompound nbt) {
-		nbt.setByte("mode", mode);
-		nbt.setByte("prior", priority);
-		if (list.length > 0) {
-			NBTTagList tlist = new NBTTagList();
-			for (ItemStack item : list) {
-				NBTTagCompound tag = new NBTTagCompound();
-				item.writeToNBT(tag);
-				tlist.appendTag(tag);
-			}
-			nbt.setTag(ItemFluidUtil.Tag_ItemList, tlist);
-		}
-		if (ores != null) nbt.setIntArray("ore", ores);
-	}
-
-	public static NBTTagCompound save(PipeFilterItem upgrade) {
-		NBTTagCompound nbt = new NBTTagCompound();
-		upgrade.save(nbt);
-		return nbt;
-	}
-
-	public boolean isEmpty() {
+	@Override
+	public boolean noEffect() {
 		return list.length == 0 && (mode & 1) == 0;
-	}
-
-	public static boolean isNullEq(PipeFilterItem filter) {
-		return filter == null || (filter.list.length == 0 && (filter.mode & 1) != 0);
 	}
 
 	@Override
@@ -170,8 +123,40 @@ public class PipeFilterItem implements PipeFilter<ItemStack, IItemHandler> {
 	}
 
 	@Override
-	public boolean blocking() {
-		return (mode & 2) != 0;
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound nbt = super.serializeNBT();
+		if (list.length > 0) {
+			NBTTagList tlist = new NBTTagList();
+			for (ItemStack item : list) {
+				NBTTagCompound tag = new NBTTagCompound();
+				item.writeToNBT(tag);
+				tlist.appendTag(tag);
+			}
+			nbt.setTag(ItemFluidUtil.Tag_ItemList, tlist);
+		}
+		if (ores != null) nbt.setIntArray("ore", ores);
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		if (nbt.hasKey(ItemFluidUtil.Tag_ItemList)) {
+			NBTTagList list = nbt.getTagList(ItemFluidUtil.Tag_ItemList, 10);
+			this.list = new ItemStack[list.tagCount()];
+			for (int i = 0; i < list.tagCount(); i++) {
+				this.list[i] = new ItemStack(list.getCompoundTagAt(i));
+			}
+		}
+		if ((this.mode & 16) != 0 &&
+				!nbt.hasKey("ore", Constants.NBT.TAG_INT_ARRAY) ||
+				(this.ores = nbt.getIntArray("ore")).length != this.list.length)
+			this.generateOres();
+		super.deserializeNBT(nbt);
+	}
+
+	@Override
+	public Item item() {
+		return Objects.item_filter;
 	}
 
 }

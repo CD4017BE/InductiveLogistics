@@ -1,7 +1,6 @@
 package cd4017be.indlog.multiblock;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeFilterFluid;
 import cd4017be.lib.TickRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -50,7 +49,7 @@ public class FluidInjector extends FluidComp implements IActiveCon {
 		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return true;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return true;
-		byte pr = filter == null || (filter.mode & 2) == 0 ? Byte.MIN_VALUE : filter.priority;
+		byte pr = filter == null || !filter.blocking() ? Byte.MIN_VALUE : filter.priority();
 		IFluidTankProperties[] tprs = acc.getTankProperties();
 		int m = tprs.length;
 		for (int i = slotIdx; i < slotIdx + m; i++) {
@@ -79,7 +78,7 @@ public class FluidInjector extends FluidComp implements IActiveCon {
 		fluid.amount = 65536;
 		int n = acc.fill(fluid, false);
 		if (n <= 0) return 0;
-		if (PipeFilterFluid.isNullEq(filter)) return n;
+		if (filter.noEffect()) return n;
 		fluid.amount = n;
 		return filter.insertAmount(fluid, acc);
 	}

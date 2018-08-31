@@ -1,7 +1,6 @@
 package cd4017be.indlog.multiblock;
 
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeFilterItem;
 import cd4017be.lib.TickRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -49,7 +48,7 @@ public class ItemInjector extends ItemComp implements IActiveCon {
 		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return true;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[this.side^1]);
 		if (acc == null) return true;
-		byte pr = filter == null || (filter.mode & 2) == 0 ? Byte.MIN_VALUE : filter.priority;
+		byte pr = filter == null || !filter.blocking() ? Byte.MIN_VALUE : filter.priority();
 		int m = acc.getSlots();
 		for (int i = slotIdx; i < slotIdx + m; i++) {
 			int s = i % m;
@@ -75,7 +74,7 @@ public class ItemInjector extends ItemComp implements IActiveCon {
 		int n = 65536;
 		item.setCount(n);
 		if ((n -= acc.insertItem(s, item, true).getCount()) <= 0) return 0;
-		if (PipeFilterItem.isNullEq(filter)) return n;
+		if (filter.noEffect()) return n;
 		item.setCount(n);
 		return filter.insertAmount(item, acc);
 	}

@@ -1,5 +1,11 @@
 package cd4017be.indlog.multiblock;
 
+import java.util.List;
+
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
+import cd4017be.indlog.util.filter.FluidFilterProvider;
+import cd4017be.indlog.util.filter.PipeFilter;
+import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,13 +17,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import java.util.List;
-
-import cd4017be.indlog.Objects;
-import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
-import cd4017be.indlog.util.PipeFilterFluid;
-import cd4017be.lib.util.ItemFluidUtil;
-
 /**
  * 
  * @author CD4017BE
@@ -26,7 +25,7 @@ import cd4017be.lib.util.ItemFluidUtil;
 public abstract class FluidComp extends ConComp implements IObjLink {
 
 	public ICapabilityProvider link;
-	public PipeFilterFluid filter;
+	public PipeFilter<FluidStack, IFluidHandler> filter;
 
 	public FluidComp(WarpPipeNode pipe, byte side) {
 		super(pipe, side);
@@ -34,15 +33,15 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 
 	@Override
 	public void load(NBTTagCompound nbt) {
-		if (nbt.hasKey("mode")) {
-			filter = PipeFilterFluid.load(nbt);
+		if (nbt.hasKey("id") || nbt.hasKey("mode")) {
+			filter = FluidFilterProvider.load(nbt);
 			pipe.hasFilters |= 1 << side;
 		} else pipe.hasFilters &= ~(1 << side);
 	}
 
 	@Override
 	public void save(NBTTagCompound nbt) {
-		if (filter != null) filter.save(nbt);
+		if (filter != null) nbt.merge(filter.writeNBT());
 	}
 
 	/**
@@ -65,10 +64,8 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 	public boolean onClicked(EntityPlayer player, EnumHand hand, ItemStack item) {
 		if (item.getCount() == 0) {
 			if (filter != null) {
-				item = new ItemStack(Objects.fluid_filter);
-				item.setTagCompound(PipeFilterFluid.save(filter));
+				ItemFluidUtil.dropStack(filter.getItemStack(), player);
 				filter = null;
-				ItemFluidUtil.dropStack(item, player);
 				pipe.network.reorder(this);
 				pipe.hasFilters &= ~(1 << side);
 				pipe.isBlocked |= 1 << side;
@@ -77,8 +74,8 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 				pipe.isBlocked ^= 1 << side;
 				return true;
 			}
-		} else if (filter == null && item.getItem() == Objects.fluid_filter && item.getTagCompound() != null) {
-			filter = PipeFilterFluid.load(item.getTagCompound());
+		} else if (filter == null && item.getItem() instanceof FluidFilterProvider
+				&& (filter = ((FluidFilterProvider)item.getItem()).getFluidFilter(item)) != null) {
 			item.grow(-1);
 			player.setHeldItem(hand, item);
 			pipe.network.reorder(this);
@@ -91,11 +88,7 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 
 	@Override
 	public void dropContent(List<ItemStack> list) {
-		if (filter != null) {
-			ItemStack item = new ItemStack(Objects.fluid_filter);
-			item.setTagCompound(PipeFilterFluid.save(filter));
-			list.add(item);
-		}
+		if (filter != null) list.add(filter.getItemStack());
 		super.dropContent(list);
 	}
 
@@ -117,7 +110,7 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 		if ((filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return fluid;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return fluid;
-		if (PipeFilterFluid.isNullEq(filter)) fluid.amount -= acc.fill(fluid, true);
+		if (filter == null || filter.noEffect()) fluid.amount -= acc.fill(fluid, true);
 		else {
 			int n = filter.insertAmount(fluid, acc);
 			if (n > 0) fluid.amount -= acc.fill(new FluidStack(fluid, n), true);
@@ -126,7 +119,7 @@ public abstract class FluidComp extends ConComp implements IObjLink {
 	}
 
 	public byte getPriority() {
-		return filter == null ? 0 : filter.priority;
+		return filter == null ? 0 : filter.priority();
 	}
 
 }

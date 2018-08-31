@@ -5,6 +5,7 @@ import static cd4017be.lib.property.PropertyByte.cast;
 import java.util.ArrayList;
 import java.util.List;
 
+import cd4017be.indlog.util.filter.PipeFilter;
 import cd4017be.lib.TickRegistry;
 import cd4017be.lib.TickRegistry.IUpdatable;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
@@ -15,7 +16,6 @@ import cd4017be.lib.templates.Cover;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.TileAccess;
 import cd4017be.lib.util.Utils;
-import cd4017be.indlog.util.PipeFilter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,13 +38,13 @@ import net.minecraftforge.common.util.Constants.NBT;
  *
  * @author CD4017BE
  */
-public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O, I>, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable, ITilePlaceHarvest, IUpdatable {
+public abstract class Pipe<T extends Pipe<T, O, I>, O, I> extends BaseTileEntity implements INeighborAwareTile, IInteractiveTile, IModularTile, ITickable, ITilePlaceHarvest, IUpdatable {
 
 	public static boolean SAVE_PERFORMANCE;
 
 	public O content, last;
 	protected T target;
-	protected F filter;
+	protected PipeFilter<O, I> filter;
 	protected ArrayList<TileAccess> invs = null;
 	protected byte type, dest, orDst;
 	protected int redstone;
@@ -88,7 +88,7 @@ public abstract class Pipe<T extends Pipe<T, O, F, I>, O, F extends PipeFilter<O
 				}
 			break;
 			case 2:
-				if ((flow & 0x8000) == 0 && (filter == null || filter.active(redstone > 0))) {
+				if ((flow & 0x8000) == 0 && (filter == null || filter.active(redstone > 0) && (content == null || !filter.blocking()))) {
 					I acc;
 					for (TileAccess inv : invs)
 						if (inv.te.isInvalid() || (acc = inv.te.getCapability(capability(), inv.side)) == null) updateCon = true;

@@ -2,13 +2,13 @@ package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
+import cd4017be.indlog.item.ItemNameFilter;
 import cd4017be.indlog.item.ItemPortableCrafter;
 import cd4017be.indlog.item.ItemRemoteInv;
 import cd4017be.indlog.multiblock.FluidExtractor;
 import cd4017be.indlog.multiblock.FluidInjector;
 import cd4017be.indlog.multiblock.ItemExtractor;
 import cd4017be.indlog.multiblock.ItemInjector;
-import cd4017be.indlog.multiblock.WarpPipeNetwork;
 import cd4017be.indlog.tileentity.FluidPipe;
 import cd4017be.indlog.tileentity.AutoCrafter;
 import cd4017be.indlog.tileentity.BlockPlacer;
@@ -62,6 +62,7 @@ public class CommonProxy {
 		DropedItemInterface.INV_SIZE = (int)cfg.getNumber("drop_interface_slots", 5);
 		EntityInterface.INTERVAL = (int)cfg.getNumber("entity_interface_tick", 10);
 		BlockPlacer.RANGE = (int)cfg.getNumber("block_placer_range", BlockPlacer.RANGE);
+		ItemNameFilter.MAX_LENGTH = Math.max(1, (int)cfg.getNumber("name_filter_chars", ItemNameFilter.MAX_LENGTH));
 	}
 
 	public void registerRenderers() {

@@ -2,20 +2,14 @@ package cd4017be.indlog.item;
 
 import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.io.IOException;
 import java.util.List;
 
 import cd4017be.indlog.render.gui.GuiFluidFilter;
-import cd4017be.indlog.util.PipeFilterFluid;
+import cd4017be.indlog.util.filter.FluidFilterProvider;
+import cd4017be.indlog.util.filter.PipeFilterFluid;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
-import cd4017be.lib.util.TooltipUtil;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.IGuiItem;
 import cd4017be.lib.Gui.ITankContainer;
@@ -24,6 +18,7 @@ import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
 import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.ItemFluidUtil;
+import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -38,12 +33,17 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  *
  * @author CD4017BE
  */
-public class ItemFluidFilter extends BaseItem implements IGuiItem, ClientItemPacketReceiver {
+public class ItemFluidFilter extends BaseItem implements IGuiItem, ClientItemPacketReceiver, FluidFilterProvider {
 
 	public ItemFluidFilter(String id) {
 		super(id);
@@ -54,7 +54,7 @@ public class ItemFluidFilter extends BaseItem implements IGuiItem, ClientItemPac
 	public void addInformation(ItemStack item, @Nullable World player, List<String> list, ITooltipFlag b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
-			PipeFilterFluid filter = PipeFilterFluid.load(item.getTagCompound());
+			PipeFilterFluid filter = getFluidFilter(item);
 			String s;
 			if (states.length >= 8) {
 				s = states[(filter.mode & 1) == 0 ? 0 : 1];
@@ -148,6 +148,13 @@ public class ItemFluidFilter extends BaseItem implements IGuiItem, ClientItemPac
 		@Override
 		public void setTank(int i, FluidStack fluid) {}
 
+	}
+
+	@Override
+	public PipeFilterFluid getFluidFilter(ItemStack stack) {
+		PipeFilterFluid filter = new PipeFilterFluid();
+		if (stack != null && stack.hasTagCompound()) filter.deserializeNBT(stack.getTagCompound());
+		return filter;
 	}
 
 }

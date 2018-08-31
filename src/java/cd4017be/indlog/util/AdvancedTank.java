@@ -140,7 +140,7 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 			return m;
 		} else if (fluid.isFluidEqual(res)) {
 			int m = Math.min(res.amount, cap - fluid.amount);
-			if (m > 0 && doFill) increment(m);
+			if (m != 0 && doFill) increment(m);
 			return m;
 		} else return 0;
 	}

@@ -1,8 +1,11 @@
 package cd4017be.indlog.item;
 
 import java.io.IOException;
+import java.util.function.ToIntFunction;
+
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.PipeFilterItem;
+import cd4017be.indlog.util.filter.ItemFilterProvider;
+import cd4017be.indlog.util.filter.PipeFilter;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.Gui.IGuiItem;
 import cd4017be.lib.Gui.ItemGuiData;
@@ -13,9 +16,11 @@ import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -35,15 +40,8 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 	@Override
 	public ItemStack[] loadInventory(ItemStack inv, EntityPlayer player) {
 		ItemStack[] items = new ItemStack[2];
-		NBTTagCompound nbt;
-		if ((nbt = inv.getSubCompound("fin")) != null) {
-			items[0] = new ItemStack(Objects.item_filter);
-			items[0].setTagCompound(nbt);
-		} else items[0] = ItemStack.EMPTY;
-		if ((nbt = inv.getSubCompound("fout")) != null) {
-			items[1] = new ItemStack(Objects.item_filter);
-			items[1].setTagCompound(nbt);
-		} else items[1] = ItemStack.EMPTY;
+		items[0] = loadFilter(inv.getSubCompound("fin"));
+		items[1] = loadFilter(inv.getSubCompound("fout"));
 		return items;
 	}
 
@@ -53,16 +51,35 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 		if (inv.hasTagCompound()) nbt = inv.getTagCompound();
 		else inv.setTagCompound(nbt = new NBTTagCompound());
 		ItemStack fin = items[0], fout = items[1]; items[0] = ItemStack.EMPTY; items[1] = ItemStack.EMPTY;
-		if (fin.getItem() == Objects.item_filter) {
-			if (!fin.hasTagCompound()) fin.setTagCompound(new NBTTagCompound());
-			nbt.setTag("fin", fin.getTagCompound());
+		NBTTagCompound tag;
+		if ((tag = saveFilter(fin)) != null) {
+			nbt.setTag("fin", tag);
 			items[0] = fin;
 		} else nbt.removeTag("fin");
-		if (fout.getItem() == Objects.item_filter) {
-			if (!fout.hasTagCompound()) fout.setTagCompound(new NBTTagCompound());
-			nbt.setTag("fout", fout.getTagCompound());
+		if ((tag = saveFilter(fout)) != null) {
+			nbt.setTag("fout", tag);
 			items[1] = fout;
 		} else nbt.removeTag("fout");
+	}
+
+	public static ItemStack loadFilter(NBTTagCompound nbt) {
+		if (nbt == null) return ItemStack.EMPTY;
+		Item i = Item.getByNameOrId(nbt.getString("id"));
+		if (i == null) i = Objects.item_filter;
+		ItemStack stack = new ItemStack(i);
+		stack.setTagCompound(nbt);
+		return stack;
+	}
+
+	public static NBTTagCompound saveFilter(ItemStack item) {
+		Item i = item.getItem();
+		if (i instanceof ItemFilterProvider) {
+			NBTTagCompound nbt = item.getTagCompound();
+			if (nbt == null) nbt = new NBTTagCompound();
+			ResourceLocation loc = i.getRegistryName();
+			if (loc != null) nbt.setString("id", loc.toString());
+			return nbt;
+		} else return null;
 	}
 
 	protected int tickTime() {
@@ -77,26 +94,20 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 			if ((t - (long)item.getTagCompound().getByte("t") & 0xff) >= tickTime()) {
 				EntityPlayer player = (EntityPlayer)entity;
 				InventoryPlayer inv = player.inventory;
-				PipeFilterItem in = item.getTagCompound().hasKey("fin") ? PipeFilterItem.load(item.getTagCompound().getCompoundTag("fin")) : null;
-				PipeFilterItem out = item.getTagCompound().hasKey("fout") ? PipeFilterItem.load(item.getTagCompound().getCompoundTag("fout")) : null;
+				PipeFilter<ItemStack, IItemHandler> in = item.getTagCompound().hasKey("fin") ? ItemFilterProvider.load(item.getTagCompound().getCompoundTag("fin")) : null;
+				PipeFilter<ItemStack, IItemHandler> out = item.getTagCompound().hasKey("fout") ? ItemFilterProvider.load(item.getTagCompound().getCompoundTag("fout")) : null;
 				this.updateItem(item, player, inv, s, in, out);
 				item.getTagCompound().setByte("t", (byte)t);
 			}
 		}
 	}
 
-	protected void updateItem(ItemStack item, EntityPlayer player, InventoryPlayer inv, int s, PipeFilterItem in, PipeFilterItem out) {
+	protected void updateItem(ItemStack item, EntityPlayer player, InventoryPlayer inv, int s, PipeFilter<ItemStack, IItemHandler> in, PipeFilter<ItemStack, IItemHandler> out) {
 		IItemHandler acc = item.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		IItemHandler pacc = new PlayerMainInvWrapper(inv);
 		if (acc == null) return;
-		if (in != null && (in.mode & 64) != 0) {
-			in.mode |= 128;
-			ItemFluidUtil.transferItems(pacc, acc, in, notMe);
-		}
-		if (out != null && (out.mode & 64) != 0) {
-			out.mode |= 128;
-			ItemFluidUtil.transferItems(acc, pacc, null, out);
-		}
+		if (in != null && in.active(false)) ItemFluidUtil.transferItems(pacc, acc, in, notMe);
+		if (out != null && out.active(false)) ItemFluidUtil.transferItems(acc, pacc, null, out);
 	}
 
 	public static final IFilter<ItemStack, IItemHandler> notMe = new IFilter<ItemStack, IItemHandler>(){
@@ -114,6 +125,8 @@ public abstract class ItemFilteredSubInventory extends BaseItem implements IItem
 			return true;
 		}
 	};
+
+	public static final ToIntFunction<ItemStack> FILTER_SLOT = (item) -> item.getItem() instanceof ItemFilterProvider ? 1 : 0;
 
 	@Override
 	public void onPacketFromClient(PacketBuffer dis, EntityPlayer player, ItemStack item, int slot) throws IOException {
