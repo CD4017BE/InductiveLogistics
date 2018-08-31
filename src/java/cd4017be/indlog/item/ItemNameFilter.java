@@ -3,6 +3,8 @@ package cd4017be.indlog.item;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import cd4017be.indlog.render.gui.GuiNameFilter;
 import cd4017be.indlog.util.filter.FluidFilterProvider;
 import cd4017be.indlog.util.filter.ItemFilterProvider;
@@ -16,6 +18,7 @@ import cd4017be.lib.Gui.ItemGuiData;
 import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -43,7 +46,7 @@ public class ItemNameFilter extends BaseItem implements IGuiItem, ClientItemPack
 	}
 
 	@Override
-	public void addInformation(ItemStack item, EntityPlayer player, List<String> list, boolean b) {
+	public void addInformation(ItemStack item, @Nullable World player, List<String> list, ITooltipFlag b) {
 		if (item.hasTagCompound()) {
 			String[] states = TooltipUtil.translate("gui.cd4017be.filter.state").split(",");
 			FluidFilter filter = getFluidFilter(item);
