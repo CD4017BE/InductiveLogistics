@@ -1,3 +1,15 @@
+v1.3.0
+Changes:
+- fixed fluid duplication bug in case a tank gets overfull (#32)
+- added feature: Item-Content Filter
+- added feature: Name-Filter
+- added feature: Amount-Filter
+- removed use of m³ in english localization in favor of B (Buckets)
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.2.5
+
 v1.2.3
 Changes:
 fixed #27 div / 0 crash when Portable Autocrafter tries recipes with empty stacks as result
