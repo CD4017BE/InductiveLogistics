@@ -3,6 +3,7 @@ package cd4017be.indlog.multiblock;
 import java.util.function.ToIntFunction;
 
 import cd4017be.indlog.Objects;
+import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemDest;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemSrc;
 import cd4017be.indlog.util.filter.FilterBase;
 import cd4017be.lib.util.ItemFluidUtil;
@@ -33,7 +34,7 @@ public class ItemSource extends ItemComp implements IItemSrc {
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return 0;
 		if (filter != null && !filter.noEffect()) {
-			if (filter instanceof FilterBase) {
+			if (filter instanceof FilterBase && this instanceof IItemDest) {
 				FilterBase<?,?> f = (FilterBase<?,?>)filter;
 				f.mode ^= 1;
 				max = filter.getExtract(ItemHandlerHelper.copyStackWithSize(item, max), acc).getCount();
@@ -53,7 +54,7 @@ public class ItemSource extends ItemComp implements IItemSrc {
 			ItemStack stack = acc.getStackInSlot(i);
 			if (stack.getCount() <= 0) continue;
 			if (filter != null && !filter.noEffect()) {
-				if (filter instanceof FilterBase) {
+				if (filter instanceof FilterBase && this instanceof IItemDest) {
 					FilterBase<?,?> f = (FilterBase<?,?>)filter;
 					f.mode ^= 1;
 					stack = filter.getExtract(stack, acc);
