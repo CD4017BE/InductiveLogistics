@@ -170,7 +170,7 @@ public class InvConnector extends BaseTileEntity implements INeighborAwareTile, 
 
 	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing s) {
-		return linkObj == null ? false : linkObj.hasCapability(cap, s);
+		return linkObj == null || linkObj.isInvalid() ? false : linkObj.hasCapability(cap, s);
 	}
 
 	@Override
