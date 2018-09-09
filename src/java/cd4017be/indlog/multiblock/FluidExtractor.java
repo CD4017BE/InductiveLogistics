@@ -47,7 +47,7 @@ public class FluidExtractor extends FluidComp implements IActiveCon {
 		if (!isValid() || (filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return true;
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return true;
-		FluidStack stack = filter.noEffect() ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
+		FluidStack stack = filter == null || filter.noEffect() ? acc.drain(Integer.MAX_VALUE, false) : filter.getExtract(null, acc);
 		if (stack == null) return true;
 		int n = stack.amount;
 		FluidStack result = pipe.network.insertFluid(stack.copy(), filter == null || !filter.blocking() ? Byte.MAX_VALUE : filter.priority());

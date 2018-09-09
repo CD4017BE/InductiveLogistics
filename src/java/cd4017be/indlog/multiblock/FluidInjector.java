@@ -78,7 +78,7 @@ public class FluidInjector extends FluidComp implements IActiveCon {
 		fluid.amount = 65536;
 		int n = acc.fill(fluid, false);
 		if (n <= 0) return 0;
-		if (filter.noEffect()) return n;
+		if (filter == null || filter.noEffect()) return n;
 		fluid.amount = n;
 		return filter.insertAmount(fluid, acc);
 	}

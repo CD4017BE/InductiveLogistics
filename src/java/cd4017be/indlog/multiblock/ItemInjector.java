@@ -74,7 +74,7 @@ public class ItemInjector extends ItemComp implements IActiveCon {
 		int n = 65536;
 		item.setCount(n);
 		if ((n -= acc.insertItem(s, item, true).getCount()) <= 0) return 0;
-		if (filter.noEffect()) return n;
+		if (filter == null || filter.noEffect()) return n;
 		item.setCount(n);
 		return filter.insertAmount(item, acc);
 	}

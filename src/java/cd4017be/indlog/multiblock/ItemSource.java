@@ -32,7 +32,7 @@ public class ItemSource extends ItemComp implements IItemSrc {
 		if ((filter != null && !filter.active(pipe.redstone)) || (pipe.isBlocked & 1 << side) != 0) return 0;
 		IItemHandler acc = link.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return 0;
-		if (!filter.noEffect()) {
+		if (filter != null && !filter.noEffect()) {
 			if (filter instanceof FilterBase) {
 				FilterBase<?,?> f = (FilterBase<?,?>)filter;
 				f.mode ^= 1;
@@ -52,7 +52,7 @@ public class ItemSource extends ItemComp implements IItemSrc {
 		for (int i = 0; i < acc.getSlots(); i++) {
 			ItemStack stack = acc.getStackInSlot(i);
 			if (stack.getCount() <= 0) continue;
-			if (!filter.noEffect()) {
+			if (filter != null && !filter.noEffect()) {
 				if (filter instanceof FilterBase) {
 					FilterBase<?,?> f = (FilterBase<?,?>)filter;
 					f.mode ^= 1;
