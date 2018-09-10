@@ -1,3 +1,14 @@
+v1.3.1
+Changes:
+- fixed #34 inconsistent handling of invalidated TileEntities causing crash
+- fixed advanced pipes without filters crashing
+- made filters only inverted for bidirectional access used as source (caused confusion)
+- overworked some tooltips
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.2.5
+
 v1.3.0
 Changes:
 - fixed fluid duplication bug in case a tank gets overfull (#32)
