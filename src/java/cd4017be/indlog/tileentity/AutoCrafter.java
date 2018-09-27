@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+
+import com.mojang.authlib.GameProfile;
 
 import cd4017be.lib.block.AdvancedBlock.IRedstoneTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
@@ -14,6 +17,7 @@ import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import cd4017be.lib.util.ItemFluidUtil;
+import cd4017be.lib.util.SaferFakePlayer;
 import cd4017be.lib.util.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +32,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
@@ -40,6 +47,8 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 	public static int INTERVAL = 10;
 
 	private final InventoryCrafting icr = new InventoryCrafting(ItemFluidUtil.CraftContDummy, 3, 3);
+	private GameProfile gp = new GameProfile(new UUID(0, 0), "dummyPlayer");
+	private FakePlayer player;
 	private IRecipe lastRecipe;
 	private ItemStack output = ItemStack.EMPTY;
 	private final LinkedInventory inventory = new LinkedInventory(1, 64, (i)-> output, (o, i)-> output = o);
@@ -94,6 +103,12 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 					}
 				if (lastRecipe == null) return;
 			}
+			//check result
+			if (player == null && world instanceof WorldServer) player = new SaferFakePlayer((WorldServer)world, gp);
+			ForgeHooks.setCraftingPlayer(player);
+			ItemStack stack = lastRecipe.getCraftingResult(icr);
+			ForgeHooks.setCraftingPlayer(null);
+			if ((lastAm = stack.getCount()) == 0) return; //Recipe is invalid
 			//extract ingredients
 			for (int i = 0; i < 6; i++)
 				if (ingreds[i] != null) {
@@ -107,8 +122,6 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 					}
 				}
 			//output results
-			ItemStack stack = lastRecipe.getCraftingResult(icr);
-			lastAm = stack.getCount();
 			if (amount > 1) stack.setCount(lastAm * amount);
 			results[6] = stack;
 			outEmpty = false;
@@ -235,6 +248,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
+		gp = new GameProfile(nbt.getUniqueId("FPuuid"), nbt.getString("FPname"));
 		output = new ItemStack(nbt.getCompoundTag("result"));
 		outEmpty = true;
 		for (int i = 0; i < results.length; i++)
@@ -253,6 +267,8 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		nbt.setUniqueId("FPuuid", gp.getId());
+		nbt.setString("FPname", gp.getName());
 		if (!output.isEmpty()) nbt.setTag("result", output.writeToNBT(new NBTTagCompound()));
 		for (int i = 0; i < results.length; i++)
 			if (!results[i].isEmpty()) nbt.setTag("out" + i, ItemFluidUtil.saveItemHighRes(results[i]));
@@ -352,6 +368,10 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 
 	@Override
 	public void onPlaced(EntityLivingBase entity, ItemStack item) {
+		if (entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer)entity;
+			gp = player.getGameProfile();
+		}
 	}
 
 	@Override
