@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import cd4017be.indlog.util.AdvancedTank;
+import cd4017be.lib.TickRegistry;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.SlotTank;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
+import cd4017be.lib.block.AdvancedBlock.IComparatorSource;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.capability.AbstractInventory;
@@ -40,7 +42,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.*;
  * 
  * @author cd4017be
  */
-public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePlaceHarvest, ITickable, IGuiData, ClientPacketReceiver {
+public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePlaceHarvest, ITickable, IGuiData, ClientPacketReceiver, IComparatorSource {
 
 	public static final int[] CAP = {8000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -50,6 +52,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	private byte type;
 	public boolean auto, checkTarget = true;
 	private int lastAmount;
+	private int comparator;
 
 	public Tank() {
 		super();
@@ -235,6 +238,20 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 			return 1;
 		}
 
+	}
+
+	@Override
+	public void markDirty() {
+		if (!world.isRemote && comparator >= 0) {
+			comparator = -1;
+			TickRegistry.instance.updates.add(()-> world.updateComparatorOutputLevel(pos, blockType));
+		}
+		super.markDirty();
+	}
+
+	@Override
+	public int comparatorValue() {
+		return comparator < 0 ? comparator = tank.getComparatorValue() : comparator;
 	}
 
 }

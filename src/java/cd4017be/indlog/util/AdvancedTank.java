@@ -265,4 +265,8 @@ public class AdvancedTank extends AbstractInventory implements IFluidHandler, IT
 		return nbt;
 	}
 
+	public int getComparatorValue() {
+		return fluid == null || fluid.amount <= 0 ? 0 : (int)((long)fluid.amount * 14 / cap) + 1;
+	}
+
 }
