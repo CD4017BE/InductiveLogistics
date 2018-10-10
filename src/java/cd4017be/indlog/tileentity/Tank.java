@@ -8,7 +8,7 @@ import cd4017be.lib.TickRegistry;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
-import cd4017be.lib.Gui.SlotTank;
+import cd4017be.lib.Gui.GlitchSaveSlot;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
 import cd4017be.lib.block.AdvancedBlock.IComparatorSource;
@@ -169,7 +169,7 @@ public class Tank extends BaseTileEntity implements INeighborAwareTile, ITilePla
 	public void initContainer(DataContainer container) {
 		TileContainer cont = (TileContainer)container;
 		cont.addTankSlot(new TankSlot(tank, 0, 184, 16, (byte)0x23));
-		cont.addItemSlot(new SlotTank(tank, 0, 184, 74));
+		cont.addItemSlot(new GlitchSaveSlot(tank, 0, 184, 74));
 		cont.addPlayerInventory(8, 16);
 	}
 
