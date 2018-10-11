@@ -14,6 +14,7 @@ import cd4017be.lib.capability.InventoryItem;
 import cd4017be.lib.capability.InventoryItem.IItemInventory;
 import cd4017be.lib.item.BaseItem;
 import cd4017be.lib.util.ItemFluidUtil;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -229,7 +230,9 @@ public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientIte
 					}
 			}
 			//output crafting results
+			ForgeHooks.setCraftingPlayer(inv.player);
 			result = recipe.getCraftingResult(icr);
+			ForgeHooks.setCraftingPlayer(null);
 			boolean invFull = false;
 			if (result.isEmpty()) {
 				for (int i = 0; i < 9; i++)
