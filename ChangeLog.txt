@@ -1,3 +1,16 @@
+v1.3.2
+Changes:
+- crafting recipes performed in AutomaticCrafter are now provided with a FakePlayer instance that has the same user identity as the owner who placed the block.
+- also crafting recipes performed with PortableAutomaticCrafter are now provided with the player that carries the device.
+- fixed stuff still moving through ghost-connections that shouldn't exist anymore (happened with injecion and destination pipes).
+- fixed item disappearing glitch in FluidTank's fill/drain slot (of course by replacing it with a GlitchSaveSlot).
+- added comparator support for Fluid Tanks
+- added comparator support for Item Buffers
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.2.7
+
 v1.3.1
 Changes:
 - fixed #34 inconsistent handling of invalidated TileEntities causing crash
