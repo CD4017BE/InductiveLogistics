@@ -6,8 +6,10 @@ import java.util.List;
 
 import cd4017be.indlog.util.VariableInventory;
 import cd4017be.indlog.util.VariableInventory.GroupAccess;
+import cd4017be.lib.block.AdvancedBlock.IComparatorSource;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.tileentity.BaseTileEntity;
+import cd4017be.lib.TickRegistry;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
@@ -31,7 +33,7 @@ import net.minecraftforge.items.IItemHandler;
  * 
  * @author cd4017be
  */
-public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiData, ClientPacketReceiver {
+public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiData, ClientPacketReceiver, IComparatorSource {
 
 	public static final int[] SLOTS = {12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 							STACKS = {64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -39,6 +41,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	public final VariableInventory inventory;
 	public final GroupAccess[] sideAccs = new GroupAccess[6];
 	public byte type;
+	private int comparator;
 
 	public Buffer() {
 		inventory = new VariableInventory(0, this::markDirty);
@@ -115,6 +118,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 	private void load(NBTTagCompound nbt) {
 		inventory.slots = nbt.getByte("slots") & 0xff;
 		inventory.stackSize = nbt.getInteger("stack");
+		if (inventory.stackSize < 1) inventory.stackSize = 1;
 		Arrays.fill(inventory.items, ItemStack.EMPTY);
 		for (NBTBase t : nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND)) {
 			NBTTagCompound tag = (NBTTagCompound)t;
@@ -125,6 +129,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 				inventory.items[s] = stack;
 			}
 		}
+		comparator = inventory.getComparatorValue();
 	}
 
 	private void save(NBTTagCompound nbt) {
@@ -217,6 +222,7 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 		case 1:
 			inventory.stackSize = data.readInt();
 			if (inventory.stackSize > STACKS[type]) inventory.stackSize = STACKS[type];
+			else if (inventory.stackSize < 1) inventory.stackSize = 1;
 			break;
 		case 2: {
 			int s = data.readByte();
@@ -235,6 +241,21 @@ public class Buffer extends BaseTileEntity implements ITilePlaceHarvest, IGuiDat
 			break;
 		}
 		markDirty();
+	}
+
+	@Override
+	public void markDirty() {
+		if (!world.isRemote && comparator >= 0) {
+			comparator = -1;
+			TickRegistry.instance.updates.add(()-> world.updateComparatorOutputLevel(pos, blockType));
+			//The way this is implemented, there will be no further comparator updates triggered as long as nobody has asked for the comparator signal in the mean time, which makes this super performance efficient.
+		}
+		super.markDirty();
+	}
+
+	@Override
+	public int comparatorValue() {
+		return comparator < 0 ? comparator = inventory.getComparatorValue() : comparator;
 	}
 
 }

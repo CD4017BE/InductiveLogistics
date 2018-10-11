@@ -85,6 +85,16 @@ public class VariableInventory implements IItemHandlerModifiable {
 		return ItemHandlerHelper.copyStackWithSize(item, amount);
 	}
 
+	public int getComparatorValue() {
+		if (slots == 0) return 7;
+		long count = 0;
+		for (int i = 0; i < slots; i++) {
+			int n = items[i].getCount();
+			if (n != Integer.MAX_VALUE) count += n;
+		}
+		return (int)(count * 14 / stackSize / slots) + (count > 0 ? 1:0);
+	}
+
 	public class GroupAccess implements IItemHandler {
 
 		public int start, size;
