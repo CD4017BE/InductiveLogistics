@@ -144,6 +144,10 @@ public abstract class Pipe<T extends Pipe<T, O, I>, O, I> extends BaseTileEntity
 			return;
 		}
 		
+		if (getFlowBit(dest) == 3) {
+			dest = orDst = -1;
+			target = null;
+		}
 		redstone = world.isBlockIndirectlyGettingPowered(pos);
 		EnumFacing dir;
 		ArrayList<T> updateList = new ArrayList<T>();
