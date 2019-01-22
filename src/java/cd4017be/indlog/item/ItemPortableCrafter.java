@@ -37,6 +37,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 public class ItemPortableCrafter extends BaseItem implements IGuiItem, ClientItemPacketReceiver, IItemInventory {
 
 	public static int INTERVAL;

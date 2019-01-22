@@ -12,7 +12,6 @@ import cd4017be.lib.item.ItemVariantBlock;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +23,10 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 public class ItemTank extends ItemVariantBlock {
 
 	public ItemTank(Block id) {

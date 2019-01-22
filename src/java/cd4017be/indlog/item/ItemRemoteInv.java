@@ -38,6 +38,10 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 public class ItemRemoteInv extends ItemFilteredSubInventory {
 
 	public static int INTERVAL = 20, MAX_SLOTS = 48;

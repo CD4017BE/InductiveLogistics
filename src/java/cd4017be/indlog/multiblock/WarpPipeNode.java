@@ -2,14 +2,12 @@ package cd4017be.indlog.multiblock;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import cd4017be.api.IAbstractTile;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
-import cd4017be.lib.templates.MultiblockComp;
-import cd4017be.lib.tileentity.BaseTileEntity;
+import cd4017be.indlog.tileentity.WarpPipe;
+import cd4017be.lib.templates.NetworkNode;
 import cd4017be.lib.util.Utils;
 
 /**
@@ -17,14 +15,14 @@ import cd4017be.lib.util.Utils;
  * @author CD4017BE
  *
  */
-public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> {
+public class WarpPipeNode extends NetworkNode<WarpPipeNode, WarpPipeNetwork, WarpPipe> {
 
 	public final byte[] con = new byte[6];
 	public byte hasFilters = 0, isBlocked = 0;
 	public boolean redstone = false;
 	public ConComp[] cons = new ConComp[6];
 
-	public WarpPipeNode(IAbstractTile pipe) {
+	public WarpPipeNode(WarpPipe pipe) {
 		super(pipe);
 	}
 
@@ -60,7 +58,7 @@ public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> 
 		network.addConnector(con);
 		if (con instanceof IObjLink) markDirty();
 		if (!tile.invalid()) {
-			Utils.notifyNeighborTile((TileEntity)tile, EnumFacing.VALUES[con.side]);
+			Utils.notifyNeighborTile(tile, EnumFacing.VALUES[con.side]);
 			if (!tile.isClient() && con instanceof IActiveCon) ((IActiveCon)con).enable();
 		}
 	}
@@ -72,8 +70,8 @@ public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> 
 		cons[side] = null;
 		markDirty();
 		hasFilters &= ~(1 << side);
-		((BaseTileEntity)tile).markUpdate();
-		if (!tile.invalid()) Utils.notifyNeighborTile((TileEntity)tile, EnumFacing.VALUES[con.side]);
+		tile.markUpdate();
+		if (!tile.invalid()) Utils.notifyNeighborTile(tile, EnumFacing.VALUES[con.side]);
 		if (con instanceof IActiveCon) ((IActiveCon)con).disable();
 		return con;
 	}
@@ -95,7 +93,7 @@ public class WarpPipeNode extends MultiblockComp<WarpPipeNode, WarpPipeNetwork> 
 		}
 	}
 
-	public static WarpPipeNode readFromNBT(IAbstractTile tile, NBTTagCompound nbt) {
+	public static WarpPipeNode readFromNBT(WarpPipe tile, NBTTagCompound nbt) {
 		WarpPipeNode pipe = new WarpPipeNode(tile);
 		NBTTagList list = nbt.getTagList("connectors", 10);
 		for (int i = 0; i < list.tagCount(); i++) {

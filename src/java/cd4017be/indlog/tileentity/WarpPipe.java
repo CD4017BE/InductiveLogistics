@@ -24,11 +24,10 @@ import cd4017be.indlog.multiblock.WarpPipeNetwork;
 import cd4017be.indlog.util.IFluidPipeCon;
 import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
-import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
 import cd4017be.lib.templates.Cover;
-import cd4017be.lib.tileentity.PassiveMultiblockTile;
+import cd4017be.lib.tileentity.PassiveNetworkTile;
 import cd4017be.lib.util.Utils;
 
 /**
@@ -36,7 +35,7 @@ import cd4017be.lib.util.Utils;
  * @author CD4017BE
  *
  */
-public class WarpPipe extends PassiveMultiblockTile<WarpPipeNode, WarpPipeNetwork> implements ITilePlaceHarvest, INeighborAwareTile, IInteractiveTile, IModularTile, IItemPipeCon, IFluidPipeCon {
+public class WarpPipe extends PassiveNetworkTile<WarpPipeNode, WarpPipeNetwork, WarpPipe> implements ITilePlaceHarvest, IInteractiveTile, IModularTile, IItemPipeCon, IFluidPipeCon {
 
 	private Cover cover = new Cover();
 

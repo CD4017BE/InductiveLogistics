@@ -12,12 +12,15 @@ import cd4017be.lib.item.ItemVariantBlock;
 import cd4017be.lib.util.TooltipUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 public class ItemBuffer extends ItemVariantBlock {
 
 	public ItemBuffer(Block id) {

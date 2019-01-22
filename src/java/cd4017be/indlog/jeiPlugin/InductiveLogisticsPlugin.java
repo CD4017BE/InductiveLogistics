@@ -3,7 +3,7 @@ package cd4017be.indlog.jeiPlugin;
 import net.minecraft.item.ItemStack;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.render.gui.GuiPortableCrafting;
-import mezz.jei.api.BlankModPlugin;
+import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
@@ -14,7 +14,7 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
  * @author CD4017BE
  */
 @JEIPlugin
-public class InductiveLogisticsPlugin extends BlankModPlugin {
+public class InductiveLogisticsPlugin implements IModPlugin {
 
 	@Override
 	public void register(IModRegistry registry) {

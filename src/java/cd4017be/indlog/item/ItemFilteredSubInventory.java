@@ -27,6 +27,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
+/**
+ * 
+ * @author CD4017BE
+ */
 public abstract class ItemFilteredSubInventory extends BaseItem implements IItemInventory, IGuiItem, ClientItemPacketReceiver {
 
 	public ItemFilteredSubInventory(String id) {
