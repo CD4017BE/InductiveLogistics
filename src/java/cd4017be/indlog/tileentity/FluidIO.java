@@ -6,7 +6,6 @@ import java.util.List;
 import com.mojang.authlib.GameProfile;
 
 import cd4017be.api.protect.PermissionUtil;
-import cd4017be.indlog.util.AdvancedTank;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.SlotTank;
@@ -14,6 +13,7 @@ import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
+import cd4017be.lib.capability.AdvancedTank;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;

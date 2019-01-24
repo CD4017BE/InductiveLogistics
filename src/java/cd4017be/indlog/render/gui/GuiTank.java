@@ -3,9 +3,9 @@ package cd4017be.indlog.render.gui;
 import cd4017be.lib.Gui.AdvancedGui;
 import cd4017be.lib.Gui.TileContainer;
 import cd4017be.lib.Gui.TileContainer.TankSlot;
+import cd4017be.lib.capability.AdvancedTank;
 import cd4017be.lib.Gui.DataContainer.IGuiData;
 import cd4017be.indlog.tileentity.Tank;
-import cd4017be.indlog.util.AdvancedTank;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 

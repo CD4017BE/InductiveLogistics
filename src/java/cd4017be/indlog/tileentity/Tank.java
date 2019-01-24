@@ -3,7 +3,6 @@ package cd4017be.indlog.tileentity;
 import java.io.IOException;
 import java.util.List;
 
-import cd4017be.indlog.util.AdvancedTank;
 import cd4017be.lib.TickRegistry;
 import cd4017be.lib.BlockGuiHandler.ClientPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;
@@ -15,6 +14,7 @@ import cd4017be.lib.block.AdvancedBlock.IComparatorSource;
 import cd4017be.lib.block.AdvancedBlock.INeighborAwareTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.capability.AbstractInventory;
+import cd4017be.lib.capability.AdvancedTank;
 import cd4017be.lib.tileentity.BaseTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
