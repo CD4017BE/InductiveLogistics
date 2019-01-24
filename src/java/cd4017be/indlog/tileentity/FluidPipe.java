@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import cd4017be.api.indlog.filter.FluidFilterProvider;
-import cd4017be.indlog.util.IFluidPipeCon;
+import cd4017be.api.indlog.pipe.IFluidPipeCon;
 import cd4017be.indlog.filter.DummyFilter;
 import cd4017be.lib.capability.LinkedTank;
 import net.minecraft.block.state.IBlockState;

@@ -17,12 +17,12 @@ import static cd4017be.lib.property.PropertyByte.cast;
 
 import java.util.List;
 
+import cd4017be.api.indlog.pipe.IFluidPipeCon;
+import cd4017be.api.indlog.pipe.IItemPipeCon;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNode;
 import cd4017be.indlog.multiblock.ConComp;
 import cd4017be.indlog.multiblock.WarpPipeNetwork;
-import cd4017be.indlog.util.IFluidPipeCon;
-import cd4017be.indlog.util.IItemPipeCon;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;
 import cd4017be.lib.block.AdvancedBlock.ITilePlaceHarvest;
 import cd4017be.lib.block.MultipartBlock.IModularTile;
