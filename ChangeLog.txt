@@ -1,3 +1,13 @@
+v1.3.3
+Changes:
+- fixed #36 Pipe solidness behavior
+- moved several utilities & APIs to CD4017BE_lib
+- adaptions to new scripting system of CD4017BE_lib and other changes
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.3.0
+
 v1.3.2
 Changes:
 - crafting recipes performed in AutomaticCrafter are now provided with a FakePlayer instance that has the same user identity as the owner who placed the block.
