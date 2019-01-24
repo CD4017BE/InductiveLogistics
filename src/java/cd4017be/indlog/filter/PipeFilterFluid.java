@@ -1,5 +1,6 @@
-package cd4017be.indlog.util.filter;
+package cd4017be.indlog.filter;
 
+import cd4017be.api.indlog.filter.FilterBase;
 import cd4017be.indlog.Objects;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.item.Item;

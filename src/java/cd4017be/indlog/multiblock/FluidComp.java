@@ -2,9 +2,9 @@ package cd4017be.indlog.multiblock;
 
 import java.util.List;
 
+import cd4017be.api.indlog.filter.FluidFilterProvider;
+import cd4017be.api.indlog.filter.PipeFilter;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IObjLink;
-import cd4017be.indlog.util.filter.FluidFilterProvider;
-import cd4017be.indlog.util.filter.PipeFilter;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

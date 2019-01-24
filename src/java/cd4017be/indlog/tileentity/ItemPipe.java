@@ -2,9 +2,9 @@ package cd4017be.indlog.tileentity;
 
 import java.util.List;
 
+import cd4017be.api.indlog.filter.ItemFilterProvider;
 import cd4017be.indlog.util.IItemPipeCon;
-import cd4017be.indlog.util.filter.DummyFilter;
-import cd4017be.indlog.util.filter.ItemFilterProvider;
+import cd4017be.indlog.filter.DummyFilter;
 import cd4017be.lib.capability.AbstractInventory;
 import cd4017be.lib.capability.LinkedInventory;
 import cd4017be.lib.util.ItemFluidUtil;

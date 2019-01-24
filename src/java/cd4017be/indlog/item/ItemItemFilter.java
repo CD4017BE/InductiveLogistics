@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import cd4017be.api.indlog.filter.ItemFilterProvider;
+import cd4017be.indlog.filter.PipeFilterItem;
 import cd4017be.indlog.render.gui.GuiItemFilter;
-import cd4017be.indlog.util.filter.ItemFilterProvider;
-import cd4017be.indlog.util.filter.PipeFilterItem;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.util.TooltipUtil;

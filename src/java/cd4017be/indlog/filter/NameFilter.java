@@ -1,9 +1,10 @@
-package cd4017be.indlog.util.filter;
+package cd4017be.indlog.filter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import cd4017be.api.indlog.filter.FilterBase;
 import cd4017be.indlog.Objects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import cd4017be.api.indlog.filter.FluidFilterProvider;
+import cd4017be.api.indlog.filter.ItemFilterProvider;
+import cd4017be.indlog.filter.NameFilter.FluidFilter;
+import cd4017be.indlog.filter.NameFilter.ItemFilter;
 import cd4017be.indlog.render.gui.GuiNameFilter;
-import cd4017be.indlog.util.filter.FluidFilterProvider;
-import cd4017be.indlog.util.filter.ItemFilterProvider;
-import cd4017be.indlog.util.filter.NameFilter.FluidFilter;
-import cd4017be.indlog.util.filter.NameFilter.ItemFilter;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;

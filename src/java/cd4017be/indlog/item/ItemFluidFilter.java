@@ -5,9 +5,9 @@ import net.minecraft.client.util.ITooltipFlag;
 import java.io.IOException;
 import java.util.List;
 
+import cd4017be.api.indlog.filter.FluidFilterProvider;
+import cd4017be.indlog.filter.PipeFilterFluid;
 import cd4017be.indlog.render.gui.GuiFluidFilter;
-import cd4017be.indlog.util.filter.FluidFilterProvider;
-import cd4017be.indlog.util.filter.PipeFilterFluid;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;

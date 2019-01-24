@@ -3,9 +3,9 @@ package cd4017be.indlog.item;
 import java.io.IOException;
 import java.util.function.ToIntFunction;
 
+import cd4017be.api.indlog.filter.ItemFilterProvider;
+import cd4017be.api.indlog.filter.PipeFilter;
 import cd4017be.indlog.Objects;
-import cd4017be.indlog.util.filter.ItemFilterProvider;
-import cd4017be.indlog.util.filter.PipeFilter;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.Gui.IGuiItem;
 import cd4017be.lib.Gui.ItemGuiData;

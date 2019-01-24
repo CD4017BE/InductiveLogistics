@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import cd4017be.api.indlog.filter.ItemFilterProvider;
+import cd4017be.indlog.filter.ItemPropertyFilter;
 import cd4017be.indlog.render.gui.GuiPropertyFilter;
-import cd4017be.indlog.util.filter.ItemFilterProvider;
-import cd4017be.indlog.util.filter.ItemPropertyFilter;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockGuiHandler.ClientItemPacketReceiver;
 import cd4017be.lib.Gui.DataContainer;

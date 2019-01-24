@@ -5,7 +5,7 @@ import static cd4017be.lib.property.PropertyByte.cast;
 import java.util.ArrayList;
 import java.util.List;
 
-import cd4017be.indlog.util.filter.PipeFilter;
+import cd4017be.api.indlog.filter.PipeFilter;
 import cd4017be.lib.TickRegistry;
 import cd4017be.lib.TickRegistry.IUpdatable;
 import cd4017be.lib.block.AdvancedBlock.IInteractiveTile;

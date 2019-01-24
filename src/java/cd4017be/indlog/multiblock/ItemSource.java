@@ -2,10 +2,10 @@ package cd4017be.indlog.multiblock;
 
 import java.util.function.ToIntFunction;
 
+import cd4017be.api.indlog.filter.FilterBase;
 import cd4017be.indlog.Objects;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemDest;
 import cd4017be.indlog.multiblock.WarpPipeNetwork.IItemSrc;
-import cd4017be.indlog.util.filter.FilterBase;
 import cd4017be.lib.util.ItemFluidUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
