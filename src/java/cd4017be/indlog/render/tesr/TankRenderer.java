@@ -1,6 +1,7 @@
 package cd4017be.indlog.render.tesr;
 
 import cd4017be.indlog.tileentity.Tank;
+import cd4017be.lib.render.FluidRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraftforge.fluids.FluidStack;
 

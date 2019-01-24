@@ -3,6 +3,7 @@ package cd4017be.indlog;
 import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.BlockItemRegistry;
 import cd4017be.lib.ClientInputHandler;
+import cd4017be.lib.render.FluidRenderer;
 import cd4017be.lib.render.SpecialModelLoader;
 import cd4017be.lib.render.model.MultipartModel;
 import net.minecraft.util.BlockRenderLayer;
@@ -15,7 +16,6 @@ import cd4017be.indlog.render.gui.GuiFluidIO;
 import cd4017be.indlog.render.gui.GuiItemBuffer;
 import cd4017be.indlog.render.gui.GuiTank;
 import cd4017be.indlog.render.tesr.FluidPipeRenderer;
-import cd4017be.indlog.render.tesr.FluidRenderer;
 import cd4017be.indlog.render.tesr.ItemPipeRenderer;
 import cd4017be.indlog.render.tesr.TankRenderer;
 import cd4017be.indlog.tileentity.FluidPipe;
@@ -49,7 +49,7 @@ public class ClientProxy extends CommonProxy {
 
 	@SubscribeEvent
 	public void registerModels(ModelRegistryEvent ev) {
-		SpecialModelLoader.instance.tesrs.add(FluidRenderer.instance);
+		FluidRenderer.register();
 		SpecialModelLoader.setMod(Main.ID);
 		SpecialModelLoader.registerBlockModel(ITEM_PIPE, new MultipartModel(ITEM_PIPE).setPipeVariants(7));
 		SpecialModelLoader.registerBlockModel(FLUID_PIPE, new MultipartModel(FLUID_PIPE).setPipeVariants(7));
