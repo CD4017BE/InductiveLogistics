@@ -2,9 +2,12 @@ package cd4017be.indlog;
 
 import cd4017be.api.recipes.RecipeScriptContext;
 import cd4017be.api.recipes.RecipeScriptContext.ConfigConstants;
+import cd4017be.api.rs_ctr.sensor.SensorRegistry;
 import cd4017be.indlog.item.ItemNameFilter;
 import cd4017be.indlog.item.ItemPortableCrafter;
 import cd4017be.indlog.item.ItemRemoteInv;
+import cd4017be.indlog.modCompat.FilteredFluidSensor;
+import cd4017be.indlog.modCompat.FilteredItemSensor;
 import cd4017be.indlog.multiblock.FluidExtractor;
 import cd4017be.indlog.multiblock.FluidInjector;
 import cd4017be.indlog.multiblock.ItemExtractor;
@@ -23,6 +26,8 @@ import cd4017be.lib.BlockGuiHandler;
 import cd4017be.lib.TickRegistry;
 import cd4017be.lib.Gui.DataContainer;
 import cd4017be.lib.Gui.TileContainer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
 
 public class CommonProxy {
 
@@ -36,6 +41,18 @@ public class CommonProxy {
 		BlockGuiHandler.registerContainer(Objects.FLUID_INTAKE, TileContainer.class);
 		BlockGuiHandler.registerContainer(Objects.FLUID_OUTLET, TileContainer.class);
 		BlockGuiHandler.registerContainer(Objects.DROP_INTERFACE, DataContainer.class);
+		
+		//RedstoneControl compatibility
+		if (Loader.isModLoaded("rs_ctr")) {
+			SensorRegistry.register(FilteredItemSensor::new,
+					new ItemStack(Objects.item_filter),
+					new ItemStack(Objects.name_filter),
+					new ItemStack(Objects.property_filter)
+				);
+			SensorRegistry.register(FilteredFluidSensor::new,
+					new ItemStack(Objects.fluid_filter)
+				);
+		}
 	}
 
 	private void setConfig() {

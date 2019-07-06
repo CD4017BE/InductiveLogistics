@@ -3,8 +3,6 @@ package cd4017be.indlog.filter;
 import cd4017be.api.indlog.filter.FilterBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
@@ -13,7 +11,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @param <Obj>
  * @param <Inv>
  */
-@SideOnly(Side.CLIENT)
 public class DummyFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 
 	public DummyFilter(byte mode) {

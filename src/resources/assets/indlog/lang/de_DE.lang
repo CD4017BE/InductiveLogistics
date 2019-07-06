@@ -92,6 +92,8 @@ item.indlog.remote_inv.tip=Erlaubt Fernzugriff auf das Inventar eines Blocks und
 
 cd4017be.inv_con.noLink=Nicht Verbunden!
 cd4017be.inv_con.link=Verbunden mit %s @ %s
+sensor.indlog.item_filter=gefilterte\nItemanzahl
+sensor.indlog.fluid_filter=gefilterte\nFlüssigkeitsmenge [mB]
 
 #GUI namen
 gui.indlog.tank.name=Tank
