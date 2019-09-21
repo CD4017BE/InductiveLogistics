@@ -47,7 +47,10 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return null;
 		FluidStack stack;
-		for (IFluidTankProperties inf : acc.getTankProperties())
+		IFluidTankProperties[] tankProps = acc.getTankProperties();
+		if (tankProps == null) return null;
+		for (IFluidTankProperties inf : tankProps) {
+			if (inf == null) continue;
 			if((stack = inf.getContents()) != null && inf.canDrainFluidType(stack)) {
 				if (filter != null && !filter.noEffect()) {
 					stack = filter.getExtract(stack, acc);
@@ -56,6 +59,7 @@ public class FluidSource extends FluidComp implements IFluidSrc {
 				int n = acceptor.applyAsInt(stack);
 				if (n > 0) return new FluidStack(stack, n);
 			}
+		}
 		return null;
 	}
 
