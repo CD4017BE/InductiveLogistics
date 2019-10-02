@@ -1,3 +1,13 @@
+v1.3.4
+Changes:
+- fixed #38 Fluid Containers not being automatically filled when tank got filled up from empty.
+- fixed #40 crash on load when Fluid Pipes connected to devices that don't provide propper tank info.
+
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.4.10
+
 v1.3.3
 Changes:
 - fixed #36 Pipe solidness behavior
