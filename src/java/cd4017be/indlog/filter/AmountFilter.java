@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import static cd4017be.lib.util.ItemFluidUtil.listTanks;
 
 /**
  * 
@@ -80,7 +81,7 @@ public abstract class AmountFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 			if (n <= 0) {
 				FluidStack fallback = obj;
 				int max = 0;
-				for (IFluidTankProperties prop : inv.getTankProperties())
+				for (IFluidTankProperties prop : listTanks(inv))
 					if (prop.canDrain() && (obj = prop.getContents()) != null && (obj = inv.drain(obj, false)) != null) {
 						if ((n = obj.amount) >= amount)
 							return new FluidStack(obj, amount);

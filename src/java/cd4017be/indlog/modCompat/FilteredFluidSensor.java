@@ -1,5 +1,6 @@
 package cd4017be.indlog.modCompat;
 
+import static cd4017be.lib.util.ItemFluidUtil.listTanks;
 import cd4017be.api.indlog.filter.FluidFilterProvider;
 import cd4017be.api.indlog.filter.PipeFilter;
 import cd4017be.api.rs_ctr.com.BlockReference;
@@ -33,7 +34,7 @@ public class FilteredFluidSensor implements IBlockSensor {
 		IFluidHandler inv = block.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		if (inv == null) return 0;
 		int val = 0;
-		for (IFluidTankProperties prop : inv.getTankProperties()) {
+		for (IFluidTankProperties prop : listTanks(inv)) {
 			FluidStack stack = prop.getContents();
 			if (stack != null && filter.matches(stack))
 				val += stack.amount;

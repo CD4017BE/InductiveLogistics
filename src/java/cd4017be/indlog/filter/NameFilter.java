@@ -1,5 +1,6 @@
 package cd4017be.indlog.filter;
 
+import static cd4017be.lib.util.ItemFluidUtil.listTanks;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -107,7 +108,7 @@ public abstract class NameFilter<Obj, Inv> extends FilterBase<Obj, Inv> {
 		@Override
 		public FluidStack getExtract(FluidStack obj, IFluidHandler inv) {
 			if (obj != null) return matches(obj) ? obj : null;
-			for (IFluidTankProperties prop : inv.getTankProperties())
+			for (IFluidTankProperties prop : listTanks(inv))
 				if ((obj = prop.getContents()) != null && prop.canDrainFluidType(obj) && matches(obj))
 					return obj;
 			return null;

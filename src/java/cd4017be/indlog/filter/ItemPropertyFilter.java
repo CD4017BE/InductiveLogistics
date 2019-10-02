@@ -1,5 +1,6 @@
 package cd4017be.indlog.filter;
 
+import static cd4017be.lib.util.ItemFluidUtil.listTanks;
 import cd4017be.api.indlog.filter.FilterBase;
 import cd4017be.indlog.Objects;
 import net.minecraft.item.Item;
@@ -40,7 +41,7 @@ public class ItemPropertyFilter extends FilterBase<ItemStack, IItemHandler> {
 			IFluidHandlerItem acc = obj.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 			int am = 0, cap = 0;
 			if (acc != null)
-				for (IFluidTankProperties prop : acc.getTankProperties()) {
+				for (IFluidTankProperties prop : listTanks(acc)) {
 					FluidStack stack = prop.getContents();
 					if (stack != null) am += stack.amount;
 					cap += prop.getCapacity();

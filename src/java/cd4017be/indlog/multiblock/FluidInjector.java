@@ -1,5 +1,6 @@
 package cd4017be.indlog.multiblock;
 
+import static cd4017be.lib.util.ItemFluidUtil.listTanks;
 import cd4017be.indlog.Objects;
 import cd4017be.lib.TickRegistry;
 import net.minecraft.item.ItemStack;
@@ -50,7 +51,7 @@ public class FluidInjector extends FluidComp implements IActiveCon {
 		IFluidHandler acc = link.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.VALUES[side^1]);
 		if (acc == null) return true;
 		byte pr = filter == null || !filter.blocking() ? Byte.MIN_VALUE : filter.priority();
-		IFluidTankProperties[] tprs = acc.getTankProperties();
+		IFluidTankProperties[] tprs = listTanks(acc);
 		int m = tprs.length;
 		for (int i = slotIdx; i < slotIdx + m; i++) {
 			IFluidTankProperties prop = tprs[i % m];

@@ -1,5 +1,6 @@
 package cd4017be.indlog.filter;
 
+import static cd4017be.lib.util.ItemFluidUtil.listTanks;
 import cd4017be.api.indlog.filter.FilterBase;
 import cd4017be.indlog.Objects;
 import cd4017be.lib.util.ItemFluidUtil;
@@ -35,7 +36,7 @@ public class PipeFilterFluid extends FilterBase<FluidStack, IFluidHandler> {
 		if (maxAmount == 0) return stack.amount;
 		int am = maxAmount;
 		FluidStack fluid;
-		for (IFluidTankProperties inf : inv.getTankProperties())
+		for (IFluidTankProperties inf : listTanks(inv))
 			if ((fluid = inf.getContents()) != null && fluid.isFluidEqual(stack)) am -= fluid.amount;
 		if (am <= 0) return 0;
 		else if (am >= stack.amount) return stack.amount;
@@ -45,7 +46,7 @@ public class PipeFilterFluid extends FilterBase<FluidStack, IFluidHandler> {
 	@Override
 	public FluidStack getExtract(FluidStack stack, IFluidHandler inv) {
 		if (stack == null) {
-			for (IFluidTankProperties inf : inv.getTankProperties())
+			for (IFluidTankProperties inf : listTanks(inv))
 				if((stack = inf.getContents()) != null && inf.canDrainFluidType(stack) && (stack = getExtract(stack, inv)) != null) return stack;
 			return null;
 		}
