@@ -37,7 +37,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import static net.minecraftforge.items.ItemHandlerHelper.*;
 import net.minecraftforge.items.SlotItemHandler;
 
 import static net.minecraftforge.items.CapabilityItemHandler.*;
@@ -80,7 +80,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 			for (int i = 0; i < 6; i++)  {
 				int j = inputs[i];
 				if (j > 0) {
-					Ingred ing = findIngred(Utils.neighborCapability(this, EnumFacing.VALUES[i], ITEM_HANDLER_CAPABILITY), amount * j);
+					Ingred ing = findIngred(Utils.neighborCapability(this, EnumFacing.VALUES[i], ITEM_HANDLER_CAPABILITY), amount * j, null);
 					if (ing == null) nrs |= 1 << i;
 					else ingreds[i] = ing;
 				}
@@ -91,36 +91,39 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 			for (int i = 0; i < 9; i++) {
 				int j = grid[i];
 				if (j < 0 || j >= 6) icr.setInventorySlotContents(i, ItemStack.EMPTY);
-				else icr.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(ingreds[j].stack, 1));
+				else icr.setInventorySlotContents(i, copyStackWithSize(ingreds[j].stack, 1));
 			}
 			//find recipe
-			if (lastRecipe == null || !lastRecipe.matches(icr, world)) {
-				lastRecipe = null;
-				for (IRecipe r : CraftingManager.REGISTRY)
-					if(r.matches(icr, world)) {
-						lastRecipe = r;
-						break;
-					}
-				if (lastRecipe == null) return;
-			}
-			//check result
-			if (player == null && world instanceof WorldServer) player = new SaferFakePlayer((WorldServer)world, gp);
-			ForgeHooks.setCraftingPlayer(player);
-			ItemStack stack = lastRecipe.getCraftingResult(icr);
-			ForgeHooks.setCraftingPlayer(null);
-			if ((lastAm = stack.getCount()) == 0) return; //Recipe is invalid
+			ItemStack stack = findRecipe();
+			if (stack.getCount() == 0) return; //Recipe is invalid
 			//extract ingredients
-			for (int i = 0; i < 6; i++)
-				if (ingreds[i] != null) {
-					int n = inputs[i] * amount;
-					n -= ingreds[i].extract(n);
-					if (n > 0) {//this shouldn't happen but in case it does: ABORT!
-						results[i] = ItemHandlerHelper.copyStackWithSize(ingreds[i].stack, inputs[i] * amount - n);
-						for (i--; i >= 0; i--) results[i] = ItemHandlerHelper.copyStackWithSize(ingreds[i].stack, inputs[i] * amount);
-						markDirty();
-						return;
-					}
-				}
+			for (int i = 0; i < 6; i++) {
+				Ingred ing = ingreds[i];
+				if (ing == null) continue;
+				int n = inputs[i] * amount;
+				int m = ing.extract(n);
+				if (n == m) continue;
+				//extraction might not succeed if two sides access the same physical inventory
+				ItemStack out = copyStackWithSize(ing.stack, m);
+				results[i] = out = insertItemStacked(ing.acc, out, false);
+				findAlternative: {
+					if (!out.isEmpty() || (ing = findIngred(ing.acc, n, ing)) == null)
+						break findAlternative;
+					for (int j = 0; j < 9; j++)
+						if (grid[j] == i)
+							icr.setInventorySlotContents(j, copyStackWithSize(ing.stack, 1));
+					if ((stack = findRecipe()).getCount() == 0)
+						break findAlternative;
+					ing.extract(n);
+					continue;
+				} //no alternate item found: ABORT!
+				for (i--; i >= 0; i--)
+					if (ingreds[i] != null)
+						results[i] = copyStackWithSize(ingreds[i].stack, inputs[i] * amount);
+				outEmpty = false;
+				output();
+				return;
+			}
 			//output results
 			if (amount > 1) stack.setCount(lastAm * amount);
 			results[6] = stack;
@@ -138,7 +141,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 					ItemStack item = results[j];
 					int m = item.getCount();
 					if (m <= 0) results[j] = stack;
-					else if (ItemHandlerHelper.canItemStacksStack(stack, item)) item.setCount(m + n);
+					else if (canItemStacksStack(stack, item)) item.setCount(m + n);
 					else //previously identical items have different left overs?
 						ItemFluidUtil.dropStack(stack, world, pos); //just throw them away!
 				}
@@ -147,25 +150,41 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 		if (!outEmpty) output();
 	}
 
-	private Ingred findIngred(IItemHandler acc, int am) {
-		if (acc == null) return null;
-		ArrayList<Ingred> found = new ArrayList<Ingred>();
-		int s = acc.getSlots();
-		for (int j = 0; j < s; j++) {
-			ItemStack item = acc.extractItem(j, am, true);
-			int m = item.getCount();
-			if (m <= 0) continue;
-			for (Ingred i : found)
-				if (ItemHandlerHelper.canItemStacksStack(item, i.stack)) { 
-					if (i.add(j, m) >= am) return i;
-					m = 0;
+	private ItemStack findRecipe() {
+		if (lastRecipe == null || !lastRecipe.matches(icr, world)) {
+			lastRecipe = null;
+			for (IRecipe r : CraftingManager.REGISTRY)
+				if(r.matches(icr, world)) {
+					lastRecipe = r;
 					break;
 				}
-			if (m != 0) {
-				Ingred i = new Ingred(acc, item, j);
-				if (m >= am) return i;
-				found.add(i);
-			}
+			if (lastRecipe == null) return ItemStack.EMPTY;
+		}
+		//check result
+		if (player == null && world instanceof WorldServer) player = new SaferFakePlayer((WorldServer)world, gp);
+		ForgeHooks.setCraftingPlayer(player);
+		ItemStack stack = lastRecipe.getCraftingResult(icr);
+		ForgeHooks.setCraftingPlayer(null);
+		lastAm = stack.getCount();
+		return stack;
+	}
+
+	private Ingred findIngred(IItemHandler acc, int am, Ingred from) {
+		if (acc == null) return null;
+		ArrayList<Ingred> found = new ArrayList<Ingred>();
+		int j = from == null ? 0 : from.idx[0] + 1;
+		slotLoop:
+		for (int s = acc.getSlots(); j < s; j++) {
+			ItemStack item = acc.extractItem(j, am, true);
+			int m = item.getCount();
+			if (m <= 0 || from != null && !item.isItemEqualIgnoreDurability(from.stack)) continue;
+			for (Ingred i : found)
+				if (canItemStacksStack(item, i.stack))
+					if (i.add(j, m) >= am) return i;
+					else continue slotLoop;
+			Ingred i = new Ingred(acc, item, j);
+			if (m >= am) return i;
+			found.add(i);
 		}
 		return null;
 	}
@@ -180,7 +199,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 				stack = results[i];
 				if (stack.getCount() <= 0) continue;
 				IItemHandler acc = Utils.neighborCapability(this, EnumFacing.VALUES[i], ITEM_HANDLER_CAPABILITY);
-				results[i] = stack = ItemHandlerHelper.insertItemStacked(acc, stack, false);
+				results[i] = stack = insertItemStacked(acc, stack, false);
 				outEmpty &= stack.getCount() <= 0;
 			}
 		} else {
@@ -188,7 +207,7 @@ public class AutoCrafter extends BaseTileEntity implements ITickable, IRedstoneT
 			for (int i = 0; i < 6; i++) {
 				stack = results[i];
 				if (stack.getCount() <= 0) continue;
-				results[i] = stack = ItemHandlerHelper.insertItemStacked(acc, stack, false);
+				results[i] = stack = insertItemStacked(acc, stack, false);
 				outEmpty &= stack.getCount() <= 0;
 			}
 		}
