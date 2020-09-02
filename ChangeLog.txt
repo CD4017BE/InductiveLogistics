@@ -1,3 +1,12 @@
+v1.3.5
+Changes:
+- fix crash when multiple side access same physical inventory
+
+Dependencies:
+- for MC-1.12.2
+- forge-14.23.0.2512 (or newer)
+- CD4017BE_lib-6.4.10
+
 v1.3.4
 Changes:
 - fixed #38 Fluid Containers not being automatically filled when tank got filled up from empty.
@@ -48,7 +57,7 @@ Changes:
 - added feature: Item-Content Filter
 - added feature: Name-Filter
 - added feature: Amount-Filter
-- removed use of m³ in english localization in favor of B (Buckets)
+- removed use of mï¿½ in english localization in favor of B (Buckets)
 Dependencies:
 - for MC-1.12.2
 - forge-14.23.0.2512 (or newer)
